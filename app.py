@@ -53,7 +53,8 @@ if linea == "👥 Administración de Personal":
         card(
             "🏖️ Vacaciones",
             "Seguimiento de saldos, uso y planificación de descansos.",
-            "https://tu-link-powerbi.com"
+            "https://app.powerbi.com/links/1TThJ-ia9c?ctid=42fc96b3-c018-482d-8ada-cab81720489e&pbi_source=linkShare",
+             icon="📊"
         )
 
     with col2:
@@ -83,7 +84,7 @@ elif linea == "📈 Desarrollo Organizacional":
         card(
             "🎓 Capacitaciones",
             "Monitoreo de participación, horas y cumplimiento del plan de capacitación.",
-            "https://app.powerbi.com/links/1TThJ-ia9c?ctid=42fc96b3-c018-482d-8ada-cab81720489e&pbi_source=linkShare",
+            "https://github.com/tuusuario/tu-repo",
             icon="📊"
         )
 
