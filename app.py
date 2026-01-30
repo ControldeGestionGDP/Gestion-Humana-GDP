@@ -1,50 +1,71 @@
 import streamlit as st
 
-# =============================
+# =========================================================
 # CONFIGURACIÓN GENERAL
-# =============================
+# =========================================================
 st.set_page_config(
-    page_title="Portal Gestión Humana",
-    page_icon="👥",
+    page_title="Portal Corporativo | Control de Gestión",
+    page_icon="📊",
     layout="wide"
 )
 
-# =============================
-# ESTILO CORPORATIVO GH
-# =============================
+# =========================================================
+# ESTILO CORPORATIVO (IDENTIDAD GH / DON POLLO)
+# =========================================================
 st.markdown("""
 <style>
 
-/* Fondo general */
+/* -------------------------
+   APP GENERAL
+------------------------- */
 .stApp {
     background-color: #ffffff;
 }
 
-/* Títulos */
-h1, h2, h3 {
+/* -------------------------
+   TÍTULOS
+------------------------- */
+h1 {
     color: #1071b8;
+    font-weight: 800;
+}
+
+h2, h3 {
+    color: #2e3788;
     font-weight: 700;
 }
 
-/* Sidebar */
+/* -------------------------
+   SIDEBAR
+------------------------- */
 section[data-testid="stSidebar"] {
-    background-color: #2e3788;
+    background: linear-gradient(
+        180deg,
+        #2e3788 0%,
+        #1071b8 100%
+    );
 }
 
 section[data-testid="stSidebar"] * {
-    color: white;
+    color: #ffffff;
+    font-weight: 500;
 }
 
-/* Cards */
+/* -------------------------
+   CARDS
+------------------------- */
 div[data-testid="stVerticalBlockBorderWrapper"] {
-    border: 1px solid #e6e6e6;
+    border: 1px solid #e5e7eb;
     border-left: 6px solid #c4579b;
-    border-radius: 14px;
-    padding: 1rem;
+    border-radius: 16px;
+    padding: 1.2rem;
     background-color: #ffffff;
+    box-shadow: 0 6px 16px rgba(0,0,0,0.04);
 }
 
-/* Links */
+/* -------------------------
+   LINKS
+------------------------- */
 a {
     color: #1071b8;
     font-weight: 600;
@@ -56,7 +77,9 @@ a:hover {
     text-decoration: underline;
 }
 
-/* Separadores */
+/* -------------------------
+   SEPARADORES
+------------------------- */
 hr {
     border: none;
     height: 4px;
@@ -66,30 +89,41 @@ hr {
         #2e3788,
         #c4579b
     );
-    margin: 2rem 0;
+    margin: 2.5rem 0;
+}
+
+/* -------------------------
+   FOOTER
+------------------------- */
+.footer {
+    text-align: center;
+    color: #6b7280;
+    font-size: 0.85rem;
+    margin-top: 2rem;
 }
 
 </style>
 """, unsafe_allow_html=True)
 
-# =============================
-# ENCABEZADO
-# =============================
-st.title("📊 Portal de Transformación Digital – Gestión Humana")
+# =========================================================
+# ENCABEZADO PRINCIPAL
+# =========================================================
+st.title("📊 Portal Corporativo de Transformación Digital")
 st.markdown(
     """
-    Este portal centraliza los **desarrollos digitales, reportes y aplicaciones**
-    de la **Gerencia de Gestión Humana**, organizados por líneas estratégicas.
+    Plataforma centralizada de **analítica, automatización y visualización de información**,  
+    desarrollada para apoyar la **toma de decisiones estratégicas** de la organización.
     """
 )
 
 st.markdown("---")
 
-# =============================
+# =========================================================
 # MENÚ LATERAL
-# =============================
+# =========================================================
+st.sidebar.markdown("## 📌 Líneas de Gestión")
 linea = st.sidebar.radio(
-    "📌 Líneas de Gestión Humana",
+    "",
     [
         "👥 Administración de Personal",
         "📈 Desarrollo Organizacional",
@@ -97,28 +131,30 @@ linea = st.sidebar.radio(
     ]
 )
 
-# =============================
-# FUNCIÓN CARD
-# =============================
+# =========================================================
+# FUNCIÓN CARD (REUTILIZABLE)
+# =========================================================
 def card(titulo, descripcion, link, icon="🔗"):
     with st.container(border=True):
         st.subheader(titulo)
         st.write(descripcion)
-        st.markdown(f"{icon} [Acceder al recurso]({link})")
+        st.markdown(f"{icon} **[Acceder al recurso]({link})**")
 
-# =============================
+# =========================================================
 # ADMINISTRACIÓN DE PERSONAL
-# =============================
+# =========================================================
 if linea == "👥 Administración de Personal":
     st.header("👥 Administración de Personal")
-    st.caption("Gestión operativa y analítica del personal")
+    st.caption(
+        "Indicadores clave para el control, seguimiento y planificación del recurso humano."
+    )
 
     col1, col2, col3 = st.columns(3)
 
     with col1:
         card(
             "🏖️ Vacaciones",
-            "Seguimiento de saldos, uso y planificación de descansos.",
+            "Visualización del uso, saldo y planificación de vacaciones para asegurar continuidad operativa.",
             "https://app.powerbi.com/links/1TThJ-ia9c?ctid=42fc96b3-c018-482d-8ada-cab81720489e&pbi_source=linkShare",
             icon="📊"
         )
@@ -126,7 +162,7 @@ if linea == "👥 Administración de Personal":
     with col2:
         card(
             "⏰ Asistencia",
-            "Control de asistencia, tardanzas y ausencias.",
+            "Análisis de asistencia, puntualidad y ausentismo por área y periodo.",
             "https://tu-link-powerbi.com",
             icon="📊"
         )
@@ -134,24 +170,26 @@ if linea == "👥 Administración de Personal":
     with col3:
         card(
             "📄 Legajos Digitales",
-            "Repositorio centralizado de información del personal.",
+            "Repositorio estructurado de información laboral y documental del personal.",
             "https://github.com/tuusuario/tu-repo",
             icon="📁"
         )
 
-# =============================
+# =========================================================
 # DESARROLLO ORGANIZACIONAL
-# =============================
+# =========================================================
 elif linea == "📈 Desarrollo Organizacional":
     st.header("📈 Desarrollo Organizacional")
-    st.caption("Crecimiento, desempeño y desarrollo del talento")
+    st.caption(
+        "Seguimiento del crecimiento, desempeño y fortalecimiento del talento humano."
+    )
 
     col1, col2 = st.columns(2)
 
     with col1:
         card(
             "🎓 Capacitaciones",
-            "Monitoreo de participación, horas y cumplimiento del plan de capacitación.",
+            "Control del avance, cobertura y cumplimiento del plan anual de capacitación.",
             "https://github.com/tuusuario/tu-repo",
             icon="📊"
         )
@@ -159,24 +197,26 @@ elif linea == "📈 Desarrollo Organizacional":
     with col2:
         card(
             "😊 Clima Laboral",
-            "Resultados de encuestas y análisis del clima organizacional.",
+            "Resultados consolidados de encuestas y análisis de clima organizacional.",
             "https://tu-link-powerbi.com",
             icon="📊"
         )
 
-# =============================
+# =========================================================
 # SEGURIDAD Y SALUD EN EL TRABAJO
-# =============================
+# =========================================================
 elif linea == "🦺 Seguridad y Salud en el Trabajo":
     st.header("🦺 Seguridad y Salud en el Trabajo")
-    st.caption("Prevención, bienestar y control de riesgos")
+    st.caption(
+        "Monitoreo preventivo de riesgos, incidentes y bienestar del personal."
+    )
 
     col1, col2 = st.columns(2)
 
     with col1:
         card(
             "⚠️ Incidentes y Accidentes",
-            "Registro y análisis de incidentes laborales.",
+            "Registro, análisis y seguimiento de eventos de seguridad laboral.",
             "https://tu-link-powerbi.com",
             icon="📊"
         )
@@ -184,13 +224,16 @@ elif linea == "🦺 Seguridad y Salud en el Trabajo":
     with col2:
         card(
             "❤️ Bienestar y Ausentismo",
-            "Seguimiento de ausentismo y salud ocupacional.",
+            "Indicadores de salud ocupacional y ausentismo para acciones preventivas.",
             "https://tu-link-powerbi.com",
             icon="📊"
         )
 
-# =============================
+# =========================================================
 # FOOTER
-# =============================
+# =========================================================
 st.markdown("---")
-st.caption("Gerencia de Gestión Humana | Transformación Digital")
+st.markdown(
+    "<div class='footer'>Gerencia de Control de Gestión | Transformación Digital</div>",
+    unsafe_allow_html=True
+)
