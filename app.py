@@ -108,7 +108,7 @@ hr {
 # =========================================================
 # ENCABEZADO PRINCIPAL
 # =========================================================
-st.title("📊 Portal Corporativo de Transformación Digital")
+st.title("📊 Gestión Humana | Grupo Don Pollo")
 st.markdown(
     """
     Plataforma centralizada de **analítica, automatización y visualización de información**,  
