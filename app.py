@@ -15,45 +15,31 @@ st.set_page_config(
 st.markdown("""
 <style>
 
-/* -------------------------
-   APP GENERAL
-------------------------- */
+/* APP GENERAL */
 .stApp {
     background-color: #ffffff;
 }
 
-/* -------------------------
-   TÍTULOS
-------------------------- */
+/* TÍTULOS */
 h1 {
     color: #1071b8;
     font-weight: 800;
 }
-
 h2, h3 {
     color: #2e3788;
     font-weight: 700;
 }
 
-/* -------------------------
-   SIDEBAR
-------------------------- */
+/* SIDEBAR */
 section[data-testid="stSidebar"] {
-    background: linear-gradient(
-        180deg,
-        #2e3788 0%,
-        #1071b8 100%
-    );
+    background: linear-gradient(180deg, #2e3788 0%, #1071b8 100%);
 }
-
 section[data-testid="stSidebar"] * {
     color: #ffffff;
     font-weight: 500;
 }
 
-/* -------------------------
-   CARDS
-------------------------- */
+/* CARDS */
 div[data-testid="stVerticalBlockBorderWrapper"] {
     border: 1px solid #e5e7eb;
     border-left: 6px solid #c4579b;
@@ -63,45 +49,32 @@ div[data-testid="stVerticalBlockBorderWrapper"] {
     box-shadow: 0 6px 16px rgba(0,0,0,0.04);
 }
 
-/* -------------------------
-   LINKS
-------------------------- */
+/* LINKS */
 a {
     color: #1071b8;
     font-weight: 600;
     text-decoration: none;
 }
-
 a:hover {
     color: #c4579b;
     text-decoration: underline;
 }
 
-/* -------------------------
-   SEPARADORES
-------------------------- */
+/* SEPARADORES */
 hr {
     border: none;
     height: 4px;
-    background: linear-gradient(
-        90deg,
-        #1071b8,
-        #2e3788,
-        #c4579b
-    );
+    background: linear-gradient(90deg, #1071b8, #2e3788, #c4579b);
     margin: 2.5rem 0;
 }
 
-/* -------------------------
-   FOOTER
-------------------------- */
+/* FOOTER */
 .footer {
     text-align: center;
     color: #6b7280;
     font-size: 0.85rem;
     margin-top: 2rem;
 }
-
 </style>
 """, unsafe_allow_html=True)
 
@@ -132,22 +105,25 @@ linea = st.sidebar.radio(
 )
 
 # =========================================================
-# FUNCIÓN CARD (REUTILIZABLE)
+# FUNCIÓN CARD PRO (CON INFO ADICIONAL)
 # =========================================================
-def card(titulo, descripcion, link, icon="🔗"):
+def card(titulo, descripcion, link, icon="🔗", detalles=None):
     with st.container(border=True):
         st.subheader(titulo)
         st.write(descripcion)
         st.markdown(f"{icon} **[Acceder al recurso]({link})**")
+
+        if detalles:
+            with st.expander("➕ Información técnica"):
+                for d in detalles:
+                    st.markdown(f"- {d}")
 
 # =========================================================
 # ADMINISTRACIÓN DE PERSONAL
 # =========================================================
 if linea == "👥 Administración de Personal":
     st.header("👥 Administración de Personal")
-    st.caption(
-        "Indicadores clave para el control, seguimiento y planificación del recurso humano."
-    )
+    st.caption("Indicadores clave para el control, seguimiento y planificación del recurso humano.")
 
     col1, col2, col3 = st.columns(3)
 
@@ -156,7 +132,12 @@ if linea == "👥 Administración de Personal":
             "🏖️ Vacaciones",
             "Visualización del uso, saldo y planificación de vacaciones para asegurar continuidad operativa.",
             "https://app.powerbi.com/links/1TThJ-ia9c?ctid=42fc96b3-c018-482d-8ada-cab81720489e&pbi_source=linkShare",
-            icon="📊"
+            icon="📊",
+            detalles=[
+                "🛠️ Desarrollado en: Power BI",
+                "🔄 Actualización: Automática",
+                "📅 Frecuencia: Mensual"
+            ]
         )
 
     with col2:
@@ -164,7 +145,12 @@ if linea == "👥 Administración de Personal":
             "⏰ Asistencia",
             "Análisis de asistencia, puntualidad y ausentismo por área y periodo.",
             "https://tu-link-powerbi.com",
-            icon="📊"
+            icon="📊",
+            detalles=[
+                "🛠️ Desarrollado en: Power BI",
+                "🔄 Actualización: Automática",
+                "📅 Frecuencia: Diaria"
+            ]
         )
 
     with col3:
@@ -172,7 +158,12 @@ if linea == "👥 Administración de Personal":
             "📄 Legajos Digitales",
             "Repositorio estructurado de información laboral y documental del personal.",
             "https://github.com/tuusuario/tu-repo",
-            icon="📁"
+            icon="📁",
+            detalles=[
+                "🛠️ Desarrollado en: SharePoint",
+                "🔐 Acceso: Restringido por rol",
+                "🔄 Actualización: Manual / Validada"
+            ]
         )
 
 # =========================================================
@@ -180,9 +171,7 @@ if linea == "👥 Administración de Personal":
 # =========================================================
 elif linea == "📈 Desarrollo Organizacional":
     st.header("📈 Desarrollo Organizacional")
-    st.caption(
-        "Seguimiento del crecimiento, desempeño y fortalecimiento del talento humano."
-    )
+    st.caption("Seguimiento del crecimiento, desempeño y fortalecimiento del talento humano.")
 
     col1, col2 = st.columns(2)
 
@@ -191,7 +180,12 @@ elif linea == "📈 Desarrollo Organizacional":
             "🎓 Capacitaciones",
             "Control del avance, cobertura y cumplimiento del plan anual de capacitación.",
             "https://github.com/tuusuario/tu-repo",
-            icon="📊"
+            icon="📊",
+            detalles=[
+                "🛠️ Desarrollado en: Power BI",
+                "📊 Fuente: Registros de capacitación",
+                "📅 Frecuencia: Mensual"
+            ]
         )
 
     with col2:
@@ -199,7 +193,12 @@ elif linea == "📈 Desarrollo Organizacional":
             "😊 Clima Laboral",
             "Resultados consolidados de encuestas y análisis de clima organizacional.",
             "https://tu-link-powerbi.com",
-            icon="📊"
+            icon="📊",
+            detalles=[
+                "🛠️ Desarrollado en: Power BI",
+                "📝 Fuente: Encuestas internas",
+                "📅 Frecuencia: Trimestral"
+            ]
         )
 
 # =========================================================
@@ -207,9 +206,7 @@ elif linea == "📈 Desarrollo Organizacional":
 # =========================================================
 elif linea == "🦺 Seguridad y Salud en el Trabajo":
     st.header("🦺 Seguridad y Salud en el Trabajo")
-    st.caption(
-        "Monitoreo preventivo de riesgos, incidentes y bienestar del personal."
-    )
+    st.caption("Monitoreo preventivo de riesgos, incidentes y bienestar del personal.")
 
     col1, col2 = st.columns(2)
 
@@ -218,7 +215,12 @@ elif linea == "🦺 Seguridad y Salud en el Trabajo":
             "⚠️ Incidentes y Accidentes",
             "Registro, análisis y seguimiento de eventos de seguridad laboral.",
             "https://tu-link-powerbi.com",
-            icon="📊"
+            icon="📊",
+            detalles=[
+                "🛠️ Desarrollado en: Power BI",
+                "📊 Fuente: Registros SST",
+                "📅 Frecuencia: Mensual"
+            ]
         )
 
     with col2:
@@ -226,7 +228,12 @@ elif linea == "🦺 Seguridad y Salud en el Trabajo":
             "❤️ Bienestar y Ausentismo",
             "Indicadores de salud ocupacional y ausentismo para acciones preventivas.",
             "https://tu-link-powerbi.com",
-            icon="📊"
+            icon="📊",
+            detalles=[
+                "🛠️ Desarrollado en: Power BI",
+                "📊 Fuente: RRHH / SST",
+                "📅 Frecuencia: Mensual"
+            ]
         )
 
 # =========================================================
