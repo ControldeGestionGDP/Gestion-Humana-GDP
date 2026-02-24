@@ -1,71 +1,74 @@
 import streamlit as st
 
-# 1. CONFIGURACIÓN DE PÁGINA (Máxima limpieza visual)
-st.set_page_config(page_title="Don Pollo | Business Intelligence", layout="wide", page_icon="📊")
+# 1. CONFIGURACIÓN GENERAL
+st.set_page_config(
+    page_title="Executive BI | Grupo Don Pollo",
+    page_icon="📊",
+    layout="wide"
+)
 
-# 2. SISTEMA DE SEGURIDAD
+# 2. SISTEMA DE SEGURIDAD (Las llaves del reino)
 PASSWORDS = {
-    "nominas": "pollo123",
-    "sst": "seguridad2024",
-    "desarrollo": "talento2024"
+    "👥 Administración de Personal": "pollo123",
+    "📈 Desarrollo Organizacional": "talento2024",
+    "🦺 Seguridad y Salud en el Trabajo": "seguridad2024"
 }
 
-# 3. CSS "EXECUTIVE PREMIUM" (Diseño de alto impacto)
+# 3. ESTILO FUTURISTA REFINADO (Glassmorphism & Soft Tech)
 st.markdown("""
 <style>
     @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap');
     
     html, body, [class*="st-"] {
         font-family: 'Plus Jakarta Sans', sans-serif !important;
-        background-color: #fcfcfd;
     }
 
-    /* Contenedor Principal */
+    /* Fondo con gradiente sutil */
     .stApp {
-        background: radial-gradient(at 0% 0%, rgba(59, 130, 246, 0.03) 0, transparent 50%), 
-                    radial-gradient(at 50% 0%, rgba(16, 185, 129, 0.01) 0, transparent 50%);
+        background: radial-gradient(at 0% 0%, rgba(16, 113, 184, 0.05) 0, transparent 50%),
+                    radial-gradient(at 100% 100%, rgba(196, 87, 155, 0.05) 0, transparent 50%);
+        background-color: #f8fafc;
     }
 
-    /* HEADER CORPORATIVO */
-    .main-header {
-        background: white;
-        padding: 1.5rem 3rem;
-        border-radius: 25px;
-        border: 1px solid #f1f5f9;
-        box-shadow: 0 10px 30px -10px rgba(0,0,0,0.05);
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 3rem;
+    /* SIDEBAR TECH */
+    section[data-testid="stSidebar"] {
+        background: #0f172a !important;
+    }
+    section[data-testid="stSidebar"] * {
+        color: #f1f5f9 !important;
     }
 
-    .logo-text {
-        font-size: 1.6rem;
+    /* TARJETAS INTERACTIVAS (GLASS) */
+    .tech-card {
+        background: rgba(255, 255, 255, 0.7);
+        backdrop-filter: blur(10px);
+        border-radius: 24px;
+        padding: 2rem;
+        border: 1px solid rgba(255, 255, 255, 0.8);
+        box-shadow: 0 10px 30px rgba(0,0,0,0.03);
+        margin-bottom: 1.5rem;
+        transition: all 0.4s ease;
+    }
+    .tech-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 20px 40px rgba(16, 113, 184, 0.1);
+        border-color: #1071b8;
+    }
+
+    /* TÍTULO CORPORATIVO */
+    .main-title {
         font-weight: 800;
-        color: #0f172a;
-        letter-spacing: -0.5px;
+        background: linear-gradient(90deg, #1071b8, #2e3788);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        font-size: 2.5rem;
+        margin-bottom: 0;
     }
 
-    /* TARJETAS EJECUTIVAS */
-    .card-executive {
-        background: white;
-        padding: 2.5rem 2rem;
-        border-radius: 30px;
-        border: 1px solid #f1f5f9;
-        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-        text-align: center;
-    }
-    
-    .card-executive:hover {
-        transform: translateY(-10px);
-        box-shadow: 0 30px 50px -10px rgba(0,0,0,0.08);
-        border-color: #3b82f6;
-    }
-
-    /* BOTONES DE LUJO */
+    /* BOTONES ACCIÓN */
     div.stButton > button {
-        border-radius: 14px !important;
-        padding: 0.8rem 2rem !important;
+        border-radius: 12px !important;
+        padding: 0.6rem 1.5rem !important;
         font-weight: 600 !important;
         background: #0f172a !important;
         color: white !important;
@@ -73,114 +76,105 @@ st.markdown("""
         width: 100% !important;
         transition: 0.3s !important;
     }
-
     div.stButton > button:hover {
-        background: #3b82f6 !important;
-        box-shadow: 0 10px 20px -5px rgba(59, 130, 246, 0.4) !important;
-        transform: scale(1.02);
+        background: #1071b8 !important;
+        box-shadow: 0 8px 15px rgba(16, 113, 184, 0.3) !important;
     }
 
-    /* LISTADO DE REPORTES */
-    .report-box {
-        background: white;
-        padding: 1.5rem;
-        border-radius: 20px;
-        border-left: 6px solid #0f172a;
-        margin-bottom: 1.5rem;
-        box-shadow: 0 4px 6px -1px rgba(0,0,0,0.02);
+    /* INFO TÉCNICA EXPANDER */
+    .stExpander {
+        border: none !important;
+        background: transparent !important;
     }
 </style>
 """, unsafe_allow_html=True)
 
-# 4. LÓGICA DE NAVEGACIÓN
-if 'view' not in st.session_state: st.session_state.view = 'home'
-if 'auth' not in st.session_state: st.session_state.auth = False
+# 4. ENCABEZADO
+col_h1, col_h2 = st.columns([2,1])
+with col_h1:
+    st.markdown('<h1 class="main-title">DON POLLO | BI UNIT</h1>', unsafe_allow_html=True)
+    st.markdown("<p style='color:#64748b; font-size:1rem;'>Plataforma de Inteligencia y Control de Gestión Humana</p>", unsafe_allow_html=True)
 
-# HEADER CORPORATIVO
-st.markdown("""
-    <div class="main-header">
-        <div>
-            <span class="logo-text">DON POLLO <span style="color:#3b82f6;">BI</span></span>
-            <p style="margin:0; color:#64748b; font-size:0.8rem; font-weight:500;">SISTEMA INTEGRAL DE GESTIÓN</p>
-        </div>
-        <div style="text-align:right;">
-            <span style="color:#10b981; font-size:0.75rem; font-weight:700;">● CONEXIÓN SEGURA</span>
-        </div>
-    </div>
-""", unsafe_allow_html=True)
+# 5. MENÚ LATERAL (Limpiamos el Radio para que sea el disparador)
+st.sidebar.image("https://cdn-icons-png.flaticon.com/512/1789/1789313.png", width=80) # Icono decorativo
+st.sidebar.markdown("### PANEL DE CONTROL")
+linea = st.sidebar.radio(
+    "Seleccione Área de Gestión:",
+    ["👥 Administración de Personal", "📈 Desarrollo Organizacional", "🦺 Seguridad y Salud en el Trabajo"]
+)
 
-# =========================================================
-# VISTA 1: MENÚ DE CONTROL (HOME)
-# =========================================================
-if st.session_state.view == 'home':
-    st.markdown("<h2 style='text-align:center; color:#0f172a; font-weight:800; margin-bottom:3rem;'>Dirección Estratégica</h2>", unsafe_allow_html=True)
-    
-    col1, col2, col3 = st.columns(3, gap="large")
-    
-    with col1:
-        st.markdown('<div class="card-executive"><p style="font-size:2.5rem; margin-bottom:1rem;">💼</p><h3 style="color:#0f172a; margin-bottom:1rem;">Nóminas</h3><p style="color:#64748b; font-size:0.9rem; margin-bottom:1.5rem;">Análisis de capital humano, vacaciones y asistencia.</p></div>', unsafe_allow_html=True)
-        if st.button("Abrir División", key="btn_nom"):
-            st.session_state.view = 'nominas'; st.rerun()
+# Reset de autenticación si cambia de línea
+if 'current_line' not in st.session_state:
+    st.session_state.current_line = linea
+    st.session_state.authenticated = False
 
-    with col2:
-        st.markdown('<div class="card-executive"><p style="font-size:2.5rem; margin-bottom:1rem;">🦺</p><h3 style="color:#0f172a; margin-bottom:1rem;">Seguridad</h3><p style="color:#64748b; font-size:0.9rem; margin-bottom:1.5rem;">Indicadores de SST, accidentabilidad y normativas.</p></div>', unsafe_allow_html=True)
-        if st.button("Abrir División", key="btn_sst"):
-            st.session_state.view = 'sst'; st.rerun()
+if st.session_state.current_line != linea:
+    st.session_state.current_line = linea
+    st.session_state.authenticated = False
 
-    with col3:
-        st.markdown('<div class="card-executive"><p style="font-size:2.5rem; margin-bottom:1rem;">📈</p><h3 style="color:#0f172a; margin-bottom:1rem;">Desarrollo</h3><p style="color:#64748b; font-size:0.9rem; margin-bottom:1.5rem;">Capacitaciones, clima laboral y evaluación de talento.</p></div>', unsafe_allow_html=True)
-        if st.button("Abrir División", key="btn_dev"):
-            st.session_state.view = 'desarrollo'; st.rerun()
-
-# =========================================================
-# VISTA 2: ACCESO Y RECURSOS
-# =========================================================
+# 6. LÓGICA DE ACCESO SEGURO
+if not st.session_state.authenticated:
+    st.markdown("---")
+    _, col_login, _ = st.columns([1, 1, 1])
+    with col_login:
+        st.markdown(f"### Acceso Protegido\nÁrea: **{linea}**")
+        pw = st.text_input("Ingrese Clave Gerencial", type="password")
+        if st.button("DESBLOQUEAR INDICADORES"):
+            if pw == PASSWORDS[linea]:
+                st.session_state.authenticated = True
+                st.rerun()
+            else:
+                st.error("Credencial incorrecta")
 else:
-    area = st.session_state.view
+    # SI ESTÁ AUTENTICADO, MOSTRAR CONTENIDO
+    st.markdown(f"### 🚀 {linea}")
     
-    # Barra de navegación interna
-    c_back, c_title = st.columns([1, 5])
-    with c_back:
-        if st.button("← Volver"):
-            st.session_state.view = 'home'; st.session_state.auth = False; st.rerun()
-    with c_title:
-        st.markdown(f"<h2 style='margin:0; color:#0f172a;'>División de {area.capitalize()}</h2>", unsafe_allow_html=True)
+    # --- FUNCIÓN PARA RENDERIZAR CARDS FUTURISTAS ---
+    def render_tech_card(titulo, desc, link, tech_info):
+        st.markdown(f"""
+            <div class="tech-card">
+                <h3 style="margin-top:0; color:#0f172a; font-size:1.3rem;">{titulo}</h3>
+                <p style="color:#64748b; font-size:0.9rem;">{desc}</p>
+            </div>
+        """, unsafe_allow_html=True)
+        st.link_button(f"ABRIR DASHBOARD", link, use_container_width=True)
+        with st.expander("⚙️ Especificaciones Técnicas"):
+            for item in tech_info:
+                st.markdown(f"• {item}")
+        st.write(" ")
 
-    if not st.session_state.auth:
-        st.markdown("<br><br>", unsafe_allow_html=True)
-        _, col_login, _ = st.columns([1.2, 1, 1.2])
-        with col_login:
-            st.markdown("<div style='text-align:center; margin-bottom:1rem;'>Protección de Datos Gerenciales</div>", unsafe_allow_html=True)
-            pw = st.text_input("Ingrese su contraseña", type="password", label_visibility="collapsed")
-            if st.button("Validar Credenciales"):
-                if pw == PASSWORDS[area]:
-                    st.session_state.auth = True; st.rerun()
-                else: st.error("Acceso denegado: Clave incorrecta")
-    
-    else:
-        st.markdown("<br><p style='color:#64748b;'>Panel de reportes autorizados:</p>", unsafe_allow_html=True)
-        
-        def render_report_row(name, detail, url):
-            st.markdown(f"""
-                <div class="report-box">
-                    <p style="margin:0; font-weight:800; color:#0f172a; font-size:1.1rem;">{name}</p>
-                    <p style="margin:0; font-size:0.85rem; color:#64748b;">{detail}</p>
-                </div>
-            """, unsafe_allow_html=True)
-            st.link_button(f"Abrir Dashboard {name}", url, use_container_width=True)
-            st.markdown("<br>", unsafe_allow_html=True)
+    # CONTENIDO SEGÚN LÍNEA
+    if linea == "👥 Administración de Personal":
+        c1, c2, c3 = st.columns(3)
+        with c1:
+            render_tech_card("🏖️ Vacaciones", "Control de saldos y planificación operativa.", 
+                             "https://app.powerbi.com/links/1TThJ-ia9c?ctid=42fc96b3-c018-482d-8ada-cab81720489e&pbi_source=linkShare",
+                             ["Fuente: SAP/Planillas", "Carga: Automática", "Frecuencia: Diaria"])
+        with c2:
+            render_tech_card("⏰ Asistencia", "Análisis de puntualidad y ausentismo.", "#",
+                             ["Fuente: Reloj Biométrico", "Carga: Cloud", "Frecuencia: Tiempo Real"])
+        with c3:
+            render_tech_card("📁 Legajos Digitales", "Gestión documental centralizada.", "#",
+                             ["Plataforma: SharePoint", "Seguridad: AES-256"])
 
-        if area == "nominas":
-            render_report_row("Gestión de Vacaciones", "Saldos pendientes y programación anual por sede.", "https://app.powerbi.com/links/1TThJ-ia9c?ctid=42fc96b3-c018-482d-8ada-cab81720489e&pbi_source=linkShare10")
-            render_report_row("Descansos Médicos", "Reporte de ausentismo y licencias registradas.", "https://app.powerbi.com/links/NQfjSntCO1?ctid=42fc96b3-c018-482d-8ada-cab81720489e&pbi_source=linkShare")
-        elif area == "sst":
-            render_report_row("Incidentes y SST", "Monitoreo de accidentes y actos inseguros.", "#")
-        elif area == "desarrollo":
-            render_report_row("Plan de Capacitación", "Avance de formación y cumplimiento de metas.", "#")
+    elif linea == "📈 Desarrollo Organizacional":
+        c1, c2 = st.columns(2)
+        with c1:
+            render_tech_card("🎓 Capacitaciones", "Cumplimiento del Plan Anual.", "#",
+                             ["KPI: Horas/Hombre", "Avance: Trimestral"])
+        with c2:
+            render_tech_card("😊 Clima Laboral", "Resultados de encuestas internas.", "#",
+                             ["Metodología: eNPS", "Frecuencia: Semestral"])
 
-# FOOTER PROFESIONAL
-st.markdown("""
-    <div style="margin-top: 5rem; padding: 2rem; border-top: 1px solid #f1f5f9; text-align: center;">
-        <p style="color: #94a3b8; font-size: 0.75rem; font-weight: 600; letter-spacing: 1px;">AVÍCOLA DON POLLO S.A. • 2026</p>
-    </div>
-""", unsafe_allow_html=True)
+    elif linea == "🦺 Seguridad y Salud en el Trabajo":
+        c1, c2 = st.columns(2)
+        with c1:
+            render_tech_card("⚠️ Accidentabilidad", "Registro de incidentes y actos inseguros.", "#",
+                             ["Índice: IF / IG", "Carga: Manual Validada"])
+        with c2:
+            render_tech_card("❤️ Bienestar", "Salud ocupacional y monitoreo preventivo.", "#",
+                             ["Fuente: Tópico / SST", "Frecuencia: Mensual"])
+
+# 7. FOOTER
+st.markdown("---")
+st.markdown("<div style='text-align:center; color:#94a3b8; font-size:0.8rem;'>GERENCIA DE CONTROL DE GESTIÓN | TRANSFORMACIÓN DIGITAL DON POLLO 2026</div>", unsafe_allow_html=True)
