@@ -5,20 +5,17 @@ from datetime import datetime
 # CONFIGURACIÓN
 # =========================================================
 st.set_page_config(
-    page_title="Portal GH | Grupo Don Pollo",
+    page_title="GH Command Center",
     page_icon="🧠",
     layout="wide"
 )
 
 # =========================================================
-# ESTADO DE SESIÓN
+# ESTADO
 # =========================================================
 if "area_autorizada" not in st.session_state:
     st.session_state.area_autorizada = None
 
-# =========================================================
-# CONTRASEÑAS
-# =========================================================
 PASSWORDS = {
     "👥 Administración de Personal": "pollo123",
     "📈 Desarrollo Organizacional": "talento2024",
@@ -26,47 +23,61 @@ PASSWORDS = {
 }
 
 # =========================================================
-# ESTILO MODERNO 2026
+# ESTILO FUTURISTA
 # =========================================================
 st.markdown("""
 <style>
 
-.stApp { background-color: #f6f8fb; }
+.stApp {
+    background: radial-gradient(circle at top, #0b1220, #020617 70%);
+    color: #e5e7eb;
+}
 
-h1 { font-weight: 800; color: #0f172a; }
-h2, h3 { color: #1e293b; }
+/* TÍTULOS */
+h1 {
+    font-weight: 900;
+    letter-spacing: 1px;
+    color: #e2e8f0;
+}
 
+/* SIDEBAR */
 section[data-testid="stSidebar"] {
-    background: linear-gradient(180deg,#0f172a 0%,#1e3a8a 100%);
+    background: linear-gradient(180deg,#020617,#0f172a);
 }
 section[data-testid="stSidebar"] * {
-    color: white;
+    color: #cbd5f5;
 }
 
-.metric-card {
-    background: white;
-    padding: 18px;
-    border-radius: 14px;
-    box-shadow: 0 4px 14px rgba(0,0,0,0.06);
-}
-
+/* TARJETAS GLASS */
 .card {
-    background: white;
-    padding: 22px;
-    border-radius: 16px;
-    border: 1px solid #e5e7eb;
-    transition: all 0.18s ease;
+    background: rgba(255,255,255,0.05);
+    backdrop-filter: blur(12px);
+    border-radius: 18px;
+    padding: 24px;
+    border: 1px solid rgba(255,255,255,0.08);
+    box-shadow: 0 0 25px rgba(99,102,241,0.15);
+    transition: all 0.2s ease;
 }
 .card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 12px 28px rgba(0,0,0,0.08);
+    transform: translateY(-6px) scale(1.01);
+    box-shadow: 0 0 35px rgba(139,92,246,0.35);
 }
 
+/* PANEL KPI */
+.kpi {
+    background: linear-gradient(145deg,#020617,#0f172a);
+    padding: 20px;
+    border-radius: 16px;
+    border: 1px solid rgba(99,102,241,0.25);
+    box-shadow: 0 0 20px rgba(99,102,241,0.2);
+}
+
+/* FOOTER */
 .footer {
     text-align: center;
     color: #64748b;
+    margin-top: 50px;
     font-size: 0.85rem;
-    margin-top: 40px;
 }
 
 </style>
@@ -75,19 +86,19 @@ section[data-testid="stSidebar"] * {
 # =========================================================
 # FUNCIONES
 # =========================================================
-def validar_acceso(area):
+def validar(area):
 
     if st.session_state.area_autorizada == area:
         return True
 
-    st.warning(f"🔒 Área restringida: {area}")
+    st.warning(f"🔒 Acceso restringido: {area}")
 
-    col1, col2, col3 = st.columns([1,1,1])
+    c1, c2, c3 = st.columns([1,1,1])
 
-    with col2:
-        pwd = st.text_input("Ingrese contraseña", type="password")
+    with c2:
+        pwd = st.text_input("Contraseña", type="password")
 
-        if st.button("Acceder"):
+        if st.button("Validar acceso"):
             if pwd == PASSWORDS[area]:
                 st.session_state.area_autorizada = area
                 st.rerun()
@@ -105,7 +116,7 @@ def tarjeta(titulo, desc, link):
     st.markdown(f"""
     <a href="{link}" target="_blank" style="text-decoration:none;">
         <div class="card">
-            <h4>{titulo}</h4>
+            <h3>{titulo}</h3>
             <p>{desc}</p>
         </div>
     </a>
@@ -114,127 +125,88 @@ def tarjeta(titulo, desc, link):
 # =========================================================
 # HEADER
 # =========================================================
-st.title("🧠 Portal de Gestión Humana")
-st.caption("Plataforma interna de analítica, control y soporte a decisiones")
+st.title("🧠 GH COMMAND CENTER")
+
+st.caption("Sistema estratégico de inteligencia organizacional")
 
 # =========================================================
-# PANEL EJECUTIVO
+# PANEL DE KPIs
 # =========================================================
-st.markdown("### 📊 Estado General")
+st.markdown("### ⚡ Estado Organizacional en Tiempo Real")
 
-c1, c2, c3, c4 = st.columns(4)
+k1, k2, k3, k4 = st.columns(4)
 
-c1.metric("👥 Colaboradores", "2,845", "+12")
-c2.metric("📉 Ausentismo", "3.1%", "-0.4%")
-c3.metric("📚 Capacitaciones", "87%", "+5%")
-c4.metric("🟢 Clima Laboral", "8.6/10", "+0.3")
+k1.markdown('<div class="kpi"><b>👥 Colaboradores</b><br><h2>2,845</h2></div>', unsafe_allow_html=True)
+k2.markdown('<div class="kpi"><b>📉 Ausentismo</b><br><h2>3.1%</h2></div>', unsafe_allow_html=True)
+k3.markdown('<div class="kpi"><b>📚 Capacitaciones</b><br><h2>87%</h2></div>', unsafe_allow_html=True)
+k4.markdown('<div class="kpi"><b>😊 Clima</b><br><h2>8.6 / 10</h2></div>', unsafe_allow_html=True)
 
-st.info(f"Última actualización: {datetime.now().strftime('%d/%m/%Y %H:%M')}")
+st.info(f"Última sincronización: {datetime.now().strftime('%d/%m/%Y %H:%M')}")
 
 st.markdown("---")
 
 # =========================================================
 # SIDEBAR
 # =========================================================
-st.sidebar.markdown("## 🧭 Navegación GH")
-st.sidebar.info("Usuario: Humberto Atoche\nÁrea: Control de Gestión")
+st.sidebar.markdown("## 🧭 Módulos GH")
+st.sidebar.info("Usuario: Humberto Atoche\nNivel: Control de Gestión")
 
-area = st.sidebar.radio(
-    "Seleccionar línea",
-    list(PASSWORDS.keys())
-)
+area = st.sidebar.radio("Seleccionar área", list(PASSWORDS.keys()))
 
 # =========================================================
 # BUSCADOR
 # =========================================================
-busqueda = st.text_input("🔎 Buscar herramienta o dashboard")
+busqueda = st.text_input("🔎 Buscar módulo")
 
 # =========================================================
-# CONTENIDO POR ÁREA
+# CONTENIDO
 # =========================================================
-if validar_acceso(area):
+if validar(area):
 
-    # -----------------------------------------------------
-    # ADMINISTRACIÓN
-    # -----------------------------------------------------
     if area == "👥 Administración de Personal":
 
         st.header("👥 Administración de Personal")
 
-        col1, col2, col3 = st.columns(3)
+        c1, c2, c3 = st.columns(3)
 
-        with col1:
-            tarjeta(
-                "🏖️ Gestión de Vacaciones",
-                "Control de saldos, programación y alertas.",
-                "https://app.powerbi.com"
-            )
+        with c1:
+            tarjeta("🏖️ Vacaciones", "Control integral de descansos.", "https://app.powerbi.com")
 
-        with col2:
-            tarjeta(
-                "⏰ Control de Asistencia",
-                "Puntualidad, tardanzas y ausencias.",
-                "https://app.powerbi.com"
-            )
+        with c2:
+            tarjeta("⏰ Asistencia", "Monitoreo de puntualidad.", "https://app.powerbi.com")
 
-        with col3:
-            tarjeta(
-                "📁 Legajos Digitales",
-                "Repositorio documental del personal.",
-                "https://sharepoint.com"
-            )
+        with c3:
+            tarjeta("📁 Legajos", "Gestión documental.", "https://sharepoint.com")
 
-    # -----------------------------------------------------
-    # DESARROLLO
-    # -----------------------------------------------------
     elif area == "📈 Desarrollo Organizacional":
 
         st.header("📈 Desarrollo Organizacional")
 
-        col1, col2 = st.columns(2)
+        c1, c2 = st.columns(2)
 
-        with col1:
-            tarjeta(
-                "🎓 Plan de Capacitaciones",
-                "Seguimiento del plan anual.",
-                "https://app.powerbi.com"
-            )
+        with c1:
+            tarjeta("🎓 Capacitaciones", "Seguimiento del plan anual.", "https://app.powerbi.com")
 
-        with col2:
-            tarjeta(
-                "😊 Clima Organizacional",
-                "Resultados de encuestas internas.",
-                "https://app.powerbi.com"
-            )
+        with c2:
+            tarjeta("😊 Clima", "Análisis de percepción organizacional.", "https://app.powerbi.com")
 
-    # -----------------------------------------------------
-    # SST
-    # -----------------------------------------------------
     elif area == "🦺 Seguridad y Salud en el Trabajo":
 
-        st.header("🦺 Seguridad y Salud en el Trabajo")
+        st.header("🦺 Seguridad y Salud")
 
-        col1, col2 = st.columns(2)
+        c1, c2 = st.columns(2)
 
-        with col1:
-            tarjeta(
-                "⚠️ Incidentes y Accidentes",
-                "Registro y análisis de eventos.",
-                "https://app.powerbi.com"
-            )
+        with c1:
+            tarjeta("⚠️ Incidentes", "Registro y análisis.", "https://app.powerbi.com")
 
-        with col2:
-            tarjeta(
-                "❤️ Bienestar y Ausentismo",
-                "Indicadores de salud ocupacional.",
-                "https://app.powerbi.com"
-            )
+        with c2:
+            tarjeta("❤️ Bienestar", "Indicadores de salud.", "https://app.powerbi.com")
 
 # =========================================================
 # FOOTER
 # =========================================================
 st.markdown("""
 <div class="footer">
-Grupo Don Pollo · Gestión Humana · Plataforma Interna 2026
+GH Command Center · Plataforma Estratégica 2026
 </div>
 """, unsafe_allow_html=True)
