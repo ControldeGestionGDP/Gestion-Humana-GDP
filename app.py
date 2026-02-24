@@ -1,75 +1,68 @@
 import streamlit as st
 
 # ===============================
-# CONFIGURACIÓN GENERAL
+# CONFIGURACIÓN
 # ===============================
 st.set_page_config(
     page_title="Portal GH 2026",
-    page_icon="🧬",
+    page_icon="🧠",
     layout="wide"
 )
 
 # ===============================
-# ESTILO FUTURISTA
+# ESTILOS PREMIUM CLAROS
 # ===============================
 st.markdown("""
 <style>
 
 .stApp {
-    background: linear-gradient(135deg, #050505, #0d1117);
-    color: #E6EDF3;
+    background: linear-gradient(180deg,#f8fafc,#eef2ff);
     font-family: 'Segoe UI', sans-serif;
 }
 
 /* Título principal */
 .main-title {
     text-align: center;
-    font-size: 44px;
+    font-size: 42px;
     font-weight: 800;
-    color: #58A6FF;
-    text-shadow: 0 0 25px #58A6FF;
+    color: #1e3a8a;
 }
 
 /* Tarjetas módulos */
 .module-card {
-    background: linear-gradient(145deg, #0d1117, #161b22);
+    background: white;
     padding: 35px;
-    border-radius: 18px;
-    border: 1px solid #30363d;
+    border-radius: 20px;
+    border: 1px solid #e5e7eb;
     text-align: center;
-    box-shadow: 0 0 20px rgba(88,166,255,0.25);
-    transition: 0.3s;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+    transition: 0.25s;
 }
 
 .module-card:hover {
     transform: translateY(-6px);
-    box-shadow: 0 0 35px rgba(88,166,255,0.55);
+    box-shadow: 0 20px 45px rgba(37,99,235,0.18);
 }
 
 .area-title {
-    font-size: 26px;
-    font-weight: bold;
-    color: #58A6FF;
-}
-
-.area-desc {
-    font-size: 15px;
-    color: #c9d1d9;
+    font-size: 22px;
+    font-weight: 700;
+    color: #1e3a8a;
 }
 
 .panel-box {
-    background: #0d1117;
+    background: white;
     padding: 30px;
-    border-radius: 18px;
-    border: 1px solid #30363d;
-    box-shadow: 0 0 30px rgba(88,166,255,0.25);
+    border-radius: 20px;
+    border: 1px solid #e5e7eb;
+    box-shadow: 0 12px 35px rgba(0,0,0,0.08);
 }
 
 </style>
 """, unsafe_allow_html=True)
 
 # ===============================
-# CLAVES POR ÁREA
+# ÁREAS Y CLAVES
 # ===============================
 AREAS = {
     "Reclutamiento": "recluta2026",
@@ -90,24 +83,20 @@ if "autenticado" not in st.session_state:
     st.session_state.autenticado = False
 
 
-# ===============================
-# FUNCIÓN VOLVER
-# ===============================
 def volver():
     st.session_state.area_activa = None
     st.session_state.autenticado = False
 
 
 # ===============================
-# PANTALLA PRINCIPAL — MÓDULOS
+# PORTAL PRINCIPAL
 # ===============================
 if st.session_state.area_activa is None:
 
     st.markdown('<p class="main-title">Portal Gestión Humana 2026</p>', unsafe_allow_html=True)
-    st.markdown("### Plataforma interna — Acceso por módulos")
+    st.markdown("### Plataforma modular interna")
 
     col1, col2, col3 = st.columns(3)
-
     modulos = list(AREAS.keys())
 
     for i, area in enumerate(modulos):
@@ -117,17 +106,17 @@ if st.session_state.area_activa is None:
             st.markdown(f"""
             <div class="module-card">
                 <div class="area-title">{area}</div>
-                <div class="area-desc">Acceso seguro al módulo</div>
+                <p>Acceso al módulo estratégico</p>
             </div>
             """, unsafe_allow_html=True)
 
-            if st.button(f"INGRESAR — {area}", use_container_width=True):
+            if st.button(f"Ingresar a {area}", use_container_width=True):
                 st.session_state.area_activa = area
                 st.rerun()
 
 
 # ===============================
-# PANTALLA DE CONTRASEÑA
+# PANTALLA CONTRASEÑA
 # ===============================
 elif not st.session_state.autenticado:
 
@@ -154,7 +143,7 @@ elif not st.session_state.autenticado:
 
 
 # ===============================
-# PANEL DEL ÁREA
+# PANEL DEL MÓDULO
 # ===============================
 else:
 
@@ -168,35 +157,27 @@ else:
 
     st.markdown('<div class="panel-box">', unsafe_allow_html=True)
 
-    # ========= CONTENIDO DEMO =========
-
     if area == "Reclutamiento":
-        st.subheader("Procesos activos")
         st.metric("Convocatorias abiertas", 12, "+2")
         st.metric("Postulantes este mes", 348, "+15%")
 
     elif area == "Bienestar":
-        st.subheader("Clima laboral")
         st.metric("Satisfacción general", "88%", "+3%")
         st.metric("Participación en actividades", "72%", "+5%")
 
     elif area == "Capacitación":
-        st.subheader("Formación")
         st.metric("Cursos activos", 9)
-        st.metric("Horas promedio", 18)
+        st.metric("Horas promedio por colaborador", 18)
 
     elif area == "Administración":
-        st.subheader("Gestión interna")
         st.metric("Documentos emitidos", 124)
         st.metric("Trámites pendientes", 7)
 
     elif area == "Indicadores":
-        st.subheader("KPIs GH")
         st.metric("Rotación anual", "6.2%", "-0.8%")
         st.metric("Ausentismo", "2.1%", "-0.3%")
 
     elif area == "Seguridad y Salud":
-        st.subheader("SST")
         st.metric("Accidentes reportados", 1)
         st.metric("Días sin accidentes", 84)
 
