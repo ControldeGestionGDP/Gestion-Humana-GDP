@@ -1,135 +1,197 @@
 import streamlit as st
 
-# Configuración de página
-st.set_page_config(page_title="GH Hub | Don Pollo", layout="wide", page_icon="🌐")
+# Configuración de página con estilo Wide
+st.set_page_config(page_title="Executive Hub | Don Pollo", layout="wide", page_icon="📈")
 
 # =========================================================
-# EL "WOW FACTOR": CSS PERSONALIZADO (BLANCO FUTURISTA)
+# DISEÑO DE ALTO IMPACTO (CSS AVANZADO)
 # =========================================================
-st.markdown("""
+st.markdown(f"""
 <style>
-    /* Fondo con gradiente sutil y animado */
-    .stApp {
-        background: radial-gradient(circle at top right, #f0f4f8, #e5eef5, #ffffff);
-        font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-    }
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700;800&display=swap');
 
-    /* Estilo de los "Círculos de Datos" (Cards Circulares) */
-    .dashboard-circle {
-        width: 220px;
-        height: 220px;
-        background: rgba(255, 255, 255, 0.7);
+    * {{ font-family: 'Inter', sans-serif; }}
+
+    /* Fondo de alto contraste sofisticado */
+    .stApp {{
+        background: radial-gradient(circle at 50% 50%, #ffffff 0%, #f0f2f6 100%);
+    }}
+
+    /* Header Estilo Glassmorphism Pro */
+    .header-container {{
+        background: rgba(255, 255, 255, 0.8);
+        backdrop-filter: blur(15px);
+        border-radius: 30px;
+        padding: 30px;
+        border: 1px solid rgba(46, 55, 136, 0.1);
+        box-shadow: 0 20px 50px rgba(0,0,0,0.05);
+        text-align: center;
+        margin-bottom: 40px;
+    }}
+
+    /* EL ORBE (Círculo Futurista) */
+    .orbe-nav {{
+        width: 240px;
+        height: 240px;
         border-radius: 50%;
         display: flex;
         flex-direction: column;
         justify-content: center;
         align-items: center;
         text-align: center;
-        padding: 20px;
-        border: 2px solid rgba(16, 113, 184, 0.1);
-        box-shadow: 0 10px 30px rgba(0,0,0,0.05), inset 0 0 15px rgba(16, 113, 184, 0.05);
-        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        cursor: pointer;
-        text-decoration: none !important;
-        margin: 0 auto;
-    }
-
-    .dashboard-circle:hover {
-        transform: scale(1.1) rotate(5deg);
+        margin: 20px auto;
+        position: relative;
         background: white;
-        border: 2px solid #c4579b;
-        box-shadow: 0 20px 40px rgba(196, 87, 155, 0.2);
-    }
+        border: 2px solid #1071b8;
+        box-shadow: 0 10px 30px rgba(16, 113, 184, 0.1);
+        transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+        cursor: pointer;
+        overflow: hidden;
+    }}
 
-    .circle-icon { font-size: 45px; margin-bottom: 10px; }
-    .circle-title { color: #2e3788; font-weight: 800; font-size: 16px; margin: 0; }
-    .circle-value { color: #1071b8; font-size: 24px; font-weight: 300; }
+    .orbe-nav:hover {{
+        transform: translateY(-15px) scale(1.05);
+        border-color: #c4579b;
+        box-shadow: 0 30px 60px rgba(196, 87, 155, 0.3);
+    }}
 
-    /* Header Flotante */
-    .main-header {
-        background: rgba(255, 255, 255, 0.4);
-        backdrop-filter: blur(10px);
-        padding: 20px;
-        border-radius: 20px;
-        border: 1px solid rgba(255,255,255,0.5);
-        margin-bottom: 40px;
-        text-align: center;
-    }
+    /* Efecto de anillo de luz */
+    .orbe-nav::after {{
+        content: '';
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
+        border: 2px solid transparent;
+        border-top-color: #c4579b;
+        border-bottom-color: #2e3788;
+        animation: rotate 4s linear infinite;
+        opacity: 0;
+        transition: 0.5s;
+    }}
 
-    /* Quitar decoraciones de Streamlit */
-    div[data-testid="stMetricValue"] > div { font-size: 28px !important; color: #1071b8 !important; }
+    .orbe-nav:hover::after {{ opacity: 1; }}
+
+    @keyframes rotate {{
+        from {{ transform: rotate(0deg); }}
+        to {{ transform: rotate(360deg); }}
+    }}
+
+    .icon-style {{ font-size: 50px; margin-bottom: 10px; }}
+    .title-style {{ color: #2e3788; font-weight: 800; font-size: 18px; letter-spacing: 1px; }}
+    .value-style {{ color: #1071b8; font-size: 26px; font-weight: 300; }}
+
+    /* Botones de acción */
+    .btn-portal {{
+        background: linear-gradient(135deg, #1071b8 0%, #2e3788 100%);
+        color: white !important;
+        padding: 12px 25px;
+        border-radius: 50px;
+        text-decoration: none;
+        font-weight: 600;
+        display: inline-block;
+        margin-top: 15px;
+        transition: 0.3s;
+        box-shadow: 0 10px 20px rgba(46, 55, 136, 0.3);
+    }}
+    .btn-portal:hover {{
+        background: #c4579b;
+        box-shadow: 0 10px 20px rgba(196, 87, 155, 0.4);
+        transform: scale(1.05);
+    }}
 </style>
 """, unsafe_allow_html=True)
 
 # =========================================================
-# HEADER ESTRATÉGICO
+# CONTENIDO PRINCIPAL
 # =========================================================
+
+# Header
 st.markdown("""
-    <div class="main-header">
-        <h1 style='margin:0; color:#2e3788; letter-spacing:-1px;'>Intelligence Hub <span style='color:#c4579b;'>Don Pollo</span></h1>
-        <p style='color:#6b7280; font-weight:400;'>Arquitectura de Datos para Decisiones de Alta Gerencia</p>
+    <div class="header-container">
+        <h1 style='margin:0; color:#2e3788; font-size: 3rem;'>Control de Gestión <span style='color:#c4579b;'>360°</span></h1>
+        <p style='color:#1071b8; font-size: 1.2rem; font-weight: 300;'>Ecosistema de Analítica Avanzada - Grupo Don Pollo</p>
     </div>
 """, unsafe_allow_html=True)
 
-# =========================================================
-# MÉTRICAS EN TIEMPO REAL (Línea de Vida)
-# =========================================================
-m1, m2, m3, m4 = st.columns(4)
-with m1: st.metric("Talento Activo", "1,420", "+2.4%")
-with m2: st.metric("Eficacia Formación", "92%", "Core")
-with m3: st.metric("Índice Clima", "84/100", "Top")
-with m4: st.metric("Siniestralidad", "0.02%", "-0.1%")
+# Tabs con estilo limpio
+tab_admin, tab_desarrollo, tab_sst = st.tabs(["📊 ADMINISTRACIÓN", "🚀 DESARROLLO", "🛡️ SEGURIDAD"])
 
-st.write("---")
+def crear_orbe(id_key, icono, titulo, dato, url):
+    """Genera el orbe interactivo con link directo"""
+    st.markdown(f"""
+        <div class="orbe-nav">
+            <div class="icon-style">{icono}</div>
+            <div class="title-style">{titulo}</div>
+            <div class="value-style">{dato}</div>
+            <a href="{url}" target="_blank" class="btn-portal">Abrir Dashboard</a>
+        </div>
+    """, unsafe_allow_html=True)
 
-# =========================================================
-# NAVEGACIÓN POR DIMENSIONES (Círculos Interactivos)
-# =========================================================
-tabs = st.tabs(["🚀 Operaciones Humana", "💎 Desarrollo & Talento", "🛡️ Salud & Futuro"])
-
-def render_circle(icon, title, value, link):
-    return f"""
-        <a href="{link}" target="_blank" style="text-decoration: none;">
-            <div class="dashboard-circle">
-                <div class="circle-icon">{icon}</div>
-                <p class="circle-title">{title}</p>
-                <div class="circle-value">{value}</div>
-                <p style="font-size:10px; color:#aaa; margin-top:5px;">CLICK PARA ABRIR</p>
-            </div>
-        </a>
-    """
-
-with tabs[0]:
+# --- TAB ADMINISTRACIÓN ---
+with tab_admin:
     st.markdown("<br>", unsafe_allow_html=True)
-    c1, c2, c3 = st.columns(3)
-    with c1: st.markdown(render_circle("🏖️", "VACACIONES", "94% Planificado", "#"), unsafe_allow_html=True)
-    with c2: st.markdown(render_circle("⏰", "ASISTENCIA", "98.2% Logrado", "#"), unsafe_allow_html=True)
-    with c3: st.markdown(render_circle("📄", "LEGAJOS", "Digitalizado", "#"), unsafe_allow_html=True)
+    col1, col2, col3 = st.columns(3)
+    
+    with col1:
+        crear_orbe(
+            "vac", "🏖️", "VACACIONES", "Disponibilidad 92%", 
+            "https://app.powerbi.com/links/1TThJ-ia9c?ctid=42fc96b3-c018-482d-8ada-cab81720489e&pbi_source=linkShare10"
+        )
+    
+    with col2:
+        crear_orbe(
+            "dm", "🚑", "DESCANSOS MÉDICOS", "Monitor de Salud", 
+            "https://app.powerbi.com/links/NQfjSntCO1?ctid=42fc96b3-c018-482d-8ada-cab81720489e&pbi_source=linkShare"
+        )
+        
+    with col3:
+        crear_orbe(
+            "asis", "⏰", "ASISTENCIA", "98% Puntualidad", 
+            "#"
+        )
 
-with tabs[1]:
+# --- TAB DESARROLLO ---
+with tab_desarrollo:
     st.markdown("<br>", unsafe_allow_html=True)
-    c1, c2 = st.columns(2)
-    with c1: st.markdown(render_circle("🎓", "CAPACITACIÓN", "8.2 hrs/mes", "#"), unsafe_allow_html=True)
-    with c2: st.markdown(render_circle("😊", "CLIMA", "Nivel A+", "#"), unsafe_allow_html=True)
+    col1, col2 = st.columns(2)
+    with col1:
+        crear_orbe("cap", "🎓", "CAPACITACIÓN", "Meta: 100%", "#")
+    with col2:
+        crear_orbe("clima", "😊", "CLIMA LABORAL", "Score: 4.5/5", "#")
 
-with tabs[2]:
+# --- TAB SEGURIDAD ---
+with tab_sst:
     st.markdown("<br>", unsafe_allow_html=True)
-    c1, c2 = st.columns(2)
-    with c1: st.markdown(render_circle("⚠️", "RIESGOS", "Nivel Bajo", "#"), unsafe_allow_html=True)
-    with c2: st.markdown(render_circle("❤️", "BIENESTAR", "15 Actividades", "#"), unsafe_allow_html=True)
+    col1, col2 = st.columns(2)
+    with col1:
+        crear_orbe("inc", "⚠️", "INCIDENTES", "Tasa: 0.0%", "#")
+    with col2:
+        crear_orbe("bien", "❤️", "BIENESTAR", "Activo", "#")
 
 # =========================================================
-# SECCIÓN DE ANÁLISIS PREDICTIVO (El toque extra)
+# PANEL DE INSIGHTS (INTELIGENCIA ARTIFICIAL)
 # =========================================================
 st.markdown("<br><br>", unsafe_allow_html=True)
-with st.expander("🔍 Ver Proyecciones Inteligentes (IA)"):
-    col_a, col_b = st.columns(2)
-    col_a.info("**Predicción de Rotación:** Se estima una reducción del 5% para el próximo trimestre basada en las últimas encuestas de clima.")
-    col_b.warning("**Alerta de Vacaciones:** 3 áreas críticas superan el 20% de saldo acumulado. Se sugiere programar antes de Junio.")
+with st.container():
+    st.markdown(f"""
+        <div style="background: linear-gradient(90deg, #2e3788 0%, #1071b8 100%); padding: 30px; border-radius: 20px; color: white;">
+            <h3 style="margin:0;">🔍 Insights Estratégicos (IA Predictiva)</h3>
+            <p style="opacity:0.8;">Análisis generado automáticamente para la toma de decisiones.</p>
+            <div style="display: flex; gap: 20px; margin-top: 15px;">
+                <div style="background: rgba(255,255,255,0.1); padding: 15px; border-radius: 10px; flex: 1;">
+                    <strong>Tendencia Vacaciones:</strong> El 15% del personal de planta tiene saldos > 30 días. Riesgo de acumulación legal alto.
+                </div>
+                <div style="background: rgba(255,255,255,0.1); padding: 15px; border-radius: 10px; flex: 1;">
+                    <strong>Salud Laboral:</strong> Los descansos médicos por temas respiratorios subieron 2% este mes. Sugerido: Reforzar EPP.
+                </div>
+            </div>
+        </div>
+    """, unsafe_allow_html=True)
 
-# Footer
+# Footer con logo o texto corporativo
 st.markdown("""
-    <div style="text-align:center; padding:50px; color:#bdc3c7; font-size:12px;">
-        GESTIÓN HUMANA | GRUPO DON POLLO | 2026 DIGITAL ECOSYSTEM
+    <div style="text-align: center; margin-top: 60px; color: #bdc3c7; font-weight: 300;">
+        GRUPO DON POLLO | GERENCIA DE CONTROL DE GESTIÓN | v2.0 - 2026
     </div>
 """, unsafe_allow_html=True)
