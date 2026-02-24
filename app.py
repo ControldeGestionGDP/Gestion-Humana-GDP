@@ -1,200 +1,181 @@
 import streamlit as st
 
-# 1. CONFIGURACIÓN DE PÁGINA
-st.set_page_config(page_title="Gestión Corporativa | Don Pollo", layout="wide", page_icon="🐔")
+# 1. CONFIGURACIÓN
+st.set_page_config(page_title="Executive Hub | Don Pollo", layout="wide", page_icon="📈")
 
 # 2. CREDENCIALES
-PASSWORDS = {
-    "nominas": "pollo123",
-    "sst": "seguridad2024",
-    "desarrollo": "talento2024"
-}
+PASSWORDS = {"nominas": "pollo123", "sst": "seguridad2024", "desarrollo": "talento2024"}
 
-# 3. CSS INDUSTRIAL (Sólido, Limpio y Corporativo)
+# 3. CSS "AVÍCOLA FUTURISTA" (Elegante y Fluido)
 st.markdown("""
 <style>
-    @import url('https://fonts.googleapis.com/css2?family=Barlow:wght@400;600;800&family=Inter:wght@400;700&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;800&family=Outfit:wght@300;600&display=swap');
     
     html, body, [class*="st-"] {
-        font-family: 'Inter', sans-serif !important;
+        font-family: 'Poppins', sans-serif !important;
     }
 
-    /* Fondo gris muy tenue, estilo oficina/planta */
     .stApp {
-        background-color: #f4f7f9;
+        background: radial-gradient(circle at top right, #f8fafc, #e2e8f0);
     }
 
-    /* HEADER TIPO LOGO CORPORATIVO */
-    .header-box {
-        background-color: #ffffff;
-        padding: 1.5rem 2rem;
-        border-bottom: 4px solid #1071b8; /* El azul de Don Pollo */
-        margin-bottom: 2rem;
+    /* HEADER ESTILO GLASS-TECH */
+    .header-tech {
+        background: rgba(255, 255, 255, 0.4);
+        backdrop-filter: blur(15px);
+        border-radius: 24px;
+        padding: 1.5rem 2.5rem;
+        border: 1px solid rgba(255, 255, 255, 0.6);
+        box-shadow: 0 10px 30px rgba(0,0,0,0.04);
         display: flex;
         justify-content: space-between;
         align-items: center;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-    }
-    
-    .brand-title {
-        font-family: 'Barlow', sans-serif;
-        font-weight: 800;
-        font-size: 2rem;
-        color: #1a365d;
-        margin: 0;
-        display: flex;
-        align-items: center;
+        margin-bottom: 3rem;
     }
 
-    /* TARJETAS DE ÁREA (Sólidas y Profesionales) */
-    .area-card {
-        background: #ffffff;
-        padding: 1.5rem;
-        border-radius: 8px;
-        border: 1px solid #d1d5db;
-        transition: 0.3s;
-        height: 100%;
-    }
-    
-    .area-card:hover {
-        border-color: #1071b8;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    .brand-text {
+        font-family: 'Outfit', sans-serif;
+        font-weight: 600;
+        font-size: 1.8rem;
+        background: linear-gradient(135deg, #0f172a 0%, #3b82f6 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        letter-spacing: -0.5px;
     }
 
-    /* BOTONES ACCIÓN DIRECTA */
+    /* TARJETAS FLUIDAS (GLASSMORPHISM) */
+    .tech-card {
+        background: rgba(255, 255, 255, 0.6);
+        backdrop-filter: blur(12px);
+        border-radius: 30px;
+        padding: 2rem;
+        border: 1px solid rgba(255, 255, 255, 0.7);
+        box-shadow: 0 20px 40px rgba(0,0,0,0.05);
+        transition: all 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
+        text-align: center;
+    }
+    
+    .tech-card:hover {
+        transform: translateY(-10px) scale(1.02);
+        background: rgba(255, 255, 255, 0.9);
+        border-color: #3b82f6;
+        box-shadow: 0 30px 60px rgba(59, 130, 246, 0.15);
+    }
+
+    /* BOTONES MODERNOS REDONDEADOS */
     div.stButton > button {
-        border-radius: 4px !important;
-        padding: 0.5rem 1rem !important;
-        font-weight: 700 !important;
-        background-color: #1071b8 !important;
+        border-radius: 50px !important;
+        padding: 0.8rem 2rem !important;
+        font-weight: 600 !important;
+        background: linear-gradient(135deg, #1e293b 0%, #334155 100%) !important;
         color: white !important;
         border: none !important;
-        width: 100% !important;
+        transition: all 0.4s ease !important;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1) !important;
         text-transform: uppercase;
-        letter-spacing: 1px;
+        font-size: 0.8rem !important;
+        letter-spacing: 1px !important;
     }
 
     div.stButton > button:hover {
-        background-color: #0d5a94 !important;
-        box-shadow: 0 4px 8px rgba(0,0,0,0.2) !important;
+        transform: scale(1.05) !important;
+        background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%) !important;
+        box-shadow: 0 10px 20px rgba(59, 130, 246, 0.4) !important;
     }
 
-    /* LISTA DE REPORTES */
-    .report-container {
-        background: #ffffff;
-        padding: 1rem;
-        border-radius: 6px;
-        border: 1px solid #e5e7eb;
-        margin-bottom: 0.5rem;
+    /* INDICADOR DE REPORTE */
+    .report-pill {
+        background: white;
+        padding: 1rem 1.5rem;
+        border-radius: 20px;
+        border-left: 6px solid #3b82f6;
+        margin-bottom: 1rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.02);
     }
 </style>
 """, unsafe_allow_html=True)
 
-# 4. LÓGICA DE NAVEGACIÓN
+# 4. NAVEGACIÓN
 if 'view' not in st.session_state: st.session_state.view = 'home'
 if 'auth' not in st.session_state: st.session_state.auth = False
 
-# HEADER CORPORATIVO (Aterrizado)
+# HEADER CORPORATIVO TECH-ELEGANT
 st.markdown("""
-    <div class="header-box">
+    <div class="header-tech">
         <div>
-            <h1 class="brand-title">🐔 DON POLLO <span style="color:#1071b8; margin-left:10px; font-weight:400;">| BI</span></h1>
-            <p style="margin:0; color:#64748b; font-size:0.85rem; font-weight:600;">PORTAL DE GESTIÓN OPERATIVA</p>
+            <div class="brand-text">DON POLLO <span style="font-weight:300; opacity:0.6;">CORE</span></div>
+            <div style="font-size:0.7rem; color:#64748b; letter-spacing:3px; margin-top:5px;">INTELIGENCIA OPERATIVA</div>
         </div>
-        <div style="text-align: right;">
-            <p style="margin:0; font-size:0.8rem; color:#1e293b; font-weight:700;">AVÍCOLA DON POLLO S.A.</p>
-            <p style="margin:0; font-size:0.75rem; color:#64748b;">Actualizado: 2026</p>
+        <div style="text-align:right;">
+            <div style="background:#e0f2fe; color:#0369a1; padding:4px 12px; border-radius:20px; font-size:0.7rem; font-weight:700;">
+                SISTEMA ACTIVO v2.4
+            </div>
         </div>
     </div>
 """, unsafe_allow_html=True)
 
 # =========================================================
-# VISTA 1: HOME (ÁREAS CLARAS)
+# VISTA 1: HOME
 # =========================================================
 if st.session_state.view == 'home':
-    st.markdown("<h3 style='color:#1a365d; margin-bottom:1.5rem;'>Módulos de Control</h3>", unsafe_allow_html=True)
+    st.markdown("<h4 style='text-align:center; color:#1e293b; font-weight:300; margin-bottom:2rem;'>Seleccione una división estratégica</h4>", unsafe_allow_html=True)
     
     col1, col2, col3 = st.columns(3)
     
     with col1:
-        st.markdown("""
-            <div class="area-card">
-                <h4 style="color:#1071b8; margin-top:0;">NÓMINAS Y PERSONAL</h4>
-                <p style="color:#4b5563; font-size:0.9rem;">Control de asistencia, vacaciones y planillas del personal de planta y campo.</p>
-            </div>
-        """, unsafe_allow_html=True)
-        if st.button("ENTRAR A NÓMINAS", key="btn_nom"):
+        st.markdown('<div class="tech-card"><h2>💼</h2><h3 style="color:#0f172a;">Nóminas</h3><p style="color:#64748b; font-size:0.85rem;">Gestión de capital humano y flujos de asistencia.</p></div>', unsafe_allow_html=True)
+        if st.button("ACCEDER NODO", key="btn_nom"):
             st.session_state.view = 'nominas'; st.rerun()
 
     with col2:
-        st.markdown("""
-            <div class="area-card">
-                <h4 style="color:#1071b8; margin-top:0;">SEGURIDAD (SST)</h4>
-                <p style="color:#4b5563; font-size:0.9rem;">Monitoreo de accidentes, seguridad industrial y cumplimiento normativo.</p>
-            </div>
-        """, unsafe_allow_html=True)
-        if st.button("ENTRAR A SEGURIDAD", key="btn_sst"):
+        st.markdown('<div class="tech-card"><h2>🦺</h2><h3 style="color:#0f172a;">Seguridad</h3><p style="color:#64748b; font-size:0.85rem;">Monitoreo de riesgos y cumplimiento industrial.</p></div>', unsafe_allow_html=True)
+        if st.button("ACCEDER NODO", key="btn_sst"):
             st.session_state.view = 'sst'; st.rerun()
 
     with col3:
-        st.markdown("""
-            <div class="area-card">
-                <h4 style="color:#1071b8; margin-top:0;">DESARROLLO HUMANO</h4>
-                <p style="color:#4b5563; font-size:0.9rem;">Indicadores de desempeño, clima laboral y planes de capacitación.</p>
-            </div>
-        """, unsafe_allow_html=True)
-        if st.button("ENTRAR A DESARROLLO", key="btn_dev"):
+        st.markdown('<div class="tech-card"><h2>📈</h2><h3 style="color:#0f172a;">Desarrollo</h3><p style="color:#64748b; font-size:0.85rem;">Indicadores de crecimiento y KPIs de talento.</p></div>', unsafe_allow_html=True)
+        if st.button("ACCEDER NODO", key="btn_dev"):
             st.session_state.view = 'desarrollo'; st.rerun()
 
 # =========================================================
-# VISTA 2: ACCESO Y REPORTES
+# VISTA 2: REPORTES
 # =========================================================
 else:
     area = st.session_state.view
-    
-    c1, c2 = st.columns([1, 4])
-    with c1:
+    c_back, c_title = st.columns([1, 4])
+    with c_back:
         if st.button("⬅ VOLVER"):
             st.session_state.view = 'home'; st.session_state.auth = False; st.rerun()
-    with c2:
-        st.subheader(f"Panel: {area.upper()}")
+    with c_title:
+        st.markdown(f"<h3 style='margin:0;'>División {area.capitalize()}</h3>", unsafe_allow_html=True)
 
     if not st.session_state.auth:
-        st.markdown("---")
-        _, col_log, _ = st.columns([1, 1, 1])
-        with col_log:
-            st.info("🔐 Ingrese clave de seguridad")
-            pw = st.text_input("Contraseña", type="password")
-            if st.button("VALIDAR ACCESO"):
+        st.markdown("<br><br>", unsafe_allow_html=True)
+        _, col_login, _ = st.columns([1, 0.8, 1])
+        with col_login:
+            pw = st.text_input("PASSWORD GERENCIAL", type="password")
+            if st.button("DESBLOQUEAR ACCESO", use_container_width=True):
                 if pw == PASSWORDS[area]:
                     st.session_state.auth = True; st.rerun()
-                else: st.error("Clave incorrecta")
-    
+                else: st.error("Clave Incorrecta")
     else:
-        st.markdown("---")
-        st.markdown("#### Reportes Disponibles")
-        
-        def display_report(name, detail, url):
-            st.markdown(f"""
-                <div class="report-container">
-                    <p style="margin:0; font-weight:700; color:#1a365d;">{name}</p>
-                    <p style="margin:0; font-size:0.85rem; color:#6b7280;">{detail}</p>
-                </div>
-            """, unsafe_allow_html=True)
-            st.link_button(f"VER REPORTE DE {name.upper()}", url, use_container_width=True)
+        st.markdown("<br>", unsafe_allow_html=True)
+        def render_report(title, link):
+            st.markdown(f"""<div class="report-pill">
+                <span style="font-weight:600; color:#1e293b;">{title}</span>
+                <span style="color:#3b82f6; font-size:0.7rem;">READY TO VIEW</span>
+            </div>""", unsafe_allow_html=True)
+            st.link_button(f"ABRIR {title.upper()}", link, use_container_width=True)
             st.write("")
 
         if area == "nominas":
-            display_report("Vacaciones", "Reporte consolidado de días pendientes y programados.", "https://app.powerbi.com/links/1TThJ-ia9c?ctid=42fc96b3-c018-482d-8ada-cab81720489e&pbi_source=linkShare10")
-            display_report("Descansos Médicos", "Seguimiento de ausentismo y licencias médicas.", "https://app.powerbi.com/links/NQfjSntCO1?ctid=42fc96b3-c018-482d-8ada-cab81720489e&pbi_source=linkShare")
+            render_report("Control Vacaciones", "https://app.powerbi.com/...")
+            render_report("Descansos Médicos", "https://app.powerbi.com/...")
         elif area == "sst":
-            display_report("Accidentabilidad", "Kpis mensuales de incidentes en planta.", "#")
-        elif area == "desarrollo":
-            display_report("Capacitación", "Avance de horas hombre entrenadas.", "#")
+            render_report("Reporte Accidentabilidad", "#")
 
 # FOOTER
-st.markdown("""
-    <div style="margin-top: 5rem; text-align: center; border-top: 1px solid #d1d5db; padding: 20px;">
-        <p style="color: #6b7280; font-size: 0.8rem; font-weight: 600;">© 2026 AVÍCOLA DON POLLO S.A. - SISTEMAS DE INFORMACIÓN</p>
-    </div>
-""", unsafe_allow_html=True)
+st.markdown("<div style='margin-top:100px; text-align:center; color:#cbd5e1; font-size:0.7rem; letter-spacing:2px;'>DON POLLO GROUP | BUSINESS INTELLIGENCE UNIT</div>", unsafe_allow_html=True)
