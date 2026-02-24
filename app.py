@@ -10,7 +10,7 @@ st.set_page_config(
 )
 
 # =========================================================
-# CREDENCIALES (ideal mover a st.secrets)
+# CREDENCIALES
 # =========================================================
 PASSWORDS = {
     "👥 Administración de Personal": "pollo123",
@@ -45,9 +45,7 @@ section[data-testid="stSidebar"] * {
     box-shadow: 0 6px 16px rgba(0,0,0,0.05);
     transition: transform 0.15s ease;
 }
-.card:hover {
-    transform: translateY(-4px);
-}
+.card:hover { transform: translateY(-4px); }
 
 .footer {
     text-align: center;
@@ -69,8 +67,8 @@ def check_password(area):
         return True
 
     st.warning(f"🔒 El área de **{area}** está restringida.")
-    _, col, _ = st.columns([1,1,1])
 
+    _, col, _ = st.columns([1,1,1])
     with col:
         pwd = st.text_input("Ingrese contraseña:", type="password")
 
@@ -84,22 +82,17 @@ def check_password(area):
     return False
 
 # =========================================================
-# HEADER CORPORATIVO
+# ENCABEZADO
 # =========================================================
-col_logo, col_title = st.columns([1,6])
+st.title("📊 Gestión Humana | Grupo Don Pollo")
 
-with col_logo:
-    st.image("logo.png", width=120)
-
-with col_title:
-    st.title("Gestión Humana | Grupo Don Pollo")
-    st.caption(
-        "Plataforma centralizada de analítica y automatización "
-        "para la toma de decisiones estratégicas."
-    )
+st.caption(
+    "Plataforma centralizada de analítica y automatización "
+    "para la toma de decisiones estratégicas."
+)
 
 # =========================================================
-# MÉTRICAS EJECUTIVAS
+# MÉTRICAS GENERALES
 # =========================================================
 st.markdown("### 📊 Indicadores Generales")
 
@@ -110,16 +103,14 @@ c2.metric("📈 Indicadores activos", "18")
 c3.metric("📊 Dashboards", "9")
 c4.metric("🟢 Sistemas online", "100%")
 
-st.success("✔️ Datos actualizados automáticamente — Hoy 08:35 AM")
+st.success("✔️ Datos actualizados automáticamente — Hoy")
 
 st.markdown("---")
 
 # =========================================================
 # SIDEBAR
 # =========================================================
-st.sidebar.image("logo.png", width=160)
-
-st.sidebar.markdown("### 👤 Usuario")
+st.sidebar.markdown("## 👤 Usuario")
 st.sidebar.info("Humberto Atoche\nControl de Gestión")
 
 st.sidebar.markdown("## 📌 Líneas de Gestión")
@@ -139,11 +130,11 @@ linea = st.sidebar.selectbox(
 search = st.text_input("🔎 Buscar recurso")
 
 # =========================================================
-# FUNCIÓN CARD PRO
+# FUNCIÓN CARD
 # =========================================================
 def card(titulo, descripcion, link, detalles=None):
 
-    if search.lower() not in titulo.lower() and search != "":
+    if search and search.lower() not in titulo.lower():
         return
 
     st.markdown(f"""
