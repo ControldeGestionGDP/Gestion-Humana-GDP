@@ -2,16 +2,16 @@ import streamlit as st
 from datetime import datetime
 
 # =========================================================
-# CONFIGURACIÓN
+# CONFIG
 # =========================================================
 st.set_page_config(
-    page_title="GH Command Center",
-    page_icon="🧠",
+    page_title="GH Intelligence Hub",
+    page_icon="📊",
     layout="wide"
 )
 
 # =========================================================
-# ESTADO
+# SESIÓN
 # =========================================================
 if "area_autorizada" not in st.session_state:
     st.session_state.area_autorizada = None
@@ -23,60 +23,58 @@ PASSWORDS = {
 }
 
 # =========================================================
-# ESTILO FUTURISTA
+# ESTILO FUTURISTA CLARO
 # =========================================================
 st.markdown("""
 <style>
 
 .stApp {
-    background: radial-gradient(circle at top, #0b1220, #020617 70%);
-    color: #e5e7eb;
+    background: linear-gradient(180deg,#f8fafc,#eef2ff);
 }
 
-/* TÍTULOS */
+/* TITULOS */
 h1 {
     font-weight: 900;
-    letter-spacing: 1px;
-    color: #e2e8f0;
+    color: #0f172a;
 }
 
 /* SIDEBAR */
 section[data-testid="stSidebar"] {
-    background: linear-gradient(180deg,#020617,#0f172a);
+    background: linear-gradient(180deg,#1e3a8a,#2563eb);
 }
 section[data-testid="stSidebar"] * {
-    color: #cbd5f5;
+    color: white;
 }
 
-/* TARJETAS GLASS */
+/* TARJETAS */
 .card {
-    background: rgba(255,255,255,0.05);
-    backdrop-filter: blur(12px);
+    background: white;
     border-radius: 18px;
     padding: 24px;
-    border: 1px solid rgba(255,255,255,0.08);
-    box-shadow: 0 0 25px rgba(99,102,241,0.15);
+    border: 1px solid #e5e7eb;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.08);
     transition: all 0.2s ease;
 }
 .card:hover {
-    transform: translateY(-6px) scale(1.01);
-    box-shadow: 0 0 35px rgba(139,92,246,0.35);
+    transform: translateY(-6px);
+    box-shadow: 0 16px 40px rgba(37,99,235,0.18);
 }
 
-/* PANEL KPI */
+/* KPI */
 .kpi {
-    background: linear-gradient(145deg,#020617,#0f172a);
-    padding: 20px;
+    background: white;
+    padding: 22px;
     border-radius: 16px;
-    border: 1px solid rgba(99,102,241,0.25);
-    box-shadow: 0 0 20px rgba(99,102,241,0.2);
+    border: 1px solid #e5e7eb;
+    box-shadow: 0 8px 22px rgba(0,0,0,0.06);
+    text-align: center;
 }
 
 /* FOOTER */
 .footer {
     text-align: center;
     color: #64748b;
-    margin-top: 50px;
+    margin-top: 40px;
     font-size: 0.85rem;
 }
 
@@ -91,14 +89,14 @@ def validar(area):
     if st.session_state.area_autorizada == area:
         return True
 
-    st.warning(f"🔒 Acceso restringido: {area}")
+    st.warning(f"🔒 Área restringida: {area}")
 
     c1, c2, c3 = st.columns([1,1,1])
 
     with c2:
         pwd = st.text_input("Contraseña", type="password")
 
-        if st.button("Validar acceso"):
+        if st.button("Acceder"):
             if pwd == PASSWORDS[area]:
                 st.session_state.area_autorizada = area
                 st.rerun()
@@ -125,14 +123,13 @@ def tarjeta(titulo, desc, link):
 # =========================================================
 # HEADER
 # =========================================================
-st.title("🧠 GH COMMAND CENTER")
-
-st.caption("Sistema estratégico de inteligencia organizacional")
+st.title("📊 GH Intelligence Hub")
+st.caption("Centro de analítica estratégica de Gestión Humana")
 
 # =========================================================
-# PANEL DE KPIs
+# PANEL KPI
 # =========================================================
-st.markdown("### ⚡ Estado Organizacional en Tiempo Real")
+st.markdown("### 📈 Estado Organizacional")
 
 k1, k2, k3, k4 = st.columns(4)
 
@@ -141,15 +138,15 @@ k2.markdown('<div class="kpi"><b>📉 Ausentismo</b><br><h2>3.1%</h2></div>', un
 k3.markdown('<div class="kpi"><b>📚 Capacitaciones</b><br><h2>87%</h2></div>', unsafe_allow_html=True)
 k4.markdown('<div class="kpi"><b>😊 Clima</b><br><h2>8.6 / 10</h2></div>', unsafe_allow_html=True)
 
-st.info(f"Última sincronización: {datetime.now().strftime('%d/%m/%Y %H:%M')}")
+st.info(f"Última actualización: {datetime.now().strftime('%d/%m/%Y %H:%M')}")
 
 st.markdown("---")
 
 # =========================================================
 # SIDEBAR
 # =========================================================
-st.sidebar.markdown("## 🧭 Módulos GH")
-st.sidebar.info("Usuario: Humberto Atoche\nNivel: Control de Gestión")
+st.sidebar.markdown("## 🧭 Navegación")
+st.sidebar.info("Usuario: Humberto Atoche\nRol: Control de Gestión")
 
 area = st.sidebar.radio("Seleccionar área", list(PASSWORDS.keys()))
 
@@ -188,7 +185,7 @@ if validar(area):
             tarjeta("🎓 Capacitaciones", "Seguimiento del plan anual.", "https://app.powerbi.com")
 
         with c2:
-            tarjeta("😊 Clima", "Análisis de percepción organizacional.", "https://app.powerbi.com")
+            tarjeta("😊 Clima", "Análisis organizacional.", "https://app.powerbi.com")
 
     elif area == "🦺 Seguridad y Salud en el Trabajo":
 
@@ -207,6 +204,6 @@ if validar(area):
 # =========================================================
 st.markdown("""
 <div class="footer">
-GH Command Center · Plataforma Estratégica 2026
+GH Intelligence Hub · Plataforma Estratégica 2026
 </div>
 """, unsafe_allow_html=True)
