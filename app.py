@@ -1,246 +1,175 @@
 import streamlit as st
 
-# =========================================================
-# CONFIGURACIÓN GENERAL
-# =========================================================
+# Configuración inicial
 st.set_page_config(
-    page_title="Portal Corporativo | Control de Gestión",
-    page_icon="📊",
+    page_title="Gestión Humana | Smart Portal",
+    page_icon="🚀",
     layout="wide"
 )
 
 # =========================================================
-# ESTILO CORPORATIVO (IDENTIDAD GH / DON POLLO)
+# ESTILO FUTURISTA (GLASSMORPHISM & ANIMACIONES)
 # =========================================================
 st.markdown("""
 <style>
-
-/* APP GENERAL */
+/* Fondo general con degradado animado */
 .stApp {
-    background-color: #ffffff;
+    background: linear-gradient(-45deg, #0f172a, #1e293b, #2e3788, #1071b8);
+    background-size: 400% 400%;
+    animation: gradient 15s ease infinite;
 }
 
-/* TÍTULOS */
+@keyframes gradient {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+/* Títulos con neón */
 h1 {
-    color: #1071b8;
-    font-weight: 800;
-}
-h2, h3 {
-    color: #2e3788;
-    font-weight: 700;
+    color: #ffffff !important;
+    text-shadow: 0 0 10px rgba(16, 113, 184, 0.8);
+    font-family: 'Inter', sans-serif;
 }
 
-/* SIDEBAR */
+/* Sidebar transparente */
 section[data-testid="stSidebar"] {
-    background: linear-gradient(180deg, #2e3788 0%, #1071b8 100%);
-}
-section[data-testid="stSidebar"] * {
-    color: #ffffff;
-    font-weight: 500;
+    background-color: rgba(255, 255, 255, 0.05) !important;
+    backdrop-filter: blur(10px);
 }
 
-/* CARDS */
+/* CARDS GLASSMORPHISM */
 div[data-testid="stVerticalBlockBorderWrapper"] {
-    border: 1px solid #e5e7eb;
-    border-left: 6px solid #c4579b;
-    border-radius: 16px;
-    padding: 1.2rem;
-    background-color: #ffffff;
-    box-shadow: 0 6px 16px rgba(0,0,0,0.04);
+    background: rgba(255, 255, 255, 0.03) !important;
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    border-radius: 20px !important;
+    transition: all 0.3s ease-in-out;
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
 }
 
-/* LINKS */
-a {
-    color: #1071b8;
-    font-weight: 600;
-    text-decoration: none;
-}
-a:hover {
-    color: #c4579b;
-    text-decoration: underline;
+div[data-testid="stVerticalBlockBorderWrapper"]:hover {
+    transform: translateY(-5px);
+    background: rgba(255, 255, 255, 0.08) !important;
+    border: 1px solid rgba(196, 87, 155, 0.5) !important;
+    box-shadow: 0 12px 40px 0 rgba(196, 87, 155, 0.2);
 }
 
-/* SEPARADORES */
-hr {
+/* Estilo de Botones tipo 'Cápsula' */
+.stButton>button {
+    border-radius: 20px;
+    background: linear-gradient(90deg, #1071b8, #c4579b);
+    color: white;
     border: none;
-    height: 4px;
-    background: linear-gradient(90deg, #1071b8, #2e3788, #c4579b);
-    margin: 2.5rem 0;
+    transition: 0.3s;
 }
 
-/* FOOTER */
-.footer {
-    text-align: center;
-    color: #6b7280;
-    font-size: 0.85rem;
-    margin-top: 2rem;
+/* Texto en blanco para legibilidad */
+p, li, label, .stMarkdown {
+    color: #e2e8f0 !important;
 }
+
+/* Ocultar decoraciones de Streamlit */
+#MainMenu {visibility: hidden;}
+footer {visibility: hidden;}
+
 </style>
 """, unsafe_allow_html=True)
 
 # =========================================================
-# ENCABEZADO PRINCIPAL
+# HEADER & KPI RESUMEN
 # =========================================================
-st.title("📊 Gestión Humana | Grupo Don Pollo")
-st.markdown(
-    """
-    Plataforma centralizada de **analítica, automatización y visualización de información**,  
-    desarrollada para apoyar la **toma de decisiones estratégicas** de la organización.
-    """
-)
+st.title("🚀 Smart Management Portal")
+st.write("Grupo Don Pollo | Intelligence Hub")
+
+# Fila de métricas rápidas (Los "Bolos" que mencionabas)
+kpi1, kpi2, kpi3, kpi4 = st.columns(4)
+kpi1.metric(label="Dotación Total", value="1,250", delta="12%")
+kpi2.metric(label="Cumplimiento SST", value="98%", delta="2%")
+kpi3.metric(label="Clima Laboral", value="4.2/5", delta="0.5")
+kpi4.metric(label="Capacitación", value="85%", delta="-3%")
 
 st.markdown("---")
 
 # =========================================================
 # MENÚ LATERAL
 # =========================================================
-st.sidebar.markdown("## 📌 Líneas de Gestión")
-linea = st.sidebar.radio(
-    "",
-    [
-        "👥 Administración de Personal",
-        "📈 Desarrollo Organizacional",
-        "🦺 Seguridad y Salud en el Trabajo"
-    ]
+st.sidebar.image("https://via.placeholder.com/150x50/ffffff/1071b8?text=DON+POLLO", width=150)
+st.sidebar.markdown("### 🧠 Central de Navegación")
+linea = st.sidebar.selectbox(
+    "Selecciona una dimensión:",
+    ["👥 Administración de Personal", "📈 Desarrollo Organizacional", "🦺 Seguridad y Salud"]
 )
 
 # =========================================================
-# FUNCIÓN CARD PRO (CON INFO ADICIONAL)
+# COMPONENTE DE CARD MEJORADO
 # =========================================================
-def card(titulo, descripcion, link, icon="🔗", detalles=None):
+def card_futurista(titulo, icono, desc, link, tech_stack):
     with st.container(border=True):
-        st.subheader(titulo)
-        st.write(descripcion)
-        st.markdown(f"{icon} **[Acceder al recurso]({link})**")
-
-        if detalles:
-            with st.expander("➕ Información técnica"):
-                for d in detalles:
-                    st.markdown(f"- {d}")
+        col_icon, col_txt = st.columns([1, 4])
+        with col_icon:
+            st.markdown(f"## {icono}")
+        with col_txt:
+            st.subheader(titulo)
+        
+        st.write(desc)
+        
+        # Tags de tecnología
+        tags = ""
+        for tech in tech_stack:
+            tags += f" `<small>{tech}</small>` "
+        st.markdown(tags, unsafe_allow_html=True)
+        
+        # Link como botón estilizado
+        st.markdown(f"""
+        <a href="{link}" target="_blank">
+            <div style="
+                text-align: center;
+                padding: 10px;
+                background: linear-gradient(90deg, #1071b8, #2e3788);
+                border-radius: 10px;
+                color: white;
+                font-weight: bold;
+                margin-top: 15px;
+                cursor: pointer;">
+                Explorar Dashboard
+            </div>
+        </a>
+        """, unsafe_allow_html=True)
 
 # =========================================================
-# ADMINISTRACIÓN DE PERSONAL
+# LÓGICA DE CONTENIDO
 # =========================================================
-if linea == "👥 Administración de Personal":
+if "Administración" in linea:
     st.header("👥 Administración de Personal")
-    st.caption("Indicadores clave para el control, seguimiento y planificación del recurso humano.")
+    c1, c2, c3 = st.columns(3)
+    with c1:
+        card_futurista("Vacaciones", "🏖️", "Gestión de saldos y provisión.", "#", ["Power BI", "Real-time"])
+    with c2:
+        card_futurista("Asistencia", "⏰", "Control de tiempos y ausentismo.", "#", ["Power BI", "Daily"])
+    with c3:
+        card_futurista("Legajos", "📄", "Expediente digital del colaborador.", "#", ["SharePoint", "Secure"])
 
-    col1, col2, col3 = st.columns(3)
-
-    with col1:
-        card(
-            "🏖️ Vacaciones",
-            "Visualización del uso, saldo y planificación de vacaciones para asegurar continuidad operativa.",
-            "https://app.powerbi.com/links/1TThJ-ia9c?ctid=42fc96b3-c018-482d-8ada-cab81720489e&pbi_source=linkShare",
-            icon="📊",
-            detalles=[
-                "🛠️ Desarrollado en: Power BI",
-                "🔄 Actualización: Automática",
-                "📅 Frecuencia: Mensual"
-            ]
-        )
-
-    with col2:
-        card(
-            "⏰ Asistencia",
-            "Análisis de asistencia, puntualidad y ausentismo por área y periodo.",
-            "https://tu-link-powerbi.com",
-            icon="📊",
-            detalles=[
-                "🛠️ Desarrollado en: Power BI",
-                "🔄 Actualización: Automática",
-                "📅 Frecuencia: Diaria"
-            ]
-        )
-
-    with col3:
-        card(
-            "📄 Legajos Digitales",
-            "Repositorio estructurado de información laboral y documental del personal.",
-            "https://github.com/tuusuario/tu-repo",
-            icon="📁",
-            detalles=[
-                "🛠️ Desarrollado en: SharePoint",
-                "🔐 Acceso: Restringido por rol",
-                "🔄 Actualización: Manual / Validada"
-            ]
-        )
-
-# =========================================================
-# DESARROLLO ORGANIZACIONAL
-# =========================================================
-elif linea == "📈 Desarrollo Organizacional":
+elif "Desarrollo" in linea:
     st.header("📈 Desarrollo Organizacional")
-    st.caption("Seguimiento del crecimiento, desempeño y fortalecimiento del talento humano.")
+    c1, c2 = st.columns(2)
+    with c1:
+        card_futurista("Capacitación", "🎓", "Avance del Plan Anual.", "#", ["Metrics", "LMS"])
+    with c2:
+        card_futurista("Clima", "😊", "Engagement y satisfacción.", "#", ["Survey", "Quarterly"])
 
-    col1, col2 = st.columns(2)
+else:
+    st.header("🦺 Seguridad y Salud")
+    c1, c2 = st.columns(2)
+    with c1:
+        card_futurista("Incidentes", "⚠️", "Reporte de seguridad y riesgos.", "#", ["SST", "Critical"])
+    with c2:
+        card_futurista("Bienestar", "❤️", "Salud física y mental.", "#", ["Salud", "Monthly"])
 
-    with col1:
-        card(
-            "🎓 Capacitaciones",
-            "Control del avance, cobertura y cumplimiento del plan anual de capacitación.",
-            "https://github.com/tuusuario/tu-repo",
-            icon="📊",
-            detalles=[
-                "🛠️ Desarrollado en: Power BI",
-                "📊 Fuente: Registros de capacitación",
-                "📅 Frecuencia: Mensual"
-            ]
-        )
-
-    with col2:
-        card(
-            "😊 Clima Laboral",
-            "Resultados consolidados de encuestas y análisis de clima organizacional.",
-            "https://tu-link-powerbi.com",
-            icon="📊",
-            detalles=[
-                "🛠️ Desarrollado en: Power BI",
-                "📝 Fuente: Encuestas internas",
-                "📅 Frecuencia: Trimestral"
-            ]
-        )
-
-# =========================================================
-# SEGURIDAD Y SALUD EN EL TRABAJO
-# =========================================================
-elif linea == "🦺 Seguridad y Salud en el Trabajo":
-    st.header("🦺 Seguridad y Salud en el Trabajo")
-    st.caption("Monitoreo preventivo de riesgos, incidentes y bienestar del personal.")
-
-    col1, col2 = st.columns(2)
-
-    with col1:
-        card(
-            "⚠️ Incidentes y Accidentes",
-            "Registro, análisis y seguimiento de eventos de seguridad laboral.",
-            "https://tu-link-powerbi.com",
-            icon="📊",
-            detalles=[
-                "🛠️ Desarrollado en: Power BI",
-                "📊 Fuente: Registros SST",
-                "📅 Frecuencia: Mensual"
-            ]
-        )
-
-    with col2:
-        card(
-            "❤️ Bienestar y Ausentismo",
-            "Indicadores de salud ocupacional y ausentismo para acciones preventivas.",
-            "https://tu-link-powerbi.com",
-            icon="📊",
-            detalles=[
-                "🛠️ Desarrollado en: Power BI",
-                "📊 Fuente: RRHH / SST",
-                "📅 Frecuencia: Mensual"
-            ]
-        )
-
-# =========================================================
-# FOOTER
-# =========================================================
-st.markdown("---")
-st.markdown(
-    "<div class='footer'>Gerencia de Control de Gestión | Transformación Digital</div>",
-    unsafe_allow_html=True
-)
+# Footer futurista
+st.markdown("""
+<div style="text-align: center; margin-top: 50px; opacity: 0.5;">
+    <hr>
+    <p>Powered by Control de Gestión | Don Pollo AI Team 2026</p>
+</div>
+""", unsafe_allow_html=True)
