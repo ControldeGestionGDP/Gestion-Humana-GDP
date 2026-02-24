@@ -9,7 +9,9 @@ st.set_page_config(
     layout="wide"
 )
 
-# CREDENCIALES
+# =========================================================
+# CREDENCIALES (ideal mover a st.secrets)
+# =========================================================
 PASSWORDS = {
     "👥 Administración de Personal": "pollo123",
     "📈 Desarrollo Organizacional": "talento2024",
@@ -17,18 +19,15 @@ PASSWORDS = {
 }
 
 # =========================================================
-# ESTILO CORPORATIVO (IDENTIDAD GH / DON POLLO)
+# ESTILO CORPORATIVO
 # =========================================================
 st.markdown("""
 <style>
-/* APP GENERAL */
 .stApp { background-color: #ffffff; }
 
-/* TÍTULOS */
 h1 { color: #1071b8; font-weight: 800; }
 h2, h3 { color: #2e3788; font-weight: 700; }
 
-/* SIDEBAR */
 section[data-testid="stSidebar"] {
     background: linear-gradient(180deg, #2e3788 0%, #1071b8 100%);
 }
@@ -37,29 +36,19 @@ section[data-testid="stSidebar"] * {
     font-weight: 500;
 }
 
-/* CARDS */
-div[data-testid="stVerticalBlockBorderWrapper"] {
+.card {
     border: 1px solid #e5e7eb;
     border-left: 6px solid #c4579b;
     border-radius: 16px;
     padding: 1.2rem;
     background-color: #ffffff;
-    box-shadow: 0 6px 16px rgba(0,0,0,0.04);
+    box-shadow: 0 6px 16px rgba(0,0,0,0.05);
+    transition: transform 0.15s ease;
+}
+.card:hover {
+    transform: translateY(-4px);
 }
 
-/* LINKS */
-a { color: #1071b8; font-weight: 600; text-decoration: none; }
-a:hover { color: #c4579b; text-decoration: underline; }
-
-/* SEPARADORES */
-hr {
-    border: none;
-    height: 4px;
-    background: linear-gradient(90deg, #1071b8, #2e3788, #c4579b);
-    margin: 2.5rem 0;
-}
-
-/* FOOTER */
 .footer {
     text-align: center;
     color: #6b7280;
@@ -70,45 +59,72 @@ hr {
 """, unsafe_allow_html=True)
 
 # =========================================================
-# LÓGICA DE AUTENTICACIÓN
+# AUTENTICACIÓN
 # =========================================================
 if 'auth_area' not in st.session_state:
     st.session_state.auth_area = None
 
-def check_password(area_seleccionada):
-    if st.session_state.auth_area == area_seleccionada:
+def check_password(area):
+    if st.session_state.auth_area == area:
         return True
-    
-    st.warning(f"🔒 El área de **{area_seleccionada}** está restringida.")
-    _, col_p, _ = st.columns([1,1,1])
-    with col_p:
-        pwd = st.text_input("Ingrese contraseña de acceso:", type="password")
-        if st.button("Validar Acceso"):
-            if pwd == PASSWORDS[area_seleccionada]:
-                st.session_state.auth_area = area_seleccionada
+
+    st.warning(f"🔒 El área de **{area}** está restringida.")
+    _, col, _ = st.columns([1,1,1])
+
+    with col:
+        pwd = st.text_input("Ingrese contraseña:", type="password")
+
+        if st.button("Validar acceso"):
+            if pwd == PASSWORDS[area]:
+                st.session_state.auth_area = area
                 st.rerun()
             else:
                 st.error("Contraseña incorrecta")
+
     return False
 
 # =========================================================
-# ENCABEZADO PRINCIPAL
+# HEADER CORPORATIVO
 # =========================================================
-st.title("📊 Gestión Humana | Grupo Don Pollo")
-st.markdown(
-    """
-    Plataforma centralizada de **analítica, automatización y visualización de información**,  
-    desarrollada para apoyar la **toma de decisiones estratégicas** de la organización.
-    """
-)
+col_logo, col_title = st.columns([1,6])
+
+with col_logo:
+    st.image("logo.png", width=120)
+
+with col_title:
+    st.title("Gestión Humana | Grupo Don Pollo")
+    st.caption(
+        "Plataforma centralizada de analítica y automatización "
+        "para la toma de decisiones estratégicas."
+    )
+
+# =========================================================
+# MÉTRICAS EJECUTIVAS
+# =========================================================
+st.markdown("### 📊 Indicadores Generales")
+
+c1, c2, c3, c4 = st.columns(4)
+
+c1.metric("👥 Colaboradores", "2,845")
+c2.metric("📈 Indicadores activos", "18")
+c3.metric("📊 Dashboards", "9")
+c4.metric("🟢 Sistemas online", "100%")
+
+st.success("✔️ Datos actualizados automáticamente — Hoy 08:35 AM")
 
 st.markdown("---")
 
 # =========================================================
-# MENÚ LATERAL
+# SIDEBAR
 # =========================================================
+st.sidebar.image("logo.png", width=160)
+
+st.sidebar.markdown("### 👤 Usuario")
+st.sidebar.info("Humberto Atoche\nControl de Gestión")
+
 st.sidebar.markdown("## 📌 Líneas de Gestión")
-linea = st.sidebar.radio(
+
+linea = st.sidebar.selectbox(
     "",
     [
         "👥 Administración de Personal",
@@ -118,57 +134,132 @@ linea = st.sidebar.radio(
 )
 
 # =========================================================
+# BUSCADOR
+# =========================================================
+search = st.text_input("🔎 Buscar recurso")
+
+# =========================================================
 # FUNCIÓN CARD PRO
 # =========================================================
-def card(titulo, descripcion, link, icon="🔗", detalles=None):
-    with st.container(border=True):
-        st.subheader(titulo)
-        st.write(descripcion)
-        st.markdown(f"{icon} **[Acceder al recurso]({link})**")
-        if detalles:
-            with st.expander("➕ Información técnica"):
-                for d in detalles:
-                    st.markdown(f"- {d}")
+def card(titulo, descripcion, link, detalles=None):
+
+    if search.lower() not in titulo.lower() and search != "":
+        return
+
+    st.markdown(f"""
+    <a href="{link}" target="_blank" style="text-decoration:none;">
+        <div class="card">
+            <h4>{titulo}</h4>
+            <p>{descripcion}</p>
+        </div>
+    </a>
+    """, unsafe_allow_html=True)
+
+    if detalles:
+        with st.expander("➕ Información técnica"):
+            for d in detalles:
+                st.markdown(f"- {d}")
 
 # =========================================================
-# VALIDACIÓN Y CONTENIDO
+# CONTENIDO POR ÁREA
 # =========================================================
 if check_password(linea):
-    
+
+    # -----------------------------------------------------
+    # ADMINISTRACIÓN DE PERSONAL
+    # -----------------------------------------------------
     if linea == "👥 Administración de Personal":
+
         st.header("👥 Administración de Personal")
-        st.caption("Indicadores clave para el control, seguimiento y planificación del recurso humano.")
+        st.caption("Control, seguimiento y planificación del personal.")
+
         col1, col2, col3 = st.columns(3)
+
         with col1:
-            card("🏖️ Vacaciones", "Visualización del uso, saldo y planificación.", "https://app.powerbi.com/links/1TThJ-ia9c?ctid=42fc96b3-c018-482d-8ada-cab81720489e&pbi_source=linkShare", icon="📊", detalles=["🛠️ Power BI", "🔄 Automática", "📅 Mensual"])
+            card(
+                "🏖️ Vacaciones",
+                "Uso, saldo y planificación anual.",
+                "https://app.powerbi.com",
+                ["Power BI", "Actualización mensual"]
+            )
+
         with col2:
-            card("⏰ Asistencia", "Análisis de puntualidad y ausentismo.", "https://tu-link-powerbi.com", icon="📊", detalles=["🛠️ Power BI", "🔄 Automática", "📅 Diaria"])
+            card(
+                "⏰ Asistencia",
+                "Análisis de puntualidad y ausentismo.",
+                "https://app.powerbi.com",
+                ["Power BI", "Actualización diaria"]
+            )
+
         with col3:
-            card("📄 Legajos Digitales", "Repositorio documental del personal.", "https://github.com", icon="📁", detalles=["🛠️ SharePoint", "🔐 Restringido", "🔄 Manual"])
+            card(
+                "📄 Legajos Digitales",
+                "Repositorio documental del personal.",
+                "https://sharepoint.com",
+                ["SharePoint", "Acceso restringido"]
+            )
 
+    # -----------------------------------------------------
+    # DESARROLLO ORGANIZACIONAL
+    # -----------------------------------------------------
     elif linea == "📈 Desarrollo Organizacional":
-        st.header("📈 Desarrollo Organizacional")
-        st.caption("Seguimiento del crecimiento y fortalecimiento del talento humano.")
-        col1, col2 = st.columns(2)
-        with col1:
-            card("🎓 Capacitaciones", "Control del cumplimiento del plan anual.", "https://github.com", icon="📊", detalles=["🛠️ Power BI", "📊 Registros", "📅 Mensual"])
-        with col2:
-            card("😊 Clima Laboral", "Resultados consolidados de encuestas.", "https://tu-link-powerbi.com", icon="📊", detalles=["🛠️ Power BI", "📝 Encuestas", "📅 Trimestral"])
 
-    elif linea == "🦺 Seguridad y Salud en el Trabajo":
-        st.header("🦺 Seguridad y Salud en el Trabajo")
-        st.caption("Monitoreo preventivo de riesgos e incidentes.")
+        st.header("📈 Desarrollo Organizacional")
+        st.caption("Seguimiento del talento y cultura organizacional.")
+
         col1, col2 = st.columns(2)
+
         with col1:
-            card("⚠️ Incidentes y Accidentes", "Análisis de eventos de seguridad laboral.", "https://tu-link-powerbi.com", icon="📊", detalles=["🛠️ Power BI", "📊 Registros SST", "📅 Mensual"])
+            card(
+                "🎓 Capacitaciones",
+                "Cumplimiento del plan anual.",
+                "https://app.powerbi.com",
+                ["Power BI", "Mensual"]
+            )
+
         with col2:
-            card("❤️ Bienestar y Ausentismo", "Indicadores de salud ocupacional.", "https://tu-link-powerbi.com", icon="📊", detalles=["🛠️ Power BI", "📊 RRHH / SST", "📅 Mensual"])
+            card(
+                "😊 Clima Laboral",
+                "Resultados de encuestas internas.",
+                "https://app.powerbi.com",
+                ["Power BI", "Trimestral"]
+            )
+
+    # -----------------------------------------------------
+    # SST
+    # -----------------------------------------------------
+    elif linea == "🦺 Seguridad y Salud en el Trabajo":
+
+        st.header("🦺 Seguridad y Salud en el Trabajo")
+        st.caption("Monitoreo preventivo de riesgos laborales.")
+
+        col1, col2 = st.columns(2)
+
+        with col1:
+            card(
+                "⚠️ Incidentes y Accidentes",
+                "Eventos de seguridad laboral.",
+                "https://app.powerbi.com",
+                ["Power BI", "Mensual"]
+            )
+
+        with col2:
+            card(
+                "❤️ Bienestar y Ausentismo",
+                "Indicadores de salud ocupacional.",
+                "https://app.powerbi.com",
+                ["Power BI", "Mensual"]
+            )
 
 # =========================================================
 # FOOTER
 # =========================================================
 st.markdown("---")
-st.markdown(
-    "<div class='footer'>Gerencia de Control de Gestión | Transformación Digital</div>",
-    unsafe_allow_html=True
-)
+
+st.markdown("""
+<div class='footer'>
+<b>Grupo Don Pollo</b><br>
+Gerencia de Control de Gestión · Transformación Digital<br>
+© 2026 — Plataforma Corporativa Interna
+</div>
+""", unsafe_allow_html=True)
