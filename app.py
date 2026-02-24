@@ -1,175 +1,135 @@
 import streamlit as st
 
-# Configuración inicial
-st.set_page_config(
-    page_title="Gestión Humana | Smart Portal",
-    page_icon="🚀",
-    layout="wide"
-)
+# Configuración de página
+st.set_page_config(page_title="GH Hub | Don Pollo", layout="wide", page_icon="🌐")
 
 # =========================================================
-# ESTILO FUTURISTA (GLASSMORPHISM & ANIMACIONES)
+# EL "WOW FACTOR": CSS PERSONALIZADO (BLANCO FUTURISTA)
 # =========================================================
 st.markdown("""
 <style>
-/* Fondo general con degradado animado */
-.stApp {
-    background: linear-gradient(-45deg, #0f172a, #1e293b, #2e3788, #1071b8);
-    background-size: 400% 400%;
-    animation: gradient 15s ease infinite;
-}
+    /* Fondo con gradiente sutil y animado */
+    .stApp {
+        background: radial-gradient(circle at top right, #f0f4f8, #e5eef5, #ffffff);
+        font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    }
 
-@keyframes gradient {
-    0% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
-    100% { background-position: 0% 50%; }
-}
+    /* Estilo de los "Círculos de Datos" (Cards Circulares) */
+    .dashboard-circle {
+        width: 220px;
+        height: 220px;
+        background: rgba(255, 255, 255, 0.7);
+        border-radius: 50%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        padding: 20px;
+        border: 2px solid rgba(16, 113, 184, 0.1);
+        box-shadow: 0 10px 30px rgba(0,0,0,0.05), inset 0 0 15px rgba(16, 113, 184, 0.05);
+        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        cursor: pointer;
+        text-decoration: none !important;
+        margin: 0 auto;
+    }
 
-/* Títulos con neón */
-h1 {
-    color: #ffffff !important;
-    text-shadow: 0 0 10px rgba(16, 113, 184, 0.8);
-    font-family: 'Inter', sans-serif;
-}
+    .dashboard-circle:hover {
+        transform: scale(1.1) rotate(5deg);
+        background: white;
+        border: 2px solid #c4579b;
+        box-shadow: 0 20px 40px rgba(196, 87, 155, 0.2);
+    }
 
-/* Sidebar transparente */
-section[data-testid="stSidebar"] {
-    background-color: rgba(255, 255, 255, 0.05) !important;
-    backdrop-filter: blur(10px);
-}
+    .circle-icon { font-size: 45px; margin-bottom: 10px; }
+    .circle-title { color: #2e3788; font-weight: 800; font-size: 16px; margin: 0; }
+    .circle-value { color: #1071b8; font-size: 24px; font-weight: 300; }
 
-/* CARDS GLASSMORPHISM */
-div[data-testid="stVerticalBlockBorderWrapper"] {
-    background: rgba(255, 255, 255, 0.03) !important;
-    backdrop-filter: blur(12px);
-    border: 1px solid rgba(255, 255, 255, 0.1) !important;
-    border-radius: 20px !important;
-    transition: all 0.3s ease-in-out;
-    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
-}
+    /* Header Flotante */
+    .main-header {
+        background: rgba(255, 255, 255, 0.4);
+        backdrop-filter: blur(10px);
+        padding: 20px;
+        border-radius: 20px;
+        border: 1px solid rgba(255,255,255,0.5);
+        margin-bottom: 40px;
+        text-align: center;
+    }
 
-div[data-testid="stVerticalBlockBorderWrapper"]:hover {
-    transform: translateY(-5px);
-    background: rgba(255, 255, 255, 0.08) !important;
-    border: 1px solid rgba(196, 87, 155, 0.5) !important;
-    box-shadow: 0 12px 40px 0 rgba(196, 87, 155, 0.2);
-}
-
-/* Estilo de Botones tipo 'Cápsula' */
-.stButton>button {
-    border-radius: 20px;
-    background: linear-gradient(90deg, #1071b8, #c4579b);
-    color: white;
-    border: none;
-    transition: 0.3s;
-}
-
-/* Texto en blanco para legibilidad */
-p, li, label, .stMarkdown {
-    color: #e2e8f0 !important;
-}
-
-/* Ocultar decoraciones de Streamlit */
-#MainMenu {visibility: hidden;}
-footer {visibility: hidden;}
-
+    /* Quitar decoraciones de Streamlit */
+    div[data-testid="stMetricValue"] > div { font-size: 28px !important; color: #1071b8 !important; }
 </style>
 """, unsafe_allow_html=True)
 
 # =========================================================
-# HEADER & KPI RESUMEN
+# HEADER ESTRATÉGICO
 # =========================================================
-st.title("🚀 Smart Management Portal")
-st.write("Grupo Don Pollo | Intelligence Hub")
-
-# Fila de métricas rápidas (Los "Bolos" que mencionabas)
-kpi1, kpi2, kpi3, kpi4 = st.columns(4)
-kpi1.metric(label="Dotación Total", value="1,250", delta="12%")
-kpi2.metric(label="Cumplimiento SST", value="98%", delta="2%")
-kpi3.metric(label="Clima Laboral", value="4.2/5", delta="0.5")
-kpi4.metric(label="Capacitación", value="85%", delta="-3%")
-
-st.markdown("---")
+st.markdown("""
+    <div class="main-header">
+        <h1 style='margin:0; color:#2e3788; letter-spacing:-1px;'>Intelligence Hub <span style='color:#c4579b;'>Don Pollo</span></h1>
+        <p style='color:#6b7280; font-weight:400;'>Arquitectura de Datos para Decisiones de Alta Gerencia</p>
+    </div>
+""", unsafe_allow_html=True)
 
 # =========================================================
-# MENÚ LATERAL
+# MÉTRICAS EN TIEMPO REAL (Línea de Vida)
 # =========================================================
-st.sidebar.image("https://via.placeholder.com/150x50/ffffff/1071b8?text=DON+POLLO", width=150)
-st.sidebar.markdown("### 🧠 Central de Navegación")
-linea = st.sidebar.selectbox(
-    "Selecciona una dimensión:",
-    ["👥 Administración de Personal", "📈 Desarrollo Organizacional", "🦺 Seguridad y Salud"]
-)
+m1, m2, m3, m4 = st.columns(4)
+with m1: st.metric("Talento Activo", "1,420", "+2.4%")
+with m2: st.metric("Eficacia Formación", "92%", "Core")
+with m3: st.metric("Índice Clima", "84/100", "Top")
+with m4: st.metric("Siniestralidad", "0.02%", "-0.1%")
+
+st.write("---")
 
 # =========================================================
-# COMPONENTE DE CARD MEJORADO
+# NAVEGACIÓN POR DIMENSIONES (Círculos Interactivos)
 # =========================================================
-def card_futurista(titulo, icono, desc, link, tech_stack):
-    with st.container(border=True):
-        col_icon, col_txt = st.columns([1, 4])
-        with col_icon:
-            st.markdown(f"## {icono}")
-        with col_txt:
-            st.subheader(titulo)
-        
-        st.write(desc)
-        
-        # Tags de tecnología
-        tags = ""
-        for tech in tech_stack:
-            tags += f" `<small>{tech}</small>` "
-        st.markdown(tags, unsafe_allow_html=True)
-        
-        # Link como botón estilizado
-        st.markdown(f"""
-        <a href="{link}" target="_blank">
-            <div style="
-                text-align: center;
-                padding: 10px;
-                background: linear-gradient(90deg, #1071b8, #2e3788);
-                border-radius: 10px;
-                color: white;
-                font-weight: bold;
-                margin-top: 15px;
-                cursor: pointer;">
-                Explorar Dashboard
+tabs = st.tabs(["🚀 Operaciones Humana", "💎 Desarrollo & Talento", "🛡️ Salud & Futuro"])
+
+def render_circle(icon, title, value, link):
+    return f"""
+        <a href="{link}" target="_blank" style="text-decoration: none;">
+            <div class="dashboard-circle">
+                <div class="circle-icon">{icon}</div>
+                <p class="circle-title">{title}</p>
+                <div class="circle-value">{value}</div>
+                <p style="font-size:10px; color:#aaa; margin-top:5px;">CLICK PARA ABRIR</p>
             </div>
         </a>
-        """, unsafe_allow_html=True)
+    """
 
-# =========================================================
-# LÓGICA DE CONTENIDO
-# =========================================================
-if "Administración" in linea:
-    st.header("👥 Administración de Personal")
+with tabs[0]:
+    st.markdown("<br>", unsafe_allow_html=True)
     c1, c2, c3 = st.columns(3)
-    with c1:
-        card_futurista("Vacaciones", "🏖️", "Gestión de saldos y provisión.", "#", ["Power BI", "Real-time"])
-    with c2:
-        card_futurista("Asistencia", "⏰", "Control de tiempos y ausentismo.", "#", ["Power BI", "Daily"])
-    with c3:
-        card_futurista("Legajos", "📄", "Expediente digital del colaborador.", "#", ["SharePoint", "Secure"])
+    with c1: st.markdown(render_circle("🏖️", "VACACIONES", "94% Planificado", "#"), unsafe_allow_html=True)
+    with c2: st.markdown(render_circle("⏰", "ASISTENCIA", "98.2% Logrado", "#"), unsafe_allow_html=True)
+    with c3: st.markdown(render_circle("📄", "LEGAJOS", "Digitalizado", "#"), unsafe_allow_html=True)
 
-elif "Desarrollo" in linea:
-    st.header("📈 Desarrollo Organizacional")
+with tabs[1]:
+    st.markdown("<br>", unsafe_allow_html=True)
     c1, c2 = st.columns(2)
-    with c1:
-        card_futurista("Capacitación", "🎓", "Avance del Plan Anual.", "#", ["Metrics", "LMS"])
-    with c2:
-        card_futurista("Clima", "😊", "Engagement y satisfacción.", "#", ["Survey", "Quarterly"])
+    with c1: st.markdown(render_circle("🎓", "CAPACITACIÓN", "8.2 hrs/mes", "#"), unsafe_allow_html=True)
+    with c2: st.markdown(render_circle("😊", "CLIMA", "Nivel A+", "#"), unsafe_allow_html=True)
 
-else:
-    st.header("🦺 Seguridad y Salud")
+with tabs[2]:
+    st.markdown("<br>", unsafe_allow_html=True)
     c1, c2 = st.columns(2)
-    with c1:
-        card_futurista("Incidentes", "⚠️", "Reporte de seguridad y riesgos.", "#", ["SST", "Critical"])
-    with c2:
-        card_futurista("Bienestar", "❤️", "Salud física y mental.", "#", ["Salud", "Monthly"])
+    with c1: st.markdown(render_circle("⚠️", "RIESGOS", "Nivel Bajo", "#"), unsafe_allow_html=True)
+    with c2: st.markdown(render_circle("❤️", "BIENESTAR", "15 Actividades", "#"), unsafe_allow_html=True)
 
-# Footer futurista
+# =========================================================
+# SECCIÓN DE ANÁLISIS PREDICTIVO (El toque extra)
+# =========================================================
+st.markdown("<br><br>", unsafe_allow_html=True)
+with st.expander("🔍 Ver Proyecciones Inteligentes (IA)"):
+    col_a, col_b = st.columns(2)
+    col_a.info("**Predicción de Rotación:** Se estima una reducción del 5% para el próximo trimestre basada en las últimas encuestas de clima.")
+    col_b.warning("**Alerta de Vacaciones:** 3 áreas críticas superan el 20% de saldo acumulado. Se sugiere programar antes de Junio.")
+
+# Footer
 st.markdown("""
-<div style="text-align: center; margin-top: 50px; opacity: 0.5;">
-    <hr>
-    <p>Powered by Control de Gestión | Don Pollo AI Team 2026</p>
-</div>
+    <div style="text-align:center; padding:50px; color:#bdc3c7; font-size:12px;">
+        GESTIÓN HUMANA | GRUPO DON POLLO | 2026 DIGITAL ECOSYSTEM
+    </div>
 """, unsafe_allow_html=True)
