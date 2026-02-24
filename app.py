@@ -1,224 +1,203 @@
 import streamlit as st
-from datetime import datetime
 
-# =========================================================
-# CONFIG
-# =========================================================
+# ===============================
+# CONFIGURACIÓN GENERAL
+# ===============================
 st.set_page_config(
-    page_title="GH Strategic Command",
-    page_icon="📊",
+    page_title="Portal GH 2026",
+    page_icon="🧬",
     layout="wide"
 )
 
-# =========================================================
-# SESIÓN
-# =========================================================
-if "area_autorizada" not in st.session_state:
-    st.session_state.area_autorizada = None
-
-PASSWORDS = {
-    "👥 Administración de Personal": "pollo123",
-    "📈 Desarrollo Organizacional": "talento2024",
-    "🦺 Seguridad y Salud en el Trabajo": "seguridad2024"
-}
-
-# =========================================================
-# ESTILO PREMIUM CORPORATIVO
-# =========================================================
+# ===============================
+# ESTILO FUTURISTA
+# ===============================
 st.markdown("""
 <style>
 
 .stApp {
-    background: linear-gradient(180deg,#f1f5f9,#e0e7ff);
+    background: linear-gradient(135deg, #050505, #0d1117);
+    color: #E6EDF3;
+    font-family: 'Segoe UI', sans-serif;
 }
 
-/* HEADER PRINCIPAL */
-.main-header {
-    background: linear-gradient(90deg,#1e3a8a,#2563eb);
-    padding: 24px 28px;
+/* Título principal */
+.main-title {
+    text-align: center;
+    font-size: 44px;
+    font-weight: 800;
+    color: #58A6FF;
+    text-shadow: 0 0 25px #58A6FF;
+}
+
+/* Tarjetas módulos */
+.module-card {
+    background: linear-gradient(145deg, #0d1117, #161b22);
+    padding: 35px;
     border-radius: 18px;
-    color: white;
-    box-shadow: 0 12px 30px rgba(37,99,235,0.35);
-}
-
-/* TITULOS */
-h1 { font-weight: 900; }
-h2 { color: #0f172a; }
-
-/* SIDEBAR */
-section[data-testid="stSidebar"] {
-    background: linear-gradient(180deg,#1e3a8a,#1d4ed8);
-}
-section[data-testid="stSidebar"] * { color: white; }
-
-/* KPI CAPSULAS */
-.kpi {
-    background: white;
-    padding: 24px;
-    border-radius: 20px;
-    border: 1px solid #e5e7eb;
-    box-shadow: 0 12px 28px rgba(0,0,0,0.08);
+    border: 1px solid #30363d;
     text-align: center;
-    transition: all 0.2s ease;
+    box-shadow: 0 0 20px rgba(88,166,255,0.25);
+    transition: 0.3s;
 }
-.kpi:hover {
+
+.module-card:hover {
     transform: translateY(-6px);
-    box-shadow: 0 20px 40px rgba(37,99,235,0.18);
+    box-shadow: 0 0 35px rgba(88,166,255,0.55);
 }
 
-/* TARJETAS */
-.card {
-    background: white;
-    border-radius: 20px;
-    padding: 26px;
-    border: 1px solid #e5e7eb;
-    box-shadow: 0 14px 32px rgba(0,0,0,0.08);
-    transition: all 0.2s ease;
-}
-.card:hover {
-    transform: translateY(-8px);
-    box-shadow: 0 26px 60px rgba(37,99,235,0.22);
+.area-title {
+    font-size: 26px;
+    font-weight: bold;
+    color: #58A6FF;
 }
 
-/* FOOTER */
-.footer {
-    text-align: center;
-    color: #64748b;
-    margin-top: 45px;
-    font-size: 0.85rem;
+.area-desc {
+    font-size: 15px;
+    color: #c9d1d9;
+}
+
+.panel-box {
+    background: #0d1117;
+    padding: 30px;
+    border-radius: 18px;
+    border: 1px solid #30363d;
+    box-shadow: 0 0 30px rgba(88,166,255,0.25);
 }
 
 </style>
 """, unsafe_allow_html=True)
 
-# =========================================================
-# FUNCIONES
-# =========================================================
-def validar(area):
+# ===============================
+# CLAVES POR ÁREA
+# ===============================
+AREAS = {
+    "Reclutamiento": "recluta2026",
+    "Bienestar": "bienestar2026",
+    "Capacitación": "capacitacion2026",
+    "Administración": "admin2026",
+    "Indicadores": "kpi2026",
+    "Seguridad y Salud": "sst2026"
+}
 
-    if st.session_state.area_autorizada == area:
-        return True
+# ===============================
+# ESTADO
+# ===============================
+if "area_activa" not in st.session_state:
+    st.session_state.area_activa = None
 
-    st.warning(f"🔒 Área restringida: {area}")
+if "autenticado" not in st.session_state:
+    st.session_state.autenticado = False
 
-    c1, c2, c3 = st.columns([1,1,1])
 
-    with c2:
-        pwd = st.text_input("Contraseña", type="password")
+# ===============================
+# FUNCIÓN VOLVER
+# ===============================
+def volver():
+    st.session_state.area_activa = None
+    st.session_state.autenticado = False
 
+
+# ===============================
+# PANTALLA PRINCIPAL — MÓDULOS
+# ===============================
+if st.session_state.area_activa is None:
+
+    st.markdown('<p class="main-title">Portal Gestión Humana 2026</p>', unsafe_allow_html=True)
+    st.markdown("### Plataforma interna — Acceso por módulos")
+
+    col1, col2, col3 = st.columns(3)
+
+    modulos = list(AREAS.keys())
+
+    for i, area in enumerate(modulos):
+
+        with [col1, col2, col3][i % 3]:
+
+            st.markdown(f"""
+            <div class="module-card">
+                <div class="area-title">{area}</div>
+                <div class="area-desc">Acceso seguro al módulo</div>
+            </div>
+            """, unsafe_allow_html=True)
+
+            if st.button(f"INGRESAR — {area}", use_container_width=True):
+                st.session_state.area_activa = area
+                st.rerun()
+
+
+# ===============================
+# PANTALLA DE CONTRASEÑA
+# ===============================
+elif not st.session_state.autenticado:
+
+    area = st.session_state.area_activa
+
+    st.markdown(f"## 🔐 Acceso al módulo: {area}")
+
+    clave = st.text_input("Ingrese la contraseña", type="password")
+
+    col1, col2 = st.columns([1,1])
+
+    with col1:
         if st.button("Acceder"):
-            if pwd == PASSWORDS[area]:
-                st.session_state.area_autorizada = area
+            if clave == AREAS[area]:
+                st.session_state.autenticado = True
                 st.rerun()
             else:
                 st.error("Contraseña incorrecta")
 
-    return False
+    with col2:
+        if st.button("⬅ Volver"):
+            volver()
+            st.rerun()
 
 
-def tarjeta(titulo, desc, link):
+# ===============================
+# PANEL DEL ÁREA
+# ===============================
+else:
 
-    if busqueda and busqueda.lower() not in titulo.lower():
-        return
+    area = st.session_state.area_activa
 
-    st.markdown(f"""
-    <a href="{link}" target="_blank" style="text-decoration:none;">
-        <div class="card">
-            <h3>{titulo}</h3>
-            <p>{desc}</p>
-        </div>
-    </a>
-    """, unsafe_allow_html=True)
+    st.markdown(f"## 🧠 Módulo: {area}")
 
-# =========================================================
-# HEADER PREMIUM
-# =========================================================
-st.markdown(f"""
-<div class="main-header">
-<h1>📊 GH Strategic Command</h1>
-<p>Centro de inteligencia y control de Gestión Humana</p>
-<p>Actualizado: {datetime.now().strftime('%d/%m/%Y %H:%M')}</p>
-</div>
-""", unsafe_allow_html=True)
+    if st.button("⬅ Volver al portal"):
+        volver()
+        st.rerun()
 
-st.markdown("")
+    st.markdown('<div class="panel-box">', unsafe_allow_html=True)
 
-# =========================================================
-# KPIs EJECUTIVOS
-# =========================================================
-st.markdown("### 📈 Estado Organizacional")
+    # ========= CONTENIDO DEMO =========
 
-k1, k2, k3, k4 = st.columns(4)
+    if area == "Reclutamiento":
+        st.subheader("Procesos activos")
+        st.metric("Convocatorias abiertas", 12, "+2")
+        st.metric("Postulantes este mes", 348, "+15%")
 
-k1.markdown('<div class="kpi"><b>👥 Colaboradores</b><br><h2>2,845</h2></div>', unsafe_allow_html=True)
-k2.markdown('<div class="kpi"><b>📉 Ausentismo</b><br><h2>3.1%</h2></div>', unsafe_allow_html=True)
-k3.markdown('<div class="kpi"><b>📚 Capacitaciones</b><br><h2>87%</h2></div>', unsafe_allow_html=True)
-k4.markdown('<div class="kpi"><b>😊 Clima</b><br><h2>8.6 / 10</h2></div>', unsafe_allow_html=True)
+    elif area == "Bienestar":
+        st.subheader("Clima laboral")
+        st.metric("Satisfacción general", "88%", "+3%")
+        st.metric("Participación en actividades", "72%", "+5%")
 
-st.markdown("---")
+    elif area == "Capacitación":
+        st.subheader("Formación")
+        st.metric("Cursos activos", 9)
+        st.metric("Horas promedio", 18)
 
-# =========================================================
-# SIDEBAR
-# =========================================================
-st.sidebar.markdown("## 🧭 Navegación")
-st.sidebar.info("Usuario: Humberto Atoche\nRol: Control de Gestión")
+    elif area == "Administración":
+        st.subheader("Gestión interna")
+        st.metric("Documentos emitidos", 124)
+        st.metric("Trámites pendientes", 7)
 
-area = st.sidebar.radio("Seleccionar área", list(PASSWORDS.keys()))
+    elif area == "Indicadores":
+        st.subheader("KPIs GH")
+        st.metric("Rotación anual", "6.2%", "-0.8%")
+        st.metric("Ausentismo", "2.1%", "-0.3%")
 
-# =========================================================
-# BUSCADOR
-# =========================================================
-busqueda = st.text_input("🔎 Buscar módulo")
+    elif area == "Seguridad y Salud":
+        st.subheader("SST")
+        st.metric("Accidentes reportados", 1)
+        st.metric("Días sin accidentes", 84)
 
-# =========================================================
-# CONTENIDO
-# =========================================================
-if validar(area):
-
-    if area == "👥 Administración de Personal":
-
-        st.header("👥 Administración de Personal")
-
-        c1, c2, c3 = st.columns(3)
-
-        with c1:
-            tarjeta("🏖️ Vacaciones", "Control integral de descansos.", "https://app.powerbi.com")
-
-        with c2:
-            tarjeta("⏰ Asistencia", "Monitoreo de puntualidad.", "https://app.powerbi.com")
-
-        with c3:
-            tarjeta("📁 Legajos", "Gestión documental.", "https://sharepoint.com")
-
-    elif area == "📈 Desarrollo Organizacional":
-
-        st.header("📈 Desarrollo Organizacional")
-
-        c1, c2 = st.columns(2)
-
-        with c1:
-            tarjeta("🎓 Capacitaciones", "Seguimiento del plan anual.", "https://app.powerbi.com")
-
-        with c2:
-            tarjeta("😊 Clima", "Análisis organizacional.", "https://app.powerbi.com")
-
-    elif area == "🦺 Seguridad y Salud en el Trabajo":
-
-        st.header("🦺 Seguridad y Salud")
-
-        c1, c2 = st.columns(2)
-
-        with c1:
-            tarjeta("⚠️ Incidentes", "Registro y análisis.", "https://app.powerbi.com")
-
-        with c2:
-            tarjeta("❤️ Bienestar", "Indicadores de salud.", "https://app.powerbi.com")
-
-# =========================================================
-# FOOTER
-# =========================================================
-st.markdown("""
-<div class="footer">
-GH Strategic Command · Plataforma Ejecutiva 2026
-</div>
-""", unsafe_allow_html=True)
+    st.markdown('</div>', unsafe_allow_html=True)
