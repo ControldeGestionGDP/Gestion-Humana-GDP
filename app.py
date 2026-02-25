@@ -95,6 +95,26 @@ h1, h2, h3 {
     animation: fadeIn 0.5s ease;
 }
 
+/* ===== REPORT CARDS ===== */
+.report-card {
+    background: white;
+    border-radius: 16px;
+    padding: 24px;
+    height: 210px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    box-shadow: 0 12px 28px rgba(0,0,0,0.08);
+    border-left: 5px solid #1071B8;
+    transition: 0.25s;
+}
+
+.report-card:hover {
+    transform: translateY(-6px);
+    border-left: 5px solid #C4579B;
+    box-shadow: 0 22px 48px rgba(0,0,0,0.12);
+}
+
 /* ===== ANIMACIÓN ===== */
 @keyframes fadeIn {
     from {opacity:0; transform: translateY(15px);}
@@ -103,47 +123,6 @@ h1, h2, h3 {
 
 </style>
 """, unsafe_allow_html=True)
-
-# =========================================================
-# FUNCIÓN TARJETA CON IMAGEN
-# =========================================================
-def report_card(titulo, desc, link, img=None):
-
-    if img:
-        st.image(img, use_container_width=True)
-
-        st.markdown(f"""
-        <div style="
-            margin-top:-90px;
-            padding:18px;
-            color:white;
-            font-weight:700;
-            font-size:1.1rem;
-            background: linear-gradient(transparent, rgba(0,0,0,0.75));
-        ">
-            {titulo}
-            <div style="font-weight:400;font-size:0.9rem;">
-                {desc}
-            </div>
-        </div>
-        """, unsafe_allow_html=True)
-
-    else:
-        st.markdown(f"""
-        <div style="
-            background: white;
-            border-radius: 16px;
-            padding: 24px;
-            height: 210px;
-            box-shadow: 0 12px 28px rgba(0,0,0,0.08);
-            border-left: 5px solid #1071B8;
-        ">
-            <div style="font-weight:700;color:#2E3788">{titulo}</div>
-            <div style="color:#6b7280">{desc}</div>
-        </div>
-        """, unsafe_allow_html=True)
-
-    st.link_button("Abrir reporte", link, use_container_width=True)
 
 # =========================================================
 # PORTAL PRINCIPAL
@@ -179,7 +158,7 @@ if st.session_state.area is None:
                 st.rerun()
 
 # =========================================================
-# LOGIN
+# LOGIN ELEGANTE
 # =========================================================
 else:
 
@@ -228,6 +207,56 @@ else:
             st.rerun()
 
         st.divider()
+
+        def report_card(titulo, desc, link, img=None):
+
+            if img:
+                st.markdown(f"""
+                <div style="
+                    position: relative;
+                    border-radius: 16px;
+                    overflow: hidden;
+                    height: 210px;
+                    box-shadow: 0 12px 28px rgba(0,0,0,0.12);
+                ">
+
+                    <img src="{img}" style="
+                        width:100%;
+                        height:100%;
+                        object-fit: cover;
+                        filter: brightness(0.75);
+                    ">
+
+                    <div style="
+                        position: absolute;
+                        bottom: 0;
+                        padding: 18px;
+                        color: white;
+                        font-weight: 700;
+                        font-size: 1.1rem;
+                        background: linear-gradient(transparent, rgba(0,0,0,0.65));
+                        width: 100%;
+                    ">
+                        {titulo}
+                        <div style="font-weight:400;font-size:0.9rem;">
+                            {desc}
+                        </div>
+                    </div>
+
+                </div>
+                """, unsafe_allow_html=True)
+
+            else:
+                st.markdown(f"""
+                <div class="report-card">
+                    <div>
+                        <div style="font-weight:700;color:#2E3788">{titulo}</div>
+                        <div style="color:#6b7280">{desc}</div>
+                    </div>
+                </div>
+                """, unsafe_allow_html=True)
+
+            st.link_button("Abrir reporte", link, use_container_width=True)
 
         if area == "Administración de Personal":
 
