@@ -183,9 +183,17 @@ if st.session_state.area is None:
         ("📚 Desarrollo Organizacional"),
         ("🦺 Seguridad y Salud en el Trabajo")
     ]
+    
+    area_imgs = ["Administracion.jpg", "Desarrollo.jpg", "Seguridad.jpg"]
 
-    for col, name in zip([col1, col2, col3], areas):
+    for col, name, img_file in zip([col1, col2, col3], areas, area_imgs):
         with col:
+            # Mostrar imagen del área
+            img_path = ASSETS_DIR / img_file
+            if img_path.exists():
+                st.image(str(img_path), use_container_width=True)
+            else:
+                st.warning(f"Imagen {img_file} no encontrada")
 
             st.markdown(f"""
             <div class="area-card">
