@@ -34,7 +34,7 @@ if "auth" not in st.session_state:
     st.session_state.auth = False
 
 # =========================================================
-# ESTILOS SaaS
+# ESTILOS SaaS PREMIUM
 # =========================================================
 st.markdown(f"""
 <style>
@@ -45,14 +45,22 @@ html, body, [class*="css"] {{
 }}
 
 .main-title {{
-    font-size: 2.5rem;
+    font-size: 2.6rem;
     font-weight: 800;
     color: {COLOR2};
 }}
 
 .subtitle {{
     color: #6b7280;
-    margin-bottom: 30px;
+    margin-bottom: 12px;
+}}
+
+.title-accent {{
+    height: 4px;
+    width: 120px;
+    background: linear-gradient(90deg,{COLOR1},{COLOR2},{COLOR3});
+    border-radius: 4px;
+    margin-bottom: 28px;
 }}
 
 .area-card {{
@@ -74,13 +82,6 @@ html, body, [class*="css"] {{
     box-shadow: 0 28px 60px rgba(0,0,0,0.12);
 }}
 
-.area-accent {{
-    height: 4px;
-    background: linear-gradient(90deg,{COLOR1},{COLOR2},{COLOR3});
-    border-radius: 2px;
-    margin-bottom: 1.5rem;
-}}
-
 .login-box {{
     background: white;
     padding: 40px;
@@ -89,75 +90,74 @@ html, body, [class*="css"] {{
     border-top: 5px solid {COLOR1};
 }}
 
-.report-card {{
-    background: white;
+.report-card img {{
     border-radius: 18px;
-    overflow: hidden;
-    box-shadow: 0 14px 40px rgba(0,0,0,0.08);
-    transition: 0.3s;
+    transition: transform 0.4s ease;
 }}
 
-.report-card:hover {{
-    transform: translateY(-8px);
-    box-shadow: 0 25px 70px rgba(0,0,0,0.15);
+.report-card:hover img {{
+    transform: scale(1.05);
 }}
 
 .overlay {{
-    position: absolute;
-    bottom: 0;
-    width: 100%;
-    padding: 18px;
+    position: relative;
+    margin-top: -110px;
+    padding: 20px;
     color: white;
-    background: linear-gradient(transparent, rgba(0,0,0,0.8));
+    font-weight: 700;
+    font-size: 1.2rem;
+    background: linear-gradient(transparent, rgba(0,0,0,0.85));
+    border-bottom-left-radius: 18px;
+    border-bottom-right-radius: 18px;
+}}
+
+.desc {{
+    font-weight: 400;
+    font-size: 0.95rem;
 }}
 
 div.stButton > button {{
     background: linear-gradient(90deg, {COLOR1}, {COLOR2}, {COLOR3});
     color: white;
-    border-radius: 10px;
+    border-radius: 999px;
     border: none;
-    font-weight: 600;
+    font-weight: 700;
     height: 45px;
     transition: 0.3s;
 }}
 
 div.stButton > button:hover {{
     transform: translateY(-2px);
-    box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.25);
 }}
 
 </style>
 """, unsafe_allow_html=True)
 
 # =========================================================
-# FUNCIÓN TARJETA CON IMAGEN
+# FUNCIÓN TARJETA PRO
 # =========================================================
 def report_card(titulo, desc, link, img):
 
+    fallback = "assets/default.jpg"
     path = Path(img)
 
-    if path.exists():
-        st.image(img, use_container_width=True)
-    else:
-        st.warning(f"No se encontró: {img}")
+    img_to_use = img if path.exists() else fallback
+
+    st.markdown('<div class="report-card">', unsafe_allow_html=True)
+
+    st.image(img_to_use, use_container_width=True)
 
     st.markdown(f"""
-    <div style="
-        margin-top:-95px;
-        padding:18px;
-        color:white;
-        font-weight:700;
-        font-size:1.2rem;
-        background: linear-gradient(transparent, rgba(0,0,0,0.8));
-    ">
+    <div class="overlay">
         {titulo}
-        <div style="font-weight:400;font-size:0.95rem;">
-            {desc}
-        </div>
+        <div class="desc">{desc}</div>
     </div>
     """, unsafe_allow_html=True)
 
     st.link_button("Abrir reporte", link, use_container_width=True)
+
+    st.markdown("</div>", unsafe_allow_html=True)
 
 # =========================================================
 # PORTAL PRINCIPAL
@@ -166,13 +166,14 @@ if st.session_state.area is None:
 
     st.markdown('<div class="main-title">Portal Gestión Humana</div>', unsafe_allow_html=True)
     st.markdown('<div class="subtitle">Seleccione una línea de gestión</div>', unsafe_allow_html=True)
+    st.markdown('<div class="title-accent"></div>', unsafe_allow_html=True)
 
     col1, col2, col3 = st.columns(3)
 
     areas = [
-        "Administración de Personal",
-        "Desarrollo Organizacional",
-        "Seguridad y Salud en el Trabajo"
+        ("👥 Administración de Personal"),
+        ("📚 Desarrollo Organizacional"),
+        ("🦺 Seguridad y Salud en el Trabajo")
     ]
 
     for col, name in zip([col1, col2, col3], areas):
@@ -180,15 +181,16 @@ if st.session_state.area is None:
 
             st.markdown(f"""
             <div class="area-card">
-                <div class="area-accent"></div>
                 <div style="font-size:1.3rem;font-weight:700;color:{COLOR2};">
                     {name}
                 </div>
             </div>
             """, unsafe_allow_html=True)
 
-            if st.button("Ingresar", key=name):
-                st.session_state.area = name
+            clean_name = name.split(" ", 1)[1]
+
+            if st.button("Ingresar", key=clean_name):
+                st.session_state.area = clean_name
                 st.session_state.auth = False
                 st.rerun()
 
@@ -235,6 +237,7 @@ else:
     else:
 
         st.markdown(f'<div class="main-title">{area}</div>', unsafe_allow_html=True)
+        st.markdown('<div class="title-accent"></div>', unsafe_allow_html=True)
 
         if st.button("Cambiar área"):
             st.session_state.area = None
