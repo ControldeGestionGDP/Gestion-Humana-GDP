@@ -16,10 +16,10 @@ COLOR2 = "#2E3788"
 COLOR3 = "#C4579B"
 
 # =========================================================
-# RUTA BASE (FUNCIONA EN LOCAL Y CLOUD)
+# RUTA BASE (IMÁGENES EN LA RAÍZ)
 # =========================================================
 BASE_DIR = Path(__file__).resolve().parent
-ASSETS_DIR = BASE_DIR / "assets"
+ASSETS_DIR = BASE_DIR   # 🔥 AHORA APUNTA A LA RAÍZ
 
 # =========================================================
 # PASSWORDS
@@ -150,20 +150,18 @@ div.stButton > button:hover {{
 """, unsafe_allow_html=True)
 
 # =========================================================
-# FUNCIÓN TARJETA PRO (CLOUD SAFE)
+# FUNCIÓN TARJETA PRO
 # =========================================================
 def report_card(titulo, desc, link, img_relative_path):
 
     img_path = ASSETS_DIR / img_relative_path
-    fallback = ASSETS_DIR / "default.jpg"
-    img_to_use = img_path if img_path.exists() else fallback
 
     st.markdown('<div class="report-card">', unsafe_allow_html=True)
 
-    if img_to_use.exists():
-        st.image(str(img_to_use), use_container_width=True)
+    if img_path.exists():
+        st.image(str(img_path), use_container_width=True)
     else:
-        st.warning("Imagen no encontrada y no existe default.jpg")
+        st.warning(f"No se encontró {img_relative_path}")
 
     st.markdown(f"""
     <div class="overlay">
@@ -197,11 +195,10 @@ if st.session_state.area is None:
         with col:
 
             img_path = ASSETS_DIR / img
-            img_to_use = img_path if img_path.exists() else ASSETS_DIR / "default.jpg"
 
             st.markdown(f"""
             <div class="area-card">
-                <img src="{img_to_use}" style="
+                <img src="{img_path}" style="
                     width:100%;
                     height:100%;
                     object-fit:cover;
@@ -270,7 +267,6 @@ else:
 
         st.divider()
 
-        # ADMINISTRACIÓN DE PERSONAL (3 REALES)
         if area == "Administración de Personal":
 
             col1, col2, col3 = st.columns(3)
@@ -290,7 +286,6 @@ else:
                             "https://app.powerbi.com/links/eAcPJmr1vJ?ctid=42fc96b3-c018-482d-8ada-cab81720489e&pbi_source=linkShare",
                             "Examenes.jpg")
 
-        # DESARROLLO ORGANIZACIONAL (1 FICTICIO)
         elif area == "Desarrollo Organizacional":
 
             col1, col2, col3 = st.columns([1,2,1])
@@ -301,7 +296,6 @@ else:
                             "https://app.powerbi.com",
                             "Capacitaciones.jpg")
 
-        # SEGURIDAD Y SALUD (1 FICTICIO)
         elif area == "Seguridad y Salud en el Trabajo":
 
             col1, col2, col3 = st.columns([1,2,1])
