@@ -62,7 +62,6 @@ h1, h2, h3 {
     box-shadow: 0 28px 60px rgba(0,0,0,0.12);
 }
 
-/* Línea decorativa superior */
 .area-accent {
     height: 4px;
     background: linear-gradient(90deg,#1071B8,#2E3788,#C4579B);
@@ -93,26 +92,6 @@ h1, h2, h3 {
     box-shadow: 0 25px 55px rgba(0,0,0,0.12);
     border-top: 5px solid #1071B8;
     animation: fadeIn 0.5s ease;
-}
-
-/* ===== REPORT CARDS ===== */
-.report-card {
-    background: white;
-    border-radius: 16px;
-    padding: 24px;
-    height: 210px;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    box-shadow: 0 12px 28px rgba(0,0,0,0.08);
-    border-left: 5px solid #1071B8;
-    transition: 0.25s;
-}
-
-.report-card:hover {
-    transform: translateY(-6px);
-    border-left: 5px solid #C4579B;
-    box-shadow: 0 22px 48px rgba(0,0,0,0.12);
 }
 
 /* ===== ANIMACIÓN ===== */
@@ -158,7 +137,7 @@ if st.session_state.area is None:
                 st.rerun()
 
 # =========================================================
-# LOGIN ELEGANTE
+# LOGIN
 # =========================================================
 else:
 
@@ -208,6 +187,7 @@ else:
 
         st.divider()
 
+        # ⭐ TARJETA CON IMAGEN DE FONDO
         def report_card(titulo, desc, link, img=None):
 
             if img:
@@ -248,34 +228,42 @@ else:
 
             else:
                 st.markdown(f"""
-                <div class="report-card">
-                    <div>
-                        <div style="font-weight:700;color:#2E3788">{titulo}</div>
-                        <div style="color:#6b7280">{desc}</div>
-                    </div>
+                <div style="
+                    background: white;
+                    border-radius: 16px;
+                    padding: 24px;
+                    height: 210px;
+                    box-shadow: 0 12px 28px rgba(0,0,0,0.08);
+                    border-left: 5px solid #1071B8;
+                ">
+                    <div style="font-weight:700;color:#2E3788">{titulo}</div>
+                    <div style="color:#6b7280">{desc}</div>
                 </div>
                 """, unsafe_allow_html=True)
 
             st.link_button("Abrir reporte", link, use_container_width=True)
 
+        # =========================================================
+        # ADMINISTRACIÓN DE PERSONAL
+        # =========================================================
         if area == "Administración de Personal":
 
             col1, col2, col3 = st.columns(3)
 
             with col1:
                 report_card(
-                    "Descansos Médicos",
-                    "Seguimiento y subsidios",
-                    "https://app.powerbi.com/links/NQfjSntCO1?ctid=42fc96b3-c018-482d-8ada-cab81720489e&pbi_source=linkShare",
-                    "DescansosMedicos.jpg"
-                )
-
-            with col2:
-                report_card(
                     "Vacaciones",
                     "Saldo y planificación",
                     "https://app.powerbi.com/links/1TThJ-ia9c?ctid=42fc96b3-c018-482d-8ada-cab81720489e&pbi_source=linkShare",
                     "Vacaciones.jpg"
+                )
+
+            with col2:
+                report_card(
+                    "Descansos Médicos",
+                    "Seguimiento y subsidios",
+                    "https://app.powerbi.com/links/NQfjSntCO1?ctid=42fc96b3-c018-482d-8ada-cab81720489e&pbi_source=linkShare",
+                    "DescansosMedicos.jpg"
                 )
 
             with col3:
@@ -285,6 +273,9 @@ else:
                     "https://sharepoint.com"
                 )
 
+        # =========================================================
+        # DESARROLLO ORGANIZACIONAL
+        # =========================================================
         elif area == "Desarrollo Organizacional":
 
             col1, col2 = st.columns(2)
@@ -295,6 +286,9 @@ else:
             with col2:
                 report_card("Clima Laboral", "Encuestas", "https://app.powerbi.com")
 
+        # =========================================================
+        # SST
+        # =========================================================
         elif area == "Seguridad y Salud en el Trabajo":
 
             col1, col2 = st.columns(2)
