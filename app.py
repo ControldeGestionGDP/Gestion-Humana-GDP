@@ -62,6 +62,7 @@ h1, h2, h3 {
     box-shadow: 0 28px 60px rgba(0,0,0,0.12);
 }
 
+/* Línea decorativa superior */
 .area-accent {
     height: 4px;
     background: linear-gradient(90deg,#1071B8,#2E3788,#C4579B);
@@ -102,6 +103,47 @@ h1, h2, h3 {
 
 </style>
 """, unsafe_allow_html=True)
+
+# =========================================================
+# FUNCIÓN TARJETA CON IMAGEN
+# =========================================================
+def report_card(titulo, desc, link, img=None):
+
+    if img:
+        st.image(img, use_container_width=True)
+
+        st.markdown(f"""
+        <div style="
+            margin-top:-90px;
+            padding:18px;
+            color:white;
+            font-weight:700;
+            font-size:1.1rem;
+            background: linear-gradient(transparent, rgba(0,0,0,0.75));
+        ">
+            {titulo}
+            <div style="font-weight:400;font-size:0.9rem;">
+                {desc}
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
+
+    else:
+        st.markdown(f"""
+        <div style="
+            background: white;
+            border-radius: 16px;
+            padding: 24px;
+            height: 210px;
+            box-shadow: 0 12px 28px rgba(0,0,0,0.08);
+            border-left: 5px solid #1071B8;
+        ">
+            <div style="font-weight:700;color:#2E3788">{titulo}</div>
+            <div style="color:#6b7280">{desc}</div>
+        </div>
+        """, unsafe_allow_html=True)
+
+    st.link_button("Abrir reporte", link, use_container_width=True)
 
 # =========================================================
 # PORTAL PRINCIPAL
@@ -187,83 +229,24 @@ else:
 
         st.divider()
 
-        # ⭐ TARJETA CON IMAGEN DE FONDO
-        def report_card(titulo, desc, link, img=None):
-
-            if img:
-                st.markdown(f"""
-                <div style="
-                    position: relative;
-                    border-radius: 16px;
-                    overflow: hidden;
-                    height: 210px;
-                    box-shadow: 0 12px 28px rgba(0,0,0,0.12);
-                ">
-
-                    <img src="{img}" style="
-                        width:100%;
-                        height:100%;
-                        object-fit: cover;
-                        filter: brightness(0.75);
-                    ">
-
-                    <div style="
-                        position: absolute;
-                        bottom: 0;
-                        padding: 18px;
-                        color: white;
-                        font-weight: 700;
-                        font-size: 1.1rem;
-                        background: linear-gradient(transparent, rgba(0,0,0,0.65));
-                        width: 100%;
-                    ">
-                        {titulo}
-                        <div style="font-weight:400;font-size:0.9rem;">
-                            {desc}
-                        </div>
-                    </div>
-
-                </div>
-                """, unsafe_allow_html=True)
-
-            else:
-                st.markdown(f"""
-                <div style="
-                    background: white;
-                    border-radius: 16px;
-                    padding: 24px;
-                    height: 210px;
-                    box-shadow: 0 12px 28px rgba(0,0,0,0.08);
-                    border-left: 5px solid #1071B8;
-                ">
-                    <div style="font-weight:700;color:#2E3788">{titulo}</div>
-                    <div style="color:#6b7280">{desc}</div>
-                </div>
-                """, unsafe_allow_html=True)
-
-            st.link_button("Abrir reporte", link, use_container_width=True)
-
-        # =========================================================
-        # ADMINISTRACIÓN DE PERSONAL
-        # =========================================================
         if area == "Administración de Personal":
 
             col1, col2, col3 = st.columns(3)
 
             with col1:
                 report_card(
-                    "Vacaciones",
-                    "Saldo y planificación",
-                    "https://app.powerbi.com/links/1TThJ-ia9c?ctid=42fc96b3-c018-482d-8ada-cab81720489e&pbi_source=linkShare",
-                    "Vacaciones.jpg"
-                )
-
-            with col2:
-                report_card(
                     "Descansos Médicos",
                     "Seguimiento y subsidios",
                     "https://app.powerbi.com/links/NQfjSntCO1?ctid=42fc96b3-c018-482d-8ada-cab81720489e&pbi_source=linkShare",
                     "DescansosMedicos.jpg"
+                )
+
+            with col2:
+                report_card(
+                    "Vacaciones",
+                    "Saldo y planificación",
+                    "https://app.powerbi.com/links/1TThJ-ia9c?ctid=42fc96b3-c018-482d-8ada-cab81720489e&pbi_source=linkShare",
+                    "Vacaciones.jpg"
                 )
 
             with col3:
@@ -273,9 +256,6 @@ else:
                     "https://sharepoint.com"
                 )
 
-        # =========================================================
-        # DESARROLLO ORGANIZACIONAL
-        # =========================================================
         elif area == "Desarrollo Organizacional":
 
             col1, col2 = st.columns(2)
@@ -286,9 +266,6 @@ else:
             with col2:
                 report_card("Clima Laboral", "Encuestas", "https://app.powerbi.com")
 
-        # =========================================================
-        # SST
-        # =========================================================
         elif area == "Seguridad y Salud en el Trabajo":
 
             col1, col2 = st.columns(2)
