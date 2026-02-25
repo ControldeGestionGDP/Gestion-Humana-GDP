@@ -10,31 +10,45 @@ st.set_page_config(
     layout="wide"
 )
 
+# ===== COLORES CORPORATIVOS =====
 COLOR1 = "#1071B8"
 COLOR2 = "#2E3788"
 COLOR3 = "#C4579B"
 
+# =========================================================
+# RUTA BASE (FUNCIONA EN LOCAL Y CLOUD)
+# =========================================================
 BASE_DIR = Path(__file__).resolve().parent
 ASSETS_DIR = BASE_DIR / "assets"
 
+# =========================================================
+# PASSWORDS
+# =========================================================
 PASSWORDS = {
     "Administración de Personal": "pollo123",
     "Desarrollo Organizacional": "talento2024",
     "Seguridad y Salud en el Trabajo": "seguridad2024"
 }
 
+# =========================================================
+# SESSION STATE
+# =========================================================
 if "area" not in st.session_state:
     st.session_state.area = None
 
 if "auth" not in st.session_state:
     st.session_state.auth = False
 
-
 # =========================================================
-# ESTILOS (ROSADO + AZUL)
+# ESTILOS SaaS PREMIUM
 # =========================================================
 st.markdown(f"""
 <style>
+
+html, body {{
+    font-family: "Segoe UI", sans-serif;
+    background: #f4f6fb;
+}}
 
 .main-title {{
     font-size: 2.6rem;
@@ -55,92 +69,106 @@ st.markdown(f"""
     margin-bottom: 28px;
 }}
 
-.card {{
+.area-card {{
     background: white;
     border-radius: 18px;
-    overflow: hidden;
-    box-shadow: 0 20px 45px rgba(0,0,0,0.12);
-    transition: transform 0.35s ease;
+    height: 240px;
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    box-shadow: 0 18px 40px rgba(0,0,0,0.08);
+    border-top: 6px solid {COLOR1};
+    transition: all 0.25s ease;
 }}
 
-.card:hover {{
-    transform: translateY(-6px);
+.area-card:hover {{
+    transform: translateY(-8px);
+    border-top: 6px solid {COLOR3};
+    box-shadow: 0 28px 60px rgba(0,0,0,0.12);
 }}
 
-.card img {{
-    width: 100%;
-    height: 240px;   /* 👈 MISMO TAMAÑO PARA TODAS */
-    object-fit: cover;
+.login-box {{
+    background: white;
+    padding: 40px;
+    border-radius: 18px;
+    box-shadow: 0 25px 55px rgba(0,0,0,0.12);
+    border-top: 5px solid {COLOR1};
 }}
 
-.card-body {{
+.report-card img {{
+    border-radius: 18px;
+    transition: transform 0.4s ease;
+}}
+
+.report-card:hover img {{
+    transform: scale(1.05);
+}}
+
+.overlay {{
+    position: relative;
+    margin-top: -110px;
     padding: 20px;
-    text-align: center;
-}}
-
-.card-title {{
+    color: white;
     font-weight: 700;
     font-size: 1.2rem;
-    color: {COLOR2};
+    background: linear-gradient(transparent, rgba(0,0,0,0.85));
+    border-bottom-left-radius: 18px;
+    border-bottom-right-radius: 18px;
 }}
 
-.card-desc {{
+.desc {{
+    font-weight: 400;
     font-size: 0.95rem;
-    color: #6b7280;
-    margin-bottom: 14px;
 }}
 
-.stButton > button {{
-    background: linear-gradient(90deg,{COLOR1},{COLOR2},{COLOR3});
+div.stButton > button {{
+    background: linear-gradient(90deg, {COLOR1}, {COLOR2}, {COLOR3});
     color: white;
+    border-radius: 999px;
     border: none;
-    border-radius: 10px;
-    font-weight: 600;
+    font-weight: 700;
+    height: 45px;
+    transition: 0.3s;
+}}
+
+div.stButton > button:hover {{
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.25);
 }}
 
 </style>
 """, unsafe_allow_html=True)
 
-
 # =========================================================
-# TARJETA CON BOTÓN
+# FUNCIÓN TARJETA PRO (CLOUD SAFE)
 # =========================================================
-def card(titulo, desc, img_file, action=None, link=None):
+def report_card(titulo, desc, link, img_relative_path):
 
-    img_path = ASSETS_DIR / img_file
+    img_path = ASSETS_DIR / img_relative_path
+    fallback = ASSETS_DIR / "default.jpg"
+    img_to_use = img_path if img_path.exists() else fallback
 
-    st.markdown('<div class="card">', unsafe_allow_html=True)
+    st.markdown('<div class="report-card">', unsafe_allow_html=True)
 
-    if img_path.exists():
-        st.image(str(img_path), use_container_width=True)
+    if img_to_use.exists():
+        st.image(str(img_to_use), use_container_width=True)
+    else:
+        st.warning("Imagen no encontrada y no existe default.jpg")
 
     st.markdown(f"""
-        <div class="card-body">
-            <div class="card-title">{titulo}</div>
-            <div class="card-desc">{desc}</div>
-        </div>
+    <div class="overlay">
+        {titulo}
+        <div class="desc">{desc}</div>
+    </div>
     """, unsafe_allow_html=True)
 
-    if action:
-        if st.button("Ingresar", key=titulo):
-            action()
+    st.link_button("Abrir reporte", link, use_container_width=True)
 
-    if link:
-        st.markdown(f"""
-            <a href="{link}" target="_blank">
-                <button style="width:100%;padding:10px;
-                background:linear-gradient(90deg,{COLOR1},{COLOR2},{COLOR3});
-                border:none;border-radius:10px;color:white;font-weight:600;">
-                Ingresar
-                </button>
-            </a>
-        """, unsafe_allow_html=True)
-
-    st.markdown('</div>', unsafe_allow_html=True)
-
+    st.markdown("</div>", unsafe_allow_html=True)
 
 # =========================================================
-# PORTAL PRINCIPAL (ÁREAS)
+# PORTAL PRINCIPAL
 # =========================================================
 if st.session_state.area is None:
 
@@ -150,39 +178,37 @@ if st.session_state.area is None:
 
     col1, col2, col3 = st.columns(3)
 
-    with col1:
-        card(
-            "Administración de Personal",
-            "Vacaciones, descansos y exámenes",
-            "Administracion.jpg",
-            action=lambda: (
-                st.session_state.update({"area": "Administración de Personal"}),
-                st.rerun()
-            )
-        )
+    areas = [
+        ("👥 Administración de Personal"),
+        ("📚 Desarrollo Organizacional"),
+        ("🦺 Seguridad y Salud en el Trabajo")
+    ]
+    
+    area_imgs = ["Administracion.jpg", "Desarrollo.jpg", "Seguridad.jpg"]
 
-    with col2:
-        card(
-            "Desarrollo Organizacional",
-            "Capacitaciones y desempeño",
-            "Desarrollo.jpg",
-            action=lambda: (
-                st.session_state.update({"area": "Desarrollo Organizacional"}),
-                st.rerun()
-            )
-        )
+    for col, name, img_file in zip([col1, col2, col3], areas, area_imgs):
+        with col:
+            # Mostrar imagen del área
+            img_path = ASSETS_DIR / img_file
+            if img_path.exists():
+                st.image(str(img_path), use_container_width=True)
+            else:
+                st.warning(f"Imagen {img_file} no encontrada")
 
-    with col3:
-        card(
-            "Seguridad y Salud en el Trabajo",
-            "Indicadores SST",
-            "Seguridad.jpg",
-            action=lambda: (
-                st.session_state.update({"area": "Seguridad y Salud en el Trabajo"}),
-                st.rerun()
-            )
-        )
+            st.markdown(f"""
+            <div class="area-card">
+                <div style="font-size:1.3rem;font-weight:700;color:{COLOR2};">
+                    {name}
+                </div>
+            </div>
+            """, unsafe_allow_html=True)
 
+            clean_name = name.split(" ", 1)[1]
+
+            if st.button("Ingresar", key=clean_name):
+                st.session_state.area = clean_name
+                st.session_state.auth = False
+                st.rerun()
 
 # =========================================================
 # LOGIN
@@ -193,27 +219,41 @@ else:
 
     if not st.session_state.auth:
 
-        st.subheader(area)
-        pwd = st.text_input("Contraseña", type="password")
+        col1, col2, col3 = st.columns([1,2,1])
 
-        if st.button("Ingresar"):
-            if pwd == PASSWORDS[area]:
-                st.session_state.auth = True
+        with col2:
+
+            st.markdown(f"""
+            <div class="login-box">
+                <div style="font-size:1.4rem;font-weight:700;color:{COLOR2};text-align:center;">
+                    {area}
+                </div>
+                <div style="text-align:center;color:#6b7280;margin-bottom:20px;">
+                    Ingrese su contraseña
+                </div>
+            </div>
+            """, unsafe_allow_html=True)
+
+            pwd = st.text_input("Contraseña", type="password")
+
+            if st.button("Ingresar", use_container_width=True):
+                if pwd == PASSWORDS[area]:
+                    st.session_state.auth = True
+                    st.rerun()
+                else:
+                    st.error("Contraseña incorrecta")
+
+            if st.button("Volver", use_container_width=True):
+                st.session_state.area = None
                 st.rerun()
-            else:
-                st.error("Contraseña incorrecta")
-
-        if st.button("Volver"):
-            st.session_state.area = None
-            st.rerun()
-
 
 # =========================================================
-# DASHBOARD INTERNO
+# DASHBOARDS
 # =========================================================
     else:
 
-        st.header(area)
+        st.markdown(f'<div class="main-title">{area}</div>', unsafe_allow_html=True)
+        st.markdown('<div class="title-accent"></div>', unsafe_allow_html=True)
 
         if st.button("Cambiar área"):
             st.session_state.area = None
@@ -222,34 +262,47 @@ else:
 
         st.divider()
 
+        # ADMINISTRACIÓN DE PERSONAL (3 REALES)
         if area == "Administración de Personal":
 
             col1, col2, col3 = st.columns(3)
 
             with col1:
-                card(
-                    "Vacaciones",
-                    "Saldo y planificación",
-                    "Vacaciones.jpg",
-                    link="https://app.powerbi.com"
-                )
+                report_card("Vacaciones", "Saldo y planificación",
+                            "https://app.powerbi.com/links/1TThJ-ia9c?ctid=42fc96b3-c018-482d-8ada-cab81720489e&pbi_source=linkShare",
+                            "Vacaciones.jpg")
 
             with col2:
-                card(
-                    "Descansos Médicos",
-                    "Subsidios y ausencias",
-                    "DescansosMedicos.jpg",
-                    link="https://app.powerbi.com"
-                )
+                report_card("Descansos Médicos", "Subsidios y ausencias",
+                            "https://app.powerbi.com/links/NQfjSntCO1?ctid=42fc96b3-c018-482d-8ada-cab81720489e&pbi_source=linkShare",
+                            "DescansosMedicos.jpg")
 
             with col3:
-                card(
-                    "Exámenes Médicos",
-                    "Seguimiento ocupacional",
-                    "Examenes.jpg",
-                    link="https://app.powerbi.com"
-                )
+                report_card("Exámenes Médicos", "Seguimiento ocupacional",
+                            "https://app.powerbi.com/links/eAcPJmr1vJ?ctid=42fc96b3-c018-482d-8ada-cab81720489e&pbi_source=linkShare",
+                            "Examenes.jpg")
 
+        # DESARROLLO ORGANIZACIONAL (1 FICTICIO)
+        elif area == "Desarrollo Organizacional":
+
+            col1, col2, col3 = st.columns([1,2,1])
+
+            with col2:
+                report_card("Capacitaciones",
+                            "Panel en construcción",
+                            "https://app.powerbi.com",
+                            "Capacitaciones.jpg")
+
+        # SEGURIDAD Y SALUD (1 FICTICIO)
+        elif area == "Seguridad y Salud en el Trabajo":
+
+            col1, col2, col3 = st.columns([1,2,1])
+
+            with col2:
+                report_card("Incidentes SST",
+                            "Panel en construcción",
+                            "https://app.powerbi.com",
+                            "Incidentes.jpg")
 
 # =========================================================
 # FOOTER
