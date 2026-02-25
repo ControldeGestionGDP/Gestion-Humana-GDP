@@ -31,15 +31,10 @@ if "auth" not in st.session_state:
 
 
 # =========================================================
-# ESTILOS
+# ESTILOS (ROSADO + AZUL)
 # =========================================================
 st.markdown(f"""
 <style>
-
-html, body {{
-    font-family: "Segoe UI", sans-serif;
-    background: #f4f6fb;
-}}
 
 .main-title {{
     font-size: 2.6rem;
@@ -60,12 +55,11 @@ html, body {{
     margin-bottom: 28px;
 }}
 
-/* TARJETA */
 .card {{
-    position: relative;
+    background: white;
     border-radius: 18px;
     overflow: hidden;
-    cursor: pointer;
+    box-shadow: 0 20px 45px rgba(0,0,0,0.12);
     transition: transform 0.35s ease;
 }}
 
@@ -75,37 +69,33 @@ html, body {{
 
 .card img {{
     width: 100%;
-    height: 260px;
+    height: 240px;   /* 👈 MISMO TAMAÑO PARA TODAS */
     object-fit: cover;
-    transition: transform 0.4s ease;
 }}
 
-.card:hover img {{
-    transform: scale(1.05);
-}}
-
-.overlay {{
-    position: absolute;
-    bottom: 0;
-    width: 100%;
+.card-body {{
     padding: 20px;
-    color: white;
+    text-align: center;
+}}
+
+.card-title {{
     font-weight: 700;
     font-size: 1.2rem;
-    background: linear-gradient(transparent, rgba(0,0,0,0.85));
+    color: {COLOR2};
 }}
 
-.desc {{
-    font-weight: 400;
+.card-desc {{
     font-size: 0.95rem;
+    color: #6b7280;
+    margin-bottom: 14px;
 }}
 
-.login-box {{
-    background: white;
-    padding: 40px;
-    border-radius: 18px;
-    box-shadow: 0 25px 55px rgba(0,0,0,0.12);
-    border-top: 5px solid {COLOR1};
+.stButton > button {{
+    background: linear-gradient(90deg,{COLOR1},{COLOR2},{COLOR3});
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-weight: 600;
 }}
 
 </style>
@@ -113,45 +103,44 @@ html, body {{
 
 
 # =========================================================
-# TARJETA CLICKEABLE
+# TARJETA CON BOTÓN
 # =========================================================
-def card(titulo, desc, img_relative_path, action=None, link=None):
+def card(titulo, desc, img_file, action=None, link=None):
 
-    img_path = ASSETS_DIR / img_relative_path
-    fallback = ASSETS_DIR / "default.jpg"
-    img_to_use = img_path if img_path.exists() else fallback
+    img_path = ASSETS_DIR / img_file
 
     st.markdown('<div class="card">', unsafe_allow_html=True)
 
-    if img_to_use.exists():
-        st.image(str(img_to_use), use_container_width=True)
+    if img_path.exists():
+        st.image(str(img_path), use_container_width=True)
 
     st.markdown(f"""
-        <div class="overlay">
-            {titulo}
-            <div class="desc">{desc}</div>
+        <div class="card-body">
+            <div class="card-title">{titulo}</div>
+            <div class="card-desc">{desc}</div>
         </div>
     """, unsafe_allow_html=True)
 
-    st.markdown("</div>", unsafe_allow_html=True)
-
     if action:
-        if st.button(f"abrir_{titulo}", key=titulo):
+        if st.button("Ingresar", key=titulo):
             action()
 
     if link:
         st.markdown(f"""
-            <script>
-                const cards = window.parent.document.querySelectorAll('.card');
-                cards[cards.length - 1].onclick = function() {{
-                    window.open("{link}", "_blank");
-                }};
-            </script>
+            <a href="{link}" target="_blank">
+                <button style="width:100%;padding:10px;
+                background:linear-gradient(90deg,{COLOR1},{COLOR2},{COLOR3});
+                border:none;border-radius:10px;color:white;font-weight:600;">
+                Ingresar
+                </button>
+            </a>
         """, unsafe_allow_html=True)
+
+    st.markdown('</div>', unsafe_allow_html=True)
 
 
 # =========================================================
-# PORTAL PRINCIPAL
+# PORTAL PRINCIPAL (ÁREAS)
 # =========================================================
 if st.session_state.area is None:
 
@@ -163,7 +152,7 @@ if st.session_state.area is None:
 
     with col1:
         card(
-            "👥 Administración de Personal",
+            "Administración de Personal",
             "Vacaciones, descansos y exámenes",
             "Administracion.jpg",
             action=lambda: (
@@ -174,7 +163,7 @@ if st.session_state.area is None:
 
     with col2:
         card(
-            "📚 Desarrollo Organizacional",
+            "Desarrollo Organizacional",
             "Capacitaciones y desempeño",
             "Desarrollo.jpg",
             action=lambda: (
@@ -185,7 +174,7 @@ if st.session_state.area is None:
 
     with col3:
         card(
-            "🦺 Seguridad y Salud en el Trabajo",
+            "Seguridad y Salud en el Trabajo",
             "Indicadores SST",
             "Seguridad.jpg",
             action=lambda: (
@@ -194,8 +183,9 @@ if st.session_state.area is None:
             )
         )
 
+
 # =========================================================
-# LOGIN + DASHBOARD
+# LOGIN
 # =========================================================
 else:
 
@@ -203,38 +193,27 @@ else:
 
     if not st.session_state.auth:
 
-        col1, col2, col3 = st.columns([1,2,1])
+        st.subheader(area)
+        pwd = st.text_input("Contraseña", type="password")
 
-        with col2:
-
-            st.markdown(f"""
-            <div class="login-box">
-                <div style="font-size:1.4rem;font-weight:700;color:{COLOR2};text-align:center;">
-                    {area}
-                </div>
-                <div style="text-align:center;color:#6b7280;margin-bottom:20px;">
-                    Ingrese su contraseña
-                </div>
-            </div>
-            """, unsafe_allow_html=True)
-
-            pwd = st.text_input("Contraseña", type="password")
-
-            if st.button("Ingresar", use_container_width=True):
-                if pwd == PASSWORDS[area]:
-                    st.session_state.auth = True
-                    st.rerun()
-                else:
-                    st.error("Contraseña incorrecta")
-
-            if st.button("Volver", use_container_width=True):
-                st.session_state.area = None
+        if st.button("Ingresar"):
+            if pwd == PASSWORDS[area]:
+                st.session_state.auth = True
                 st.rerun()
+            else:
+                st.error("Contraseña incorrecta")
 
+        if st.button("Volver"):
+            st.session_state.area = None
+            st.rerun()
+
+
+# =========================================================
+# DASHBOARD INTERNO
+# =========================================================
     else:
 
-        st.markdown(f'<div class="main-title">{area}</div>', unsafe_allow_html=True)
-        st.markdown('<div class="title-accent"></div>', unsafe_allow_html=True)
+        st.header(area)
 
         if st.button("Cambiar área"):
             st.session_state.area = None
