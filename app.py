@@ -186,25 +186,26 @@ if st.session_state.area is None:
     
     area_imgs = ["Administracion.jpg", "Desarrollo.jpg", "Seguridad.jpg"]
 
-for col, name, img_file in zip([col1, col2, col3], areas, area_imgs):
-    with col:
-        img_path = ASSETS_DIR / img_file
-        img_url = str(img_path) if img_path.exists() else ""
+    for col, name, img_file in zip([col1, col2, col3], areas, area_imgs):
+        with col:
+            # Mostrar la imagen dentro de la tarjeta como fondo
+            img_path = ASSETS_DIR / img_file
+            img_url = str(img_path) if img_path.exists() else ""
 
-        st.markdown(f"""
-        <div class="area-card" style="background-image:url('{img_url}'); background-size:cover; background-position:center;">
-            <div style="font-size:1.3rem;font-weight:700;color:white;text-shadow: 1px 1px 5px black;">
-                {name}
+            st.markdown(f"""
+            <div class="area-card" style="background-image:url('{img_url}'); background-size:cover; background-position:center;">
+                <div style="font-size:1.3rem;font-weight:700;color:white;text-shadow: 1px 1px 5px black;">
+                    {name}
+                </div>
             </div>
-        </div>
-        """, unsafe_allow_html=True)
+            """, unsafe_allow_html=True)
 
-        clean_name = name.split(" ", 1)[1]
+            clean_name = name.split(" ", 1)[1]
 
-        if st.button("Ingresar", key=clean_name):
-            st.session_state.area = clean_name
-            st.session_state.auth = False
-            st.rerun()
+            if st.button("Ingresar", key=clean_name):
+                st.session_state.area = clean_name
+                st.session_state.auth = False
+                st.rerun()
 
 # =========================================================
 # LOGIN
