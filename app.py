@@ -16,7 +16,7 @@ COLOR2 = "#2E3788"
 COLOR3 = "#C4579B"
 
 # =========================================================
-# RUTA BASE (FUNCIONA EN LOCAL Y CLOUD)
+# RUTA BASE
 # =========================================================
 BASE_DIR = Path(__file__).resolve().parent
 ASSETS_DIR = BASE_DIR / "assets"
@@ -35,16 +35,14 @@ PASSWORDS = {
 # =========================================================
 if "area" not in st.session_state:
     st.session_state.area = None
-
 if "auth" not in st.session_state:
     st.session_state.auth = False
 
 # =========================================================
-# ESTILOS SaaS PREMIUM
+# ESTILOS
 # =========================================================
 st.markdown(f"""
 <style>
-
 html, body {{
     font-family: "Segoe UI", sans-serif;
     background: #f4f6fb;
@@ -72,16 +70,16 @@ html, body {{
 .area-card {{
     background: white;
     border-radius: 18px;
-    height: 240px;
-    padding: 0;
+    padding: 0.5rem;
     display: flex;
     flex-direction: column;
     justify-content: flex-end;
+    align-items: center;
     box-shadow: 0 18px 40px rgba(0,0,0,0.08);
     border-top: 6px solid {COLOR1};
     transition: all 0.25s ease;
-    position: relative;
     overflow: hidden;
+    height: 260px;
 }}
 
 .area-card:hover {{
@@ -90,17 +88,19 @@ html, body {{
     box-shadow: 0 28px 60px rgba(0,0,0,0.12);
 }}
 
-.area-card .overlay {{
-    position: absolute;
-    bottom: 0;
+.area-card img {{
+    border-radius: 18px 18px 0 0;
+    height: 160px;
     width: 100%;
-    padding: 20px;
-    background: linear-gradient(transparent, rgba(0,0,0,0.75));
-    color: white;
-    font-weight: 700;
-    font-size: 1.2rem;
-    border-bottom-left-radius: 18px;
-    border-bottom-right-radius: 18px;
+    object-fit: cover;
+}}
+
+.area-card .area-title {{
+    font-size:1.3rem;
+    font-weight:700;
+    color:{COLOR2};
+    margin-top: 0.5rem;
+    text-align: center;
 }}
 
 .login-box {{
@@ -130,22 +130,18 @@ div.stButton > button:hover {{
 """, unsafe_allow_html=True)
 
 # =========================================================
-# FUNCIÓN TARJETA PRO (CLOUD SAFE)
+# FUNCIÓN TARJETA CON IMAGEN
 # =========================================================
-def report_card(titulo, desc, link, img_relative_path):
-    img_path = ASSETS_DIR / img_relative_path
-    fallback = ASSETS_DIR / "default.jpg"
-    img_to_use = img_path if img_path.exists() else fallback
+def area_card(name, img_file):
+    img_path = ASSETS_DIR / img_file
+    if not img_path.exists():
+        st.warning(f"Imagen {img_file} no encontrada")
+        return
 
-    st.markdown(f"""
-    <div class="area-card" style="background-image: url('{img_to_use}'); background-size: cover; background-position: center;">
-        <div class="overlay">
-            {titulo}<br>
-            <span style="font-weight:400; font-size:0.95rem;">{desc}</span>
-        </div>
-    </div>
-    """, unsafe_allow_html=True)
-    st.link_button("Abrir reporte", link, use_container_width=True)
+    st.markdown('<div class="area-card">', unsafe_allow_html=True)
+    st.image(str(img_path), use_column_width=True)
+    st.markdown(f'<div class="area-title">{name}</div>', unsafe_allow_html=True)
+    st.markdown('</div>', unsafe_allow_html=True)
 
 # =========================================================
 # PORTAL PRINCIPAL
@@ -159,25 +155,15 @@ if st.session_state.area is None:
     col1, col2, col3 = st.columns(3)
 
     areas = [
-        ("👥 Administración de Personal", "Administracion.jpg"),
-        ("📚 Desarrollo Organizacional", "Desarrollo.jpg"),
-        ("🦺 Seguridad y Salud en el Trabajo", "Seguridad.jpg")
+        ("Administración de Personal", "Administracion.jpg"),
+        ("Desarrollo Organizacional", "Desarrollo.jpg"),
+        ("Seguridad y Salud en el Trabajo", "Seguridad.jpg")
     ]
 
     for col, (name, img_file) in zip([col1, col2, col3], areas):
         with col:
-            img_path = ASSETS_DIR / img_file
-            fallback = ASSETS_DIR / "default.jpg"
-            img_to_use = img_path if img_path.exists() else fallback
-
-            st.markdown(f"""
-            <div class="area-card" style="background-image: url('{img_to_use}'); background-size: cover; background-position: center;">
-                <div class="overlay">{name}</div>
-            </div>
-            """, unsafe_allow_html=True)
-
+            area_card(name, img_file)
             clean_name = name.split(" ", 1)[1]
-
             if st.button("Ingresar", key=clean_name):
                 st.session_state.area = clean_name
                 st.session_state.auth = False
@@ -190,9 +176,7 @@ else:
     area = st.session_state.area
 
     if not st.session_state.auth:
-
         col1, col2, col3 = st.columns([1,2,1])
-
         with col2:
             st.markdown(f"""
             <div class="login-box">
@@ -206,7 +190,6 @@ else:
             """, unsafe_allow_html=True)
 
             pwd = st.text_input("Contraseña", type="password")
-
             if st.button("Ingresar", use_container_width=True):
                 if pwd == PASSWORDS[area]:
                     st.session_state.auth = True
@@ -229,37 +212,32 @@ else:
 
         st.divider()
 
-        # EJEMPLO DE REPORTES
+        # ADMINISTRACIÓN DE PERSONAL
         if area == "Administración de Personal":
             col1, col2, col3 = st.columns(3)
             with col1:
-                report_card("Vacaciones", "Saldo y planificación",
-                            "https://app.powerbi.com/links/1TThJ-ia9c?ctid=42fc96b3-c018-482d-8ada-cab81720489e&pbi_source=linkShare",
-                            "Vacaciones.jpg")
+                st.image(str(ASSETS_DIR / "Vacaciones.jpg"), use_column_width=True)
+                st.markdown("<div style='font-weight:700;'>Vacaciones</div>", unsafe_allow_html=True)
             with col2:
-                report_card("Descansos Médicos", "Subsidios y ausencias",
-                            "https://app.powerbi.com/links/NQfjSntCO1?ctid=42fc96b3-c018-482d-8ada-cab81720489e&pbi_source=linkShare",
-                            "DescansosMedicos.jpg")
+                st.image(str(ASSETS_DIR / "DescansosMedicos.jpg"), use_column_width=True)
+                st.markdown("<div style='font-weight:700;'>Descansos Médicos</div>", unsafe_allow_html=True)
             with col3:
-                report_card("Exámenes Médicos", "Seguimiento ocupacional",
-                            "https://app.powerbi.com/links/eAcPJmr1vJ?ctid=42fc96b3-c018-482d-8ada-cab81720489e&pbi_source=linkShare",
-                            "Examenes.jpg")
+                st.image(str(ASSETS_DIR / "Examenes.jpg"), use_column_width=True)
+                st.markdown("<div style='font-weight:700;'>Exámenes Médicos</div>", unsafe_allow_html=True)
 
+        # DESARROLLO ORGANIZACIONAL
         elif area == "Desarrollo Organizacional":
             col1, col2, col3 = st.columns([1,2,1])
             with col2:
-                report_card("Capacitaciones",
-                            "Panel en construcción",
-                            "https://app.powerbi.com",
-                            "Capacitaciones.jpg")
+                st.image(str(ASSETS_DIR / "Capacitaciones.jpg"), use_column_width=True)
+                st.markdown("<div style='font-weight:700;'>Capacitaciones</div>", unsafe_allow_html=True)
 
+        # SEGURIDAD Y SALUD
         elif area == "Seguridad y Salud en el Trabajo":
             col1, col2, col3 = st.columns([1,2,1])
             with col2:
-                report_card("Incidentes SST",
-                            "Panel en construcción",
-                            "https://app.powerbi.com",
-                            "Incidentes.jpg")
+                st.image(str(ASSETS_DIR / "Incidentes.jpg"), use_column_width=True)
+                st.markdown("<div style='font-weight:700;'>Incidentes SST</div>", unsafe_allow_html=True)
 
 # =========================================================
 # FOOTER
