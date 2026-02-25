@@ -208,15 +208,53 @@ else:
 
         st.divider()
 
-        def report_card(titulo, desc, link):
-            st.markdown(f"""
-            <div class="report-card">
-                <div>
-                    <div style="font-weight:700;color:#2E3788">{titulo}</div>
-                    <div style="color:#6b7280">{desc}</div>
+        def report_card(titulo, desc, link, img=None):
+
+            if img:
+                st.markdown(f"""
+                <div style="
+                    position: relative;
+                    border-radius: 16px;
+                    overflow: hidden;
+                    height: 210px;
+                    box-shadow: 0 12px 28px rgba(0,0,0,0.12);
+                ">
+
+                    <img src="{img}" style="
+                        width:100%;
+                        height:100%;
+                        object-fit: cover;
+                        filter: brightness(0.75);
+                    ">
+
+                    <div style="
+                        position: absolute;
+                        bottom: 0;
+                        padding: 18px;
+                        color: white;
+                        font-weight: 700;
+                        font-size: 1.1rem;
+                        background: linear-gradient(transparent, rgba(0,0,0,0.65));
+                        width: 100%;
+                    ">
+                        {titulo}
+                        <div style="font-weight:400;font-size:0.9rem;">
+                            {desc}
+                        </div>
+                    </div>
+
                 </div>
-            </div>
-            """, unsafe_allow_html=True)
+                """, unsafe_allow_html=True)
+
+            else:
+                st.markdown(f"""
+                <div class="report-card">
+                    <div>
+                        <div style="font-weight:700;color:#2E3788">{titulo}</div>
+                        <div style="color:#6b7280">{desc}</div>
+                    </div>
+                </div>
+                """, unsafe_allow_html=True)
 
             st.link_button("Abrir reporte", link, use_container_width=True)
 
@@ -225,13 +263,27 @@ else:
             col1, col2, col3 = st.columns(3)
 
             with col1:
-                report_card("Vacaciones", "Saldo y planificación", "https://app.powerbi.com")
+                report_card(
+                    "Descansos Médicos",
+                    "Seguimiento y subsidios",
+                    "https://app.powerbi.com/links/NQfjSntCO1?ctid=42fc96b3-c018-482d-8ada-cab81720489e&pbi_source=linkShare",
+                    "DescansosMedicos.jpg"
+                )
 
             with col2:
-                report_card("Asistencia", "Puntualidad y ausentismo", "https://app.powerbi.com")
+                report_card(
+                    "Vacaciones",
+                    "Saldo y planificación",
+                    "https://app.powerbi.com/links/1TThJ-ia9c?ctid=42fc96b3-c018-482d-8ada-cab81720489e&pbi_source=linkShare",
+                    "Vacaciones.jpg"
+                )
 
             with col3:
-                report_card("Legajos Digitales", "Repositorio documental", "https://sharepoint.com")
+                report_card(
+                    "Legajos Digitales",
+                    "Repositorio documental",
+                    "https://sharepoint.com"
+                )
 
         elif area == "Desarrollo Organizacional":
 
