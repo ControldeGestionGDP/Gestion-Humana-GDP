@@ -1,6 +1,5 @@
 import streamlit as st
 from pathlib import Path
-import base64
 
 # =========================================================
 # CONFIG
@@ -11,13 +10,13 @@ st.set_page_config(
     layout="wide"
 )
 
-# ===== COLORES =====
+# ===== COLORES CORPORATIVOS =====
 COLOR1 = "#1071B8"
 COLOR2 = "#2E3788"
 COLOR3 = "#C4579B"
 
 # =========================================================
-# RUTAS
+# RUTA BASE (FUNCIONA EN LOCAL Y CLOUD)
 # =========================================================
 BASE_DIR = Path(__file__).resolve().parent
 ASSETS_DIR = BASE_DIR / "assets"
@@ -41,16 +40,7 @@ if "auth" not in st.session_state:
     st.session_state.auth = False
 
 # =========================================================
-# FUNCION: CONVERTIR IMAGEN A BASE64
-# =========================================================
-def img_to_base64(path):
-    if not path.exists():
-        path = ASSETS_DIR / "default.jpg"
-    with open(path, "rb") as f:
-        return base64.b64encode(f.read()).decode()
-
-# =========================================================
-# CSS PREMIUM
+# ESTILOS SaaS PREMIUM
 # =========================================================
 st.markdown(f"""
 <style>
@@ -87,11 +77,16 @@ html, body {{
     border-top: 5px solid {COLOR1};
 }}
 
-.card-img {{
-    width: 100%;
-    height: 260px;        /* 🔥 MISMO TAMAÑO REAL */
-    object-fit: cover;    /* 🔥 RECORTE PRO */
+.report-card img {{
     border-radius: 18px;
+    transition: transform 0.4s ease;
+    height: 260px;       /* 🔥 MISMO TAMAÑO PARA TODAS */
+    width: 100%;
+    object-fit: cover;   /* 🔥 RECORTE PROFESIONAL */
+}}
+
+.report-card:hover img {{
+    transform: scale(1.05);
 }}
 
 .overlay {{
@@ -113,21 +108,31 @@ div.stButton > button {{
     border: none;
     font-weight: 700;
     height: 45px;
+    transition: 0.3s;
+}}
+
+div.stButton > button:hover {{
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.25);
 }}
 
 </style>
 """, unsafe_allow_html=True)
 
 # =========================================================
-# TARJETA CON TAMAÑO PERFECTO
+# FUNCIÓN TARJETA PRO
 # =========================================================
-def report_card(titulo, desc, link, img_file):
+def report_card(titulo, desc, link, img_relative_path):
 
-    img_path = ASSETS_DIR / img_file
-    img_base64 = img_to_base64(img_path)
+    img_path = ASSETS_DIR / img_relative_path
+    fallback = ASSETS_DIR / "default.jpg"
+    img_to_use = img_path if img_path.exists() else fallback
+
+    st.markdown('<div class="report-card">', unsafe_allow_html=True)
+
+    st.image(str(img_to_use), use_container_width=True)
 
     st.markdown(f"""
-    <img src="data:image/jpg;base64,{img_base64}" class="card-img">
     <div class="overlay">
         {titulo}
         <div style="font-weight:400;font-size:0.95rem;">{desc}</div>
@@ -135,6 +140,8 @@ def report_card(titulo, desc, link, img_file):
     """, unsafe_allow_html=True)
 
     st.link_button("Abrir reporte", link, use_container_width=True)
+
+    st.markdown("</div>", unsafe_allow_html=True)
 
 # =========================================================
 # PORTAL PRINCIPAL
@@ -148,26 +155,38 @@ if st.session_state.area is None:
     col1, col2, col3 = st.columns(3)
 
     areas = [
-        ("Administración de Personal", "Administracion.jpg"),
-        ("Desarrollo Organizacional", "Desarrollo.jpg"),
-        ("Seguridad y Salud en el Trabajo", "Seguridad.jpg")
+        ("👥 Administración de Personal"),
+        ("📚 Desarrollo Organizacional"),
+        ("🦺 Seguridad y Salud en el Trabajo")
     ]
+    
+    area_imgs = ["Administracion.jpg", "Desarrollo.jpg", "Seguridad.jpg"]
 
-    for col, (name, img_file) in zip([col1, col2, col3], areas):
-
+    for col, name, img_file in zip([col1, col2, col3], areas, area_imgs):
         with col:
 
-            img_base64 = img_to_base64(ASSETS_DIR / img_file)
+            img_path = ASSETS_DIR / img_file
+            fallback = ASSETS_DIR / "default.jpg"
+            img_to_use = img_path if img_path.exists() else fallback
+
+            st.markdown('<div class="report-card">', unsafe_allow_html=True)
+
+            st.image(str(img_to_use), use_container_width=True)
 
             st.markdown(f"""
-            <img src="data:image/jpg;base64,{img_base64}" class="card-img">
-            <div class="overlay">{name}</div>
+            <div class="overlay">
+                {name}
+            </div>
             """, unsafe_allow_html=True)
 
-            if st.button("Ingresar", key=name):
-                st.session_state.area = name
+            clean_name = name.split(" ", 1)[1]
+
+            if st.button("Ingresar", key=clean_name):
+                st.session_state.area = clean_name
                 st.session_state.auth = False
                 st.rerun()
+
+            st.markdown("</div>", unsafe_allow_html=True)
 
 # =========================================================
 # LOGIN
