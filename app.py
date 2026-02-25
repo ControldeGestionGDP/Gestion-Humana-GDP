@@ -267,7 +267,7 @@ else:
 
             with col2:
                 report_card("Descansos Médicos", "Subsidios y ausencias",
-                            "https://app.powerbi.com", "Descansos.jpg")
+                            "https://app.powerbi.com", "DescansosMedicos.jpg")
 
             with col3:
                 report_card("Exámenes Médicos", "Seguimiento ocupacional",
