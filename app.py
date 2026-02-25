@@ -16,9 +16,10 @@ COLOR2 = "#2E3788"
 COLOR3 = "#C4579B"
 
 # =========================================================
-# RUTA BASE (LOCAL + CLOUD)
+# RUTA BASE (FUNCIONA EN LOCAL Y CLOUD)
 # =========================================================
 BASE_DIR = Path(__file__).resolve().parent
+ASSETS_DIR = BASE_DIR / "assets"
 
 # =========================================================
 # PASSWORDS
@@ -39,7 +40,7 @@ if "auth" not in st.session_state:
     st.session_state.auth = False
 
 # =========================================================
-# ESTILOS
+# ESTILOS SaaS PREMIUM
 # =========================================================
 st.markdown(f"""
 <style>
@@ -78,6 +79,13 @@ html, body {{
     justify-content: flex-end;
     box-shadow: 0 18px 40px rgba(0,0,0,0.08);
     border-top: 6px solid {COLOR1};
+    transition: all 0.25s ease;
+}}
+
+.area-card:hover {{
+    transform: translateY(-8px);
+    border-top: 6px solid {COLOR3};
+    box-shadow: 0 28px 60px rgba(0,0,0,0.12);
 }}
 
 .login-box {{
@@ -86,6 +94,15 @@ html, body {{
     border-radius: 18px;
     box-shadow: 0 25px 55px rgba(0,0,0,0.12);
     border-top: 5px solid {COLOR1};
+}}
+
+.report-card img {{
+    border-radius: 18px;
+    transition: transform 0.4s ease;
+}}
+
+.report-card:hover img {{
+    transform: scale(1.05);
 }}
 
 .overlay {{
@@ -112,31 +129,32 @@ div.stButton > button {{
     border: none;
     font-weight: 700;
     height: 45px;
+    transition: 0.3s;
+}}
+
+div.stButton > button:hover {{
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.25);
 }}
 
 </style>
 """, unsafe_allow_html=True)
 
 # =========================================================
-# FUNCIÓN TARJETA — SOPORTA assets/ o raíz
+# FUNCIÓN TARJETA PRO (CLOUD SAFE)
 # =========================================================
-def report_card(titulo, desc, link, img_name):
+def report_card(titulo, desc, link, img_relative_path):
 
-    img_assets = BASE_DIR / "assets" / img_name
-    img_root = BASE_DIR / img_name
-    fallback = BASE_DIR / "default.jpg"
+    img_path = ASSETS_DIR / img_relative_path
+    fallback = ASSETS_DIR / "default.jpg"
+    img_to_use = img_path if img_path.exists() else fallback
 
-    if img_assets.exists():
-        img_to_use = img_assets
-    elif img_root.exists():
-        img_to_use = img_root
-    else:
-        img_to_use = fallback
+    st.markdown('<div class="report-card">', unsafe_allow_html=True)
 
     if img_to_use.exists():
         st.image(str(img_to_use), use_container_width=True)
     else:
-        st.warning(f"No se encontró la imagen: {img_name}")
+        st.warning("Imagen no encontrada y no existe default.jpg")
 
     st.markdown(f"""
     <div class="overlay">
@@ -146,6 +164,8 @@ def report_card(titulo, desc, link, img_name):
     """, unsafe_allow_html=True)
 
     st.link_button("Abrir reporte", link, use_container_width=True)
+
+    st.markdown("</div>", unsafe_allow_html=True)
 
 # =========================================================
 # PORTAL PRINCIPAL
@@ -234,66 +254,47 @@ else:
 
         st.divider()
 
-        # ================================================
-        # ADMINISTRACIÓN DE PERSONAL (REALES)
-        # ================================================
+        # ADMINISTRACIÓN DE PERSONAL (3 REALES)
         if area == "Administración de Personal":
 
             col1, col2, col3 = st.columns(3)
 
             with col1:
-                report_card(
-                    "Vacaciones",
-                    "Saldo y planificación",
-                    "https://app.powerbi.com",
-                    "Vacaciones.jpg"
-                )
+                report_card("Vacaciones", "Saldo y planificación",
+                            "https://app.powerbi.com/links/1TThJ-ia9c?ctid=42fc96b3-c018-482d-8ada-cab81720489e&pbi_source=linkShare",
+                            "Vacaciones.jpg")
 
             with col2:
-                report_card(
-                    "Descansos Médicos",
-                    "Subsidios y ausencias",
-                    "https://app.powerbi.com",
-                    "DescansosMedicos.jpg"
-                )
+                report_card("Descansos Médicos", "Subsidios y ausencias",
+                            "https://app.powerbi.com/links/NQfjSntCO1?ctid=42fc96b3-c018-482d-8ada-cab81720489e&pbi_source=linkShare",
+                            "DescansosMedicos.jpg")
 
             with col3:
-                report_card(
-                    "Exámenes Médicos",
-                    "Seguimiento ocupacional",
-                    "https://app.powerbi.com",
-                    "Examenes.jpg"
-                )
+                report_card("Exámenes Médicos", "Seguimiento ocupacional",
+                            "https://app.powerbi.com/links/eAcPJmr1vJ?ctid=42fc96b3-c018-482d-8ada-cab81720489e&pbi_source=linkShare",
+                            "Examenes.jpg")
 
-        # ================================================
-        # DESARROLLO (FICTICIO)
-        # ================================================
+        # DESARROLLO ORGANIZACIONAL (1 FICTICIO)
         elif area == "Desarrollo Organizacional":
 
             col1, col2, col3 = st.columns([1,2,1])
 
             with col2:
-                report_card(
-                    "Capacitaciones",
-                    "Panel en construcción",
-                    "https://app.powerbi.com",
-                    "Capacitaciones.jpg"
-                )
+                report_card("Capacitaciones",
+                            "Panel en construcción",
+                            "https://app.powerbi.com",
+                            "Capacitaciones.jpg")
 
-        # ================================================
-        # SST (FICTICIO)
-        # ================================================
+        # SEGURIDAD Y SALUD (1 FICTICIO)
         elif area == "Seguridad y Salud en el Trabajo":
 
             col1, col2, col3 = st.columns([1,2,1])
 
             with col2:
-                report_card(
-                    "Incidentes SST",
-                    "Panel en construcción",
-                    "https://app.powerbi.com",
-                    "Incidentes.jpg"
-                )
+                report_card("Incidentes SST",
+                            "Panel en construcción",
+                            "https://app.powerbi.com",
+                            "Incidentes.jpg")
 
 # =========================================================
 # FOOTER
