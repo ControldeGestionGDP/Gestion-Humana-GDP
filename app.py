@@ -16,10 +16,10 @@ COLOR2 = "#2E3788"
 COLOR3 = "#C4579B"
 
 # =========================================================
-# RUTA BASE (IMÁGENES EN LA RAÍZ)
+# RUTA BASE (FUNCIONA EN LOCAL Y CLOUD)
 # =========================================================
 BASE_DIR = Path(__file__).resolve().parent
-ASSETS_DIR = BASE_DIR   # 🔥 AHORA APUNTA A LA RAÍZ
+ASSETS_DIR = BASE_DIR / "assets"
 
 # =========================================================
 # PASSWORDS
@@ -73,11 +73,10 @@ html, body {{
     background: white;
     border-radius: 18px;
     height: 240px;
-    padding: 0;
+    padding: 2rem;
     display: flex;
     flex-direction: column;
     justify-content: flex-end;
-    overflow: hidden;
     box-shadow: 0 18px 40px rgba(0,0,0,0.08);
     border-top: 6px solid {COLOR1};
     transition: all 0.25s ease;
@@ -87,14 +86,6 @@ html, body {{
     transform: translateY(-8px);
     border-top: 6px solid {COLOR3};
     box-shadow: 0 28px 60px rgba(0,0,0,0.12);
-}}
-
-.area-overlay {{
-    padding: 20px;
-    color: white;
-    font-weight: 700;
-    font-size: 1.2rem;
-    background: linear-gradient(transparent, rgba(0,0,0,0.85));
 }}
 
 .login-box {{
@@ -150,18 +141,20 @@ div.stButton > button:hover {{
 """, unsafe_allow_html=True)
 
 # =========================================================
-# FUNCIÓN TARJETA PRO
+# FUNCIÓN TARJETA PRO (CLOUD SAFE)
 # =========================================================
 def report_card(titulo, desc, link, img_relative_path):
 
     img_path = ASSETS_DIR / img_relative_path
+    fallback = ASSETS_DIR / "default.jpg"
+    img_to_use = img_path if img_path.exists() else fallback
 
     st.markdown('<div class="report-card">', unsafe_allow_html=True)
 
-    if img_path.exists():
-        st.image(str(img_path), use_container_width=True)
+    if img_to_use.exists():
+        st.image(str(img_to_use), use_container_width=True)
     else:
-        st.warning(f"No se encontró {img_relative_path}")
+        st.warning("Imagen no encontrada y no existe default.jpg")
 
     st.markdown(f"""
     <div class="overlay">
@@ -186,25 +179,19 @@ if st.session_state.area is None:
     col1, col2, col3 = st.columns(3)
 
     areas = [
-        ("👥 Administración de Personal", "Administracion.jpg"),
-        ("📚 Desarrollo Organizacional", "Desarrollo.jpg"),
-        ("🦺 Seguridad y Salud en el Trabajo", "Seguridad.jpg")
+        ("👥 Administración de Personal"),
+        ("📚 Desarrollo Organizacional"),
+        ("🦺 Seguridad y Salud en el Trabajo")
     ]
 
-    for col, (name, img) in zip([col1, col2, col3], areas):
+    for col, name in zip([col1, col2, col3], areas):
         with col:
-
-            img_path = ASSETS_DIR / img
 
             st.markdown(f"""
             <div class="area-card">
-                <img src="{img_path}" style="
-                    width:100%;
-                    height:100%;
-                    object-fit:cover;
-                    filter:brightness(0.75);
-                ">
-                <div class="area-overlay">{name}</div>
+                <div style="font-size:1.3rem;font-weight:700;color:{COLOR2};">
+                    {name}
+                </div>
             </div>
             """, unsafe_allow_html=True)
 
@@ -267,6 +254,7 @@ else:
 
         st.divider()
 
+        # ADMINISTRACIÓN DE PERSONAL (3 REALES)
         if area == "Administración de Personal":
 
             col1, col2, col3 = st.columns(3)
@@ -286,6 +274,7 @@ else:
                             "https://app.powerbi.com/links/eAcPJmr1vJ?ctid=42fc96b3-c018-482d-8ada-cab81720489e&pbi_source=linkShare",
                             "Examenes.jpg")
 
+        # DESARROLLO ORGANIZACIONAL (1 FICTICIO)
         elif area == "Desarrollo Organizacional":
 
             col1, col2, col3 = st.columns([1,2,1])
@@ -296,6 +285,7 @@ else:
                             "https://app.powerbi.com",
                             "Capacitaciones.jpg")
 
+        # SEGURIDAD Y SALUD (1 FICTICIO)
         elif area == "Seguridad y Salud en el Trabajo":
 
             col1, col2, col3 = st.columns([1,2,1])
