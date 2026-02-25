@@ -1,9 +1,12 @@
 import streamlit as st
 from pathlib import Path
 
-# ================= CONFIG =================
+# =========================================================
+# CONFIG
+# =========================================================
 st.set_page_config(
     page_title="Portal Gestión Humana",
+    page_icon="📊",
     layout="wide"
 )
 
@@ -12,7 +15,27 @@ COLOR1 = "#1071B8"
 COLOR2 = "#2E3788"
 COLOR3 = "#C4579B"
 
-# ================= ESTILOS =================
+# =========================================================
+# PASSWORDS
+# =========================================================
+PASSWORDS = {
+    "Administración de Personal": "pollo123",
+    "Desarrollo Organizacional": "talento2024",
+    "Seguridad y Salud en el Trabajo": "seguridad2024"
+}
+
+# =========================================================
+# SESSION STATE
+# =========================================================
+if "area" not in st.session_state:
+    st.session_state.area = None
+
+if "auth" not in st.session_state:
+    st.session_state.auth = False
+
+# =========================================================
+# ESTILOS SaaS
+# =========================================================
 st.markdown(f"""
 <style>
 
@@ -22,25 +45,59 @@ html, body, [class*="css"] {{
 }}
 
 .main-title {{
-    font-size: 2.4rem;
+    font-size: 2.5rem;
     font-weight: 800;
     color: {COLOR2};
 }}
 
 .subtitle {{
     color: #6b7280;
-    margin-bottom: 20px;
+    margin-bottom: 30px;
 }}
 
-.card-container {{
+.area-card {{
+    background: white;
+    border-radius: 18px;
+    height: 240px;
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    box-shadow: 0 18px 40px rgba(0,0,0,0.08);
+    border-top: 6px solid {COLOR1};
+    transition: all 0.25s ease;
+}}
+
+.area-card:hover {{
+    transform: translateY(-8px);
+    border-top: 6px solid {COLOR3};
+    box-shadow: 0 28px 60px rgba(0,0,0,0.12);
+}}
+
+.area-accent {{
+    height: 4px;
+    background: linear-gradient(90deg,{COLOR1},{COLOR2},{COLOR3});
+    border-radius: 2px;
+    margin-bottom: 1.5rem;
+}}
+
+.login-box {{
+    background: white;
+    padding: 40px;
+    border-radius: 18px;
+    box-shadow: 0 25px 55px rgba(0,0,0,0.12);
+    border-top: 5px solid {COLOR1};
+}}
+
+.report-card {{
+    background: white;
     border-radius: 18px;
     overflow: hidden;
-    background: white;
     box-shadow: 0 14px 40px rgba(0,0,0,0.08);
-    transition: 0.35s;
+    transition: 0.3s;
 }}
 
-.card-container:hover {{
+.report-card:hover {{
     transform: translateY(-8px);
     box-shadow: 0 25px 70px rgba(0,0,0,0.15);
 }}
@@ -51,16 +108,7 @@ html, body, [class*="css"] {{
     width: 100%;
     padding: 18px;
     color: white;
-    background: linear-gradient(transparent, rgba(0,0,0,0.75));
-}}
-
-.title-text {{
-    font-weight: 700;
-    font-size: 1.2rem;
-}}
-
-.desc-text {{
-    font-size: 0.95rem;
+    background: linear-gradient(transparent, rgba(0,0,0,0.8));
 }}
 
 div.stButton > button {{
@@ -81,16 +129,17 @@ div.stButton > button:hover {{
 </style>
 """, unsafe_allow_html=True)
 
-# ================= FUNCIÓN TARJETA =================
+# =========================================================
+# FUNCIÓN TARJETA CON IMAGEN
+# =========================================================
+def report_card(titulo, desc, link, img):
 
-def report_card(titulo, desc, link, img_path):
-
-    path = Path(img_path)
+    path = Path(img)
 
     if path.exists():
-        st.image(img_path, use_container_width=True)
+        st.image(img, use_container_width=True)
     else:
-        st.warning(f"No se encontró la imagen: {img_path}")
+        st.warning(f"No se encontró: {img}")
 
     st.markdown(f"""
     <div style="
@@ -110,47 +159,127 @@ def report_card(titulo, desc, link, img_path):
 
     st.link_button("Abrir reporte", link, use_container_width=True)
 
+# =========================================================
+# PORTAL PRINCIPAL
+# =========================================================
+if st.session_state.area is None:
 
-# ================= HEADER =================
+    st.markdown('<div class="main-title">Portal Gestión Humana</div>', unsafe_allow_html=True)
+    st.markdown('<div class="subtitle">Seleccione una línea de gestión</div>', unsafe_allow_html=True)
 
-st.markdown('<div class="main-title">Portal de Gestión Humana</div>', unsafe_allow_html=True)
-st.markdown('<div class="subtitle">Plataforma centralizada de indicadores y reportes</div>', unsafe_allow_html=True)
+    col1, col2, col3 = st.columns(3)
 
-st.divider()
+    areas = [
+        "Administración de Personal",
+        "Desarrollo Organizacional",
+        "Seguridad y Salud en el Trabajo"
+    ]
 
-# ================= MÓDULOS =================
+    for col, name in zip([col1, col2, col3], areas):
+        with col:
 
-col1, col2, col3 = st.columns(3)
+            st.markdown(f"""
+            <div class="area-card">
+                <div class="area-accent"></div>
+                <div style="font-size:1.3rem;font-weight:700;color:{COLOR2};">
+                    {name}
+                </div>
+            </div>
+            """, unsafe_allow_html=True)
 
-with col1:
-    report_card(
-        "Descansos Médicos",
-        "Seguimiento, subsidios y control de ausencias",
-        "https://google.com",
-        "assets/DescansosMedicos.jpg"
-    )
+            if st.button("Ingresar", key=name):
+                st.session_state.area = name
+                st.session_state.auth = False
+                st.rerun()
 
-with col2:
-    report_card(
-        "Vacaciones",
-        "Planificación y control anual",
-        "https://google.com",
-        "assets/Vacaciones.jpg"
-    )
+# =========================================================
+# LOGIN
+# =========================================================
+else:
 
-with col3:
-    report_card(
-        "Subsidios",
-        "Gestión de pagos y recuperos EsSalud",
-        "https://google.com",
-        "assets/Subsidios.jpg"
-    )
+    area = st.session_state.area
 
-st.divider()
+    if not st.session_state.auth:
 
-# ================= FOOTER =================
+        col1, col2, col3 = st.columns([1,2,1])
 
+        with col2:
+
+            st.markdown(f"""
+            <div class="login-box">
+                <div style="font-size:1.4rem;font-weight:700;color:{COLOR2};text-align:center;">
+                    {area}
+                </div>
+                <div style="text-align:center;color:#6b7280;margin-bottom:20px;">
+                    Ingrese su contraseña
+                </div>
+            </div>
+            """, unsafe_allow_html=True)
+
+            pwd = st.text_input("Contraseña", type="password")
+
+            if st.button("Ingresar", use_container_width=True):
+                if pwd == PASSWORDS[area]:
+                    st.session_state.auth = True
+                    st.rerun()
+                else:
+                    st.error("Contraseña incorrecta")
+
+            if st.button("Volver", use_container_width=True):
+                st.session_state.area = None
+                st.rerun()
+
+# =========================================================
+# DASHBOARDS POR ÁREA
+# =========================================================
+    else:
+
+        st.markdown(f'<div class="main-title">{area}</div>', unsafe_allow_html=True)
+
+        if st.button("Cambiar área"):
+            st.session_state.area = None
+            st.session_state.auth = False
+            st.rerun()
+
+        st.divider()
+
+        if area == "Administración de Personal":
+
+            col1, col2, col3 = st.columns(3)
+
+            with col1:
+                report_card("Vacaciones", "Saldo y planificación", "https://app.powerbi.com", "assets/Vacaciones.jpg")
+
+            with col2:
+                report_card("Asistencia", "Puntualidad y ausentismo", "https://app.powerbi.com", "assets/Asistencia.jpg")
+
+            with col3:
+                report_card("Legajos Digitales", "Repositorio documental", "https://sharepoint.com", "assets/Legajos.jpg")
+
+        elif area == "Desarrollo Organizacional":
+
+            col1, col2 = st.columns(2)
+
+            with col1:
+                report_card("Capacitaciones", "Plan anual", "https://app.powerbi.com", "assets/Capacitaciones.jpg")
+
+            with col2:
+                report_card("Clima Laboral", "Encuestas", "https://app.powerbi.com", "assets/Clima.jpg")
+
+        elif area == "Seguridad y Salud en el Trabajo":
+
+            col1, col2 = st.columns(2)
+
+            with col1:
+                report_card("Incidentes", "Eventos SST", "https://app.powerbi.com", "assets/Incidentes.jpg")
+
+            with col2:
+                report_card("Bienestar", "Salud ocupacional", "https://app.powerbi.com", "assets/Bienestar.jpg")
+
+# =========================================================
+# FOOTER
+# =========================================================
 st.markdown(
-    "<center style='color:#9ca3af'>Portal Corporativo • Gestión Humana</center>",
+    "<center style='color:#9ca3af;margin-top:40px;'>Gerencia de Control de Gestión • Transformación Digital</center>",
     unsafe_allow_html=True
 )
