@@ -10,29 +10,19 @@ st.set_page_config(
     layout="wide"
 )
 
-# ===== COLORES CORPORATIVOS =====
 COLOR1 = "#1071B8"
 COLOR2 = "#2E3788"
 COLOR3 = "#C4579B"
 
-# =========================================================
-# RUTA BASE (FUNCIONA EN LOCAL Y CLOUD)
-# =========================================================
 BASE_DIR = Path(__file__).resolve().parent
 ASSETS_DIR = BASE_DIR / "assets"
 
-# =========================================================
-# PASSWORDS
-# =========================================================
 PASSWORDS = {
     "Administración de Personal": "pollo123",
     "Desarrollo Organizacional": "talento2024",
     "Seguridad y Salud en el Trabajo": "seguridad2024"
 }
 
-# =========================================================
-# SESSION STATE
-# =========================================================
 if "area" not in st.session_state:
     st.session_state.area = None
 
@@ -40,7 +30,7 @@ if "auth" not in st.session_state:
     st.session_state.auth = False
 
 # =========================================================
-# ESTILOS SaaS PREMIUM
+# ESTILOS
 # =========================================================
 st.markdown(f"""
 <style>
@@ -69,46 +59,6 @@ html, body {{
     margin-bottom: 28px;
 }}
 
-.area-card {{
-    background: white;
-    border-radius: 18px;
-    height: 260px;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    box-shadow: 0 18px 40px rgba(0,0,0,0.08);
-    border-top: 6px solid {COLOR1};
-    transition: all 0.25s ease;
-    overflow: hidden;
-}}
-
-.area-card:hover {{
-    transform: translateY(-8px);
-    border-top: 6px solid {COLOR3};
-    box-shadow: 0 28px 60px rgba(0,0,0,0.12);
-}}
-
-.area-card img {{
-    width: 100%;
-    height: 160px;
-    object-fit: cover;
-}}
-
-.area-title {{
-    padding: 1rem;
-    font-size:1.2rem;
-    font-weight:700;
-    color:{COLOR2};
-}}
-
-.login-box {{
-    background: white;
-    padding: 40px;
-    border-radius: 18px;
-    box-shadow: 0 25px 55px rgba(0,0,0,0.12);
-    border-top: 5px solid {COLOR1};
-}}
-
 .report-card img {{
     border-radius: 18px;
     transition: transform 0.4s ease;
@@ -135,6 +85,14 @@ html, body {{
     font-size: 0.95rem;
 }}
 
+.login-box {{
+    background: white;
+    padding: 40px;
+    border-radius: 18px;
+    box-shadow: 0 25px 55px rgba(0,0,0,0.12);
+    border-top: 5px solid {COLOR1};
+}}
+
 div.stButton > button {{
     background: linear-gradient(90deg, {COLOR1}, {COLOR2}, {COLOR3});
     color: white;
@@ -154,7 +112,7 @@ div.stButton > button:hover {{
 """, unsafe_allow_html=True)
 
 # =========================================================
-# FUNCIÓN TARJETA PRO (NO SE TOCA)
+# TARJETA REUTILIZABLE
 # =========================================================
 def report_card(titulo, desc, link, img_relative_path):
 
@@ -166,8 +124,6 @@ def report_card(titulo, desc, link, img_relative_path):
 
     if img_to_use.exists():
         st.image(str(img_to_use), use_container_width=True)
-    else:
-        st.warning("Imagen no encontrada y no existe default.jpg")
 
     st.markdown(f"""
     <div class="overlay">
@@ -176,7 +132,7 @@ def report_card(titulo, desc, link, img_relative_path):
     </div>
     """, unsafe_allow_html=True)
 
-    st.link_button("Abrir reporte", link, use_container_width=True)
+    st.link_button("Ingresar", link, use_container_width=True)
 
     st.markdown("</div>", unsafe_allow_html=True)
 
@@ -191,43 +147,44 @@ if st.session_state.area is None:
 
     col1, col2, col3 = st.columns(3)
 
-    areas = [
-        "👥 Administración de Personal",
-        "📚 Desarrollo Organizacional",
-        "🦺 Seguridad y Salud en el Trabajo"
-    ]
-    
-    area_imgs = ["Administracion.jpg", "Desarrollo.jpg", "Seguridad.jpg"]
+    with col1:
+        report_card(
+            "👥 Administración de Personal",
+            "Vacaciones, descansos y exámenes",
+            "?area=Administración de Personal",
+            "Administracion.jpg"
+        )
 
-    for col, name, img_file in zip([col1, col2, col3], areas, area_imgs):
-        with col:
+        if st.button("Entrar Administración"):
+            st.session_state.area = "Administración de Personal"
+            st.rerun()
 
-            img_path = ASSETS_DIR / img_file
+    with col2:
+        report_card(
+            "📚 Desarrollo Organizacional",
+            "Capacitaciones y desempeño",
+            "?area=Desarrollo Organizacional",
+            "Desarrollo.jpg"
+        )
 
-            st.markdown('<div class="area-card">', unsafe_allow_html=True)
+        if st.button("Entrar Desarrollo"):
+            st.session_state.area = "Desarrollo Organizacional"
+            st.rerun()
 
-            if img_path.exists():
-                st.image(str(img_path), use_container_width=True)
-            else:
-                st.warning(f"Imagen {img_file} no encontrada")
+    with col3:
+        report_card(
+            "🦺 Seguridad y Salud en el Trabajo",
+            "Indicadores SST",
+            "?area=Seguridad y Salud en el Trabajo",
+            "Seguridad.jpg"
+        )
 
-            st.markdown(f"""
-                <div class="area-title">
-                    {name}
-                </div>
-            """, unsafe_allow_html=True)
-
-            st.markdown('</div>', unsafe_allow_html=True)
-
-            clean_name = name.split(" ", 1)[1]
-
-            if st.button("Ingresar", key=clean_name):
-                st.session_state.area = clean_name
-                st.session_state.auth = False
-                st.rerun()
+        if st.button("Entrar Seguridad"):
+            st.session_state.area = "Seguridad y Salud en el Trabajo"
+            st.rerun()
 
 # =========================================================
-# LOGIN Y DASHBOARDS (SIN CAMBIOS)
+# LOGIN + DASHBOARDS (NO SE TOCA)
 # =========================================================
 else:
 
@@ -281,34 +238,18 @@ else:
 
             with col1:
                 report_card("Vacaciones", "Saldo y planificación",
-                            "https://app.powerbi.com/links/1TThJ-ia9c?ctid=42fc96b3-c018-482d-8ada-cab81720489e&pbi_source=linkShare",
+                            "https://app.powerbi.com",
                             "Vacaciones.jpg")
 
             with col2:
                 report_card("Descansos Médicos", "Subsidios y ausencias",
-                            "https://app.powerbi.com/links/NQfjSntCO1?ctid=42fc96b3-c018-482d-8ada-cab81720489e&pbi_source=linkShare",
+                            "https://app.powerbi.com",
                             "DescansosMedicos.jpg")
 
             with col3:
                 report_card("Exámenes Médicos", "Seguimiento ocupacional",
-                            "https://app.powerbi.com/links/eAcPJmr1vJ?ctid=42fc96b3-c018-482d-8ada-cab81720489e&pbi_source=linkShare",
+                            "https://app.powerbi.com",
                             "Examenes.jpg")
-
-        elif area == "Desarrollo Organizacional":
-            col1, col2, col3 = st.columns([1,2,1])
-            with col2:
-                report_card("Capacitaciones",
-                            "Panel en construcción",
-                            "https://app.powerbi.com",
-                            "Capacitaciones.jpg")
-
-        elif area == "Seguridad y Salud en el Trabajo":
-            col1, col2, col3 = st.columns([1,2,1])
-            with col2:
-                report_card("Incidentes SST",
-                            "Panel en construcción",
-                            "https://app.powerbi.com",
-                            "Incidentes.jpg")
 
 # =========================================================
 # FOOTER
