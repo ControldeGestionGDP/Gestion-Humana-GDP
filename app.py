@@ -146,9 +146,7 @@ div.stButton > button:hover {{
 def report_card(titulo, desc, link, img_relative_path):
 
     img_path = ASSETS_DIR / img_relative_path
-
     fallback = ASSETS_DIR / "default.jpg"
-
     img_to_use = img_path if img_path.exists() else fallback
 
     st.markdown('<div class="report-card">', unsafe_allow_html=True)
@@ -263,15 +261,18 @@ else:
 
             with col1:
                 report_card("Vacaciones", "Saldo y planificación",
-                            "https://app.powerbi.com", "Vacaciones.jpg")
+                            "https://app.powerbi.com/links/1TThJ-ia9c?ctid=42fc96b3-c018-482d-8ada-cab81720489e&pbi_source=linkShare",
+                            "Vacaciones.jpg")
 
             with col2:
                 report_card("Descansos Médicos", "Subsidios y ausencias",
-                            "https://app.powerbi.com", "DescansosMedicos.jpg")
+                            "https://app.powerbi.com/links/NQfjSntCO1?ctid=42fc96b3-c018-482d-8ada-cab81720489e&pbi_source=linkShare",
+                            "DescansosMedicos.jpg")
 
             with col3:
                 report_card("Exámenes Médicos", "Seguimiento ocupacional",
-                            "https://app.powerbi.com", "Examenes.jpg")
+                            "https://app.powerbi.com/links/eAcPJmr1vJ?ctid=42fc96b3-c018-482d-8ada-cab81720489e&pbi_source=linkShare",
+                            "Examenes.jpg")
 
         # DESARROLLO ORGANIZACIONAL (1 FICTICIO)
         elif area == "Desarrollo Organizacional":
