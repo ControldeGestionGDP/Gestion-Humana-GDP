@@ -80,6 +80,9 @@ html, body {{
 .report-card img {{
     border-radius: 18px;
     transition: transform 0.4s ease;
+    height: 260px;       /* 🔥 MISMO TAMAÑO PARA TODAS */
+    width: 100%;
+    object-fit: cover;   /* 🔥 RECORTE PROFESIONAL */
 }}
 
 .report-card:hover img {{
@@ -166,7 +169,6 @@ if st.session_state.area is None:
             fallback = ASSETS_DIR / "default.jpg"
             img_to_use = img_path if img_path.exists() else fallback
 
-            # === TARJETA IGUAL A VACACIONES ===
             st.markdown('<div class="report-card">', unsafe_allow_html=True)
 
             st.image(str(img_to_use), use_container_width=True)
@@ -244,17 +246,17 @@ else:
 
             with col1:
                 report_card("Vacaciones", "Saldo y planificación",
-                            "https://app.powerbi.com/links/1TThJ-ia9c?ctid=42fc96b3-c018-482d-8ada-cab81720489e&pbi_source=linkShare",
+                            "https://app.powerbi.com",
                             "Vacaciones.jpg")
 
             with col2:
                 report_card("Descansos Médicos", "Subsidios y ausencias",
-                            "https://app.powerbi.com/links/NQfjSntCO1?ctid=42fc96b3-c018-482d-8ada-cab81720489e&pbi_source=linkShare",
+                            "https://app.powerbi.com",
                             "DescansosMedicos.jpg")
 
             with col3:
                 report_card("Exámenes Médicos", "Seguimiento ocupacional",
-                            "https://app.powerbi.com/links/eAcPJmr1vJ?ctid=42fc96b3-c018-482d-8ada-cab81720489e&pbi_source=linkShare",
+                            "https://app.powerbi.com",
                             "Examenes.jpg")
 
         elif area == "Desarrollo Organizacional":
