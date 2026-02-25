@@ -1,10 +1,10 @@
 import streamlit as st
 
 # =========================================================
-# CONFIGURACIÓN
+# CONFIG
 # =========================================================
 st.set_page_config(
-    page_title="Portal Corporativo | Gestión Humana",
+    page_title="Portal Gestión Humana",
     page_icon="📊",
     layout="wide"
 )
@@ -25,35 +25,57 @@ if "auth" not in st.session_state:
     st.session_state.auth = False
 
 # =========================================================
-# ESTILO MODERNO
+# ESTILO CORPORATIVO PRO
 # =========================================================
 st.markdown("""
 <style>
 
-.stApp { background-color: #f4f7fb; }
+.stApp {
+    background-color: #f4f7fb;
+}
 
-h1 { color: #2e3788; font-weight: 800; text-align:center; }
+/* TITULO */
+h1 {
+    color: #2E3788;
+    font-weight: 800;
+    text-align: center;
+}
 
+/* CARD IGUAL PARA TODOS */
 .card {
     background: white;
-    padding: 2rem;
     border-radius: 18px;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.08);
-    text-align: center;
-    transition: 0.2s;
+    height: 260px;
+    padding: 2rem 1.5rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 12px 28px rgba(0,0,0,0.08);
+    border-top: 6px solid #1071B8;
+    transition: 0.25s;
 }
 
 .card:hover {
-    transform: translateY(-6px);
-    box-shadow: 0 18px 40px rgba(0,0,0,0.12);
+    transform: translateY(-8px);
+    box-shadow: 0 22px 45px rgba(0,0,0,0.12);
+    border-top: 6px solid #C4579B;
 }
 
+/* ICONO */
+.icon {
+    font-size: 3.2rem;
+}
+
+/* TITULO AREA */
 .area-title {
-    font-size: 1.4rem;
+    font-size: 1.35rem;
     font-weight: 700;
-    color: #2e3788;
+    color: #2E3788;
+    text-align: center;
 }
 
+/* FOOTER */
 .footer {
     text-align:center;
     margin-top: 3rem;
@@ -64,7 +86,7 @@ h1 { color: #2e3788; font-weight: 800; text-align:center; }
 """, unsafe_allow_html=True)
 
 # =========================================================
-# PORTADA — SELECCIÓN DE ÁREAS
+# PORTAL PRINCIPAL
 # =========================================================
 if st.session_state.area is None:
 
@@ -81,9 +103,10 @@ if st.session_state.area is None:
 
     for col, (icon, name) in zip([col1, col2, col3], areas):
         with col:
+
             st.markdown(f"""
             <div class="card">
-                <div style="font-size:3rem">{icon}</div>
+                <div class="icon">{icon}</div>
                 <div class="area-title">{name}</div>
             </div>
             """, unsafe_allow_html=True)
@@ -94,7 +117,7 @@ if st.session_state.area is None:
                 st.rerun()
 
 # =========================================================
-# LOGIN POR ÁREA
+# LOGIN
 # =========================================================
 else:
 
@@ -118,7 +141,7 @@ else:
             st.rerun()
 
 # =========================================================
-# CONTENIDO DE CADA ÁREA
+# CONTENIDO
 # =========================================================
     else:
 
@@ -131,27 +154,22 @@ else:
 
         st.divider()
 
-        # -------- ADMINISTRACIÓN --------
         if area == "Administración de Personal":
 
             col1, col2, col3 = st.columns(3)
 
             with col1:
                 st.subheader("🏖️ Vacaciones")
-                st.write("Uso, saldo y planificación.")
                 st.link_button("Abrir reporte", "https://app.powerbi.com")
 
             with col2:
                 st.subheader("⏰ Asistencia")
-                st.write("Puntualidad y ausentismo.")
                 st.link_button("Abrir reporte", "https://app.powerbi.com")
 
             with col3:
                 st.subheader("📄 Legajos")
-                st.write("Repositorio documental.")
                 st.link_button("Abrir", "https://sharepoint.com")
 
-        # -------- DESARROLLO --------
         elif area == "Desarrollo Organizacional":
 
             col1, col2 = st.columns(2)
@@ -164,7 +182,6 @@ else:
                 st.subheader("😊 Clima Laboral")
                 st.link_button("Abrir", "https://app.powerbi.com")
 
-        # -------- SST --------
         elif area == "Seguridad y Salud en el Trabajo":
 
             col1, col2 = st.columns(2)
