@@ -1,314 +1,156 @@
 import streamlit as st
+from pathlib import Path
 
-# =========================================================
-# CONFIG
-# =========================================================
+# ================= CONFIG =================
 st.set_page_config(
     page_title="Portal Gestión Humana",
-    page_icon="📊",
     layout="wide"
 )
 
-PASSWORDS = {
-    "Administración de Personal": "pollo123",
-    "Desarrollo Organizacional": "talento2024",
-    "Seguridad y Salud en el Trabajo": "seguridad2024"
-}
+# ===== COLORES CORPORATIVOS =====
+COLOR1 = "#1071B8"
+COLOR2 = "#2E3788"
+COLOR3 = "#C4579B"
 
-# =========================================================
-# SESSION STATE
-# =========================================================
-if "area" not in st.session_state:
-    st.session_state.area = None
-
-if "auth" not in st.session_state:
-    st.session_state.auth = False
-
-# =========================================================
-# ESTILO EJECUTIVO
-# =========================================================
-st.markdown("""
+# ================= ESTILOS =================
+st.markdown(f"""
 <style>
 
-/* ===== FONDO ===== */
-.stApp {
-    background: linear-gradient(180deg, #f5f7fb 0%, #ffffff 100%);
-    font-family: 'Segoe UI', sans-serif;
-}
+html, body, [class*="css"] {{
+    font-family: "Segoe UI", sans-serif;
+    background: #f4f6fb;
+}}
 
-/* ===== TITULOS ===== */
-h1, h2, h3 {
-    color: #2E3788;
+.main-title {{
+    font-size: 2.4rem;
     font-weight: 800;
-}
+    color: {COLOR2};
+}}
 
-/* ===== TARJETAS PRINCIPALES ===== */
-.area-card {
-    background: white;
+.subtitle {{
+    color: #6b7280;
+    margin-bottom: 20px;
+}}
+
+.card-container {{
     border-radius: 18px;
-    height: 240px;
-    padding: 2rem;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-end;
-    box-shadow: 0 18px 40px rgba(0,0,0,0.08);
-    border-top: 6px solid #1071B8;
-    transition: all 0.25s ease;
-}
+    overflow: hidden;
+    background: white;
+    box-shadow: 0 14px 40px rgba(0,0,0,0.08);
+    transition: 0.35s;
+}}
 
-.area-card:hover {
+.card-container:hover {{
     transform: translateY(-8px);
-    border-top: 6px solid #C4579B;
-    box-shadow: 0 28px 60px rgba(0,0,0,0.12);
-}
+    box-shadow: 0 25px 70px rgba(0,0,0,0.15);
+}}
 
-/* Línea decorativa superior */
-.area-accent {
-    height: 4px;
-    background: linear-gradient(90deg,#1071B8,#2E3788,#C4579B);
-    border-radius: 2px;
-    margin-bottom: 1.5rem;
-}
+.overlay {{
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    padding: 18px;
+    color: white;
+    background: linear-gradient(transparent, rgba(0,0,0,0.75));
+}}
 
-/* ===== BOTONES ===== */
-.stButton > button {
-    background: linear-gradient(90deg, #1071B8, #2E3788);
+.title-text {{
+    font-weight: 700;
+    font-size: 1.2rem;
+}}
+
+.desc-text {{
+    font-size: 0.95rem;
+}}
+
+div.stButton > button {{
+    background: linear-gradient(90deg, {COLOR1}, {COLOR2}, {COLOR3});
     color: white;
     border-radius: 10px;
     border: none;
     font-weight: 600;
-    transition: 0.25s;
-}
+    height: 45px;
+    transition: 0.3s;
+}}
 
-.stButton > button:hover {
-    background: linear-gradient(90deg, #C4579B, #2E3788);
-    transform: translateY(-1px);
-}
-
-/* ===== LOGIN ===== */
-.login-box {
-    background: white;
-    padding: 38px;
-    border-radius: 18px;
-    box-shadow: 0 25px 55px rgba(0,0,0,0.12);
-    border-top: 5px solid #1071B8;
-    animation: fadeIn 0.5s ease;
-}
-
-/* ===== REPORT CARDS ===== */
-.report-card {
-    background: white;
-    border-radius: 16px;
-    padding: 24px;
-    height: 210px;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    box-shadow: 0 12px 28px rgba(0,0,0,0.08);
-    border-left: 5px solid #1071B8;
-    transition: 0.25s;
-}
-
-.report-card:hover {
-    transform: translateY(-6px);
-    border-left: 5px solid #C4579B;
-    box-shadow: 0 22px 48px rgba(0,0,0,0.12);
-}
-
-/* ===== ANIMACIÓN ===== */
-@keyframes fadeIn {
-    from {opacity:0; transform: translateY(15px);}
-    to {opacity:1; transform: translateY(0);}
-}
+div.stButton > button:hover {{
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+}}
 
 </style>
 """, unsafe_allow_html=True)
 
-# =========================================================
-# PORTAL PRINCIPAL
-# =========================================================
-if st.session_state.area is None:
+# ================= FUNCIÓN TARJETA =================
 
-    st.title("Portal Gestión Humana")
-    st.caption("Seleccione una línea de gestión")
+def report_card(titulo, desc, link, img_path):
 
-    col1, col2, col3 = st.columns(3)
+    path = Path(img_path)
 
-    areas = [
-        "Administración de Personal",
-        "Desarrollo Organizacional",
-        "Seguridad y Salud en el Trabajo"
-    ]
-
-    for col, name in zip([col1, col2, col3], areas):
-        with col:
-
-            st.markdown(f"""
-            <div class="area-card">
-                <div class="area-accent"></div>
-                <div style="font-size:1.25rem;font-weight:700;color:#2E3788;">
-                    {name}
-                </div>
-            </div>
-            """, unsafe_allow_html=True)
-
-            if st.button("Ingresar", key=name):
-                st.session_state.area = name
-                st.session_state.auth = False
-                st.rerun()
-
-# =========================================================
-# LOGIN ELEGANTE
-# =========================================================
-else:
-
-    area = st.session_state.area
-
-    if not st.session_state.auth:
-
-        col1, col2, col3 = st.columns([1,2,1])
-
-        with col2:
-
-            st.markdown(f"""
-            <div class="login-box">
-                <div style="font-size:1.3rem;font-weight:700;color:#2E3788;text-align:center;">
-                    {area}
-                </div>
-                <div style="text-align:center;color:#6b7280;margin-bottom:20px;">
-                    Ingrese su contraseña
-                </div>
-            </div>
-            """, unsafe_allow_html=True)
-
-            pwd = st.text_input("", type="password")
-
-            if st.button("Ingresar", use_container_width=True):
-                if pwd == PASSWORDS[area]:
-                    st.session_state.auth = True
-                    st.rerun()
-                else:
-                    st.error("Contraseña incorrecta")
-
-            if st.button("Volver", use_container_width=True):
-                st.session_state.area = None
-                st.rerun()
-
-# =========================================================
-# DASHBOARDS POR ÁREA
-# =========================================================
+    if path.exists():
+        st.image(img_path, use_container_width=True)
     else:
+        st.warning(f"No se encontró la imagen: {img_path}")
 
-        st.title(area)
+    st.markdown(f"""
+    <div style="
+        margin-top:-95px;
+        padding:18px;
+        color:white;
+        font-weight:700;
+        font-size:1.2rem;
+        background: linear-gradient(transparent, rgba(0,0,0,0.8));
+    ">
+        {titulo}
+        <div style="font-weight:400;font-size:0.95rem;">
+            {desc}
+        </div>
+    </div>
+    """, unsafe_allow_html=True)
 
-        if st.button("Cambiar área"):
-            st.session_state.area = None
-            st.session_state.auth = False
-            st.rerun()
+    st.link_button("Abrir reporte", link, use_container_width=True)
 
-        st.divider()
 
-        def report_card(titulo, desc, link, img=None):
+# ================= HEADER =================
 
-            if img:
-                st.markdown(f"""
-                <div style="
-                    position: relative;
-                    border-radius: 16px;
-                    overflow: hidden;
-                    height: 210px;
-                    box-shadow: 0 12px 28px rgba(0,0,0,0.12);
-                ">
+st.markdown('<div class="main-title">Portal de Gestión Humana</div>', unsafe_allow_html=True)
+st.markdown('<div class="subtitle">Plataforma centralizada de indicadores y reportes</div>', unsafe_allow_html=True)
 
-                    <img src="{img}" style="
-                        width:100%;
-                        height:100%;
-                        object-fit: cover;
-                        filter: brightness(0.75);
-                    ">
+st.divider()
 
-                    <div style="
-                        position: absolute;
-                        bottom: 0;
-                        padding: 18px;
-                        color: white;
-                        font-weight: 700;
-                        font-size: 1.1rem;
-                        background: linear-gradient(transparent, rgba(0,0,0,0.65));
-                        width: 100%;
-                    ">
-                        {titulo}
-                        <div style="font-weight:400;font-size:0.9rem;">
-                            {desc}
-                        </div>
-                    </div>
+# ================= MÓDULOS =================
 
-                </div>
-                """, unsafe_allow_html=True)
+col1, col2, col3 = st.columns(3)
 
-            else:
-                st.markdown(f"""
-                <div class="report-card">
-                    <div>
-                        <div style="font-weight:700;color:#2E3788">{titulo}</div>
-                        <div style="color:#6b7280">{desc}</div>
-                    </div>
-                </div>
-                """, unsafe_allow_html=True)
+with col1:
+    report_card(
+        "Descansos Médicos",
+        "Seguimiento, subsidios y control de ausencias",
+        "https://google.com",
+        "assets/DescansosMedicos.jpg"
+    )
 
-            st.link_button("Abrir reporte", link, use_container_width=True)
+with col2:
+    report_card(
+        "Vacaciones",
+        "Planificación y control anual",
+        "https://google.com",
+        "assets/Vacaciones.jpg"
+    )
 
-        if area == "Administración de Personal":
+with col3:
+    report_card(
+        "Subsidios",
+        "Gestión de pagos y recuperos EsSalud",
+        "https://google.com",
+        "assets/Subsidios.jpg"
+    )
 
-            col1, col2, col3 = st.columns(3)
+st.divider()
 
-            with col1:
-                report_card(
-                    "Descansos Médicos",
-                    "Seguimiento y subsidios",
-                    "https://app.powerbi.com/links/NQfjSntCO1?ctid=42fc96b3-c018-482d-8ada-cab81720489e&pbi_source=linkShare",
-                    "DescansosMedicos.jpg"
-                )
+# ================= FOOTER =================
 
-            with col2:
-                report_card(
-                    "Vacaciones",
-                    "Saldo y planificación",
-                    "https://app.powerbi.com/links/1TThJ-ia9c?ctid=42fc96b3-c018-482d-8ada-cab81720489e&pbi_source=linkShare",
-                    "Vacaciones.jpg"
-                )
-
-            with col3:
-                report_card(
-                    "Legajos Digitales",
-                    "Repositorio documental",
-                    "https://sharepoint.com"
-                )
-
-        elif area == "Desarrollo Organizacional":
-
-            col1, col2 = st.columns(2)
-
-            with col1:
-                report_card("Capacitaciones", "Plan anual", "https://app.powerbi.com")
-
-            with col2:
-                report_card("Clima Laboral", "Encuestas", "https://app.powerbi.com")
-
-        elif area == "Seguridad y Salud en el Trabajo":
-
-            col1, col2 = st.columns(2)
-
-            with col1:
-                report_card("Incidentes", "Eventos SST", "https://app.powerbi.com")
-
-            with col2:
-                report_card("Bienestar", "Salud ocupacional", "https://app.powerbi.com")
-
-# =========================================================
-# FOOTER
-# =========================================================
 st.markdown(
-    "<p style='text-align:center;color:#9ca3af;margin-top:40px;'>Gerencia de Control de Gestión | Transformación Digital</p>",
+    "<center style='color:#9ca3af'>Portal Corporativo • Gestión Humana</center>",
     unsafe_allow_html=True
 )
