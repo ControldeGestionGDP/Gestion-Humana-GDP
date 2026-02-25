@@ -1,257 +1,174 @@
 import streamlit as st
-import pandas as pd
-from datetime import datetime, date
-import sqlite3
-import io
-import time
 
-# --- CONFIGURACIÓN DE PÁGINA ---
-st.set_page_config(page_title="IncubaTrack ERP | Gestión Estratégica", page_icon="🥚", layout="wide")
+# =========================================================
+# CONFIGURACIÓN GENERAL
+# =========================================================
+st.set_page_config(
+    page_title="Portal Corporativo | Control de Gestión",
+    page_icon="📊",
+    layout="wide"
+)
 
-# --- ESTILOS CORPORATIVOS ---
-st.markdown(f"""
-    <style>
-    .main {{ background-color: #f8f9fa; }}
-    .stButton>button {{
-        background-color: #ed701b;
-        color: white;
-        border-radius: 5px;
-        border: none;
-        font-weight: bold;
-        width: 100%;
-        height: 3em;
-    }}
-    .stButton>button:hover {{ border: 2px solid #07456a; color: #07456a; }}
-    h1, h2, h3 {{ color: #07456a !important; font-family: 'Segoe UI', sans-serif; }}
+# CREDENCIALES
+PASSWORDS = {
+    "👥 Administración de Personal": "pollo123",
+    "📈 Desarrollo Organizacional": "talento2024",
+    "🦺 Seguridad y Salud en el Trabajo": "seguridad2024"
+}
+
+# =========================================================
+# ESTILO CORPORATIVO (IDENTIDAD GH / DON POLLO)
+# =========================================================
+st.markdown("""
+<style>
+/* APP GENERAL */
+.stApp { background-color: #ffffff; }
+
+/* TÍTULOS */
+h1 { color: #1071b8; font-weight: 800; }
+h2, h3 { color: #2e3788; font-weight: 700; }
+
+/* SIDEBAR */
+section[data-testid="stSidebar"] {
+    background: linear-gradient(180deg, #2e3788 0%, #1071b8 100%);
+}
+section[data-testid="stSidebar"] * {
+    color: #ffffff;
+    font-weight: 500;
+}
+
+/* CARDS */
+div[data-testid="stVerticalBlockBorderWrapper"] {
+    border: 1px solid #e5e7eb;
+    border-left: 6px solid #c4579b;
+    border-radius: 16px;
+    padding: 1.2rem;
+    background-color: #ffffff;
+    box-shadow: 0 6px 16px rgba(0,0,0,0.04);
+}
+
+/* LINKS */
+a { color: #1071b8; font-weight: 600; text-decoration: none; }
+a:hover { color: #c4579b; text-decoration: underline; }
+
+/* SEPARADORES */
+hr {
+    border: none;
+    height: 4px;
+    background: linear-gradient(90deg, #1071b8, #2e3788, #c4579b);
+    margin: 2.5rem 0;
+}
+
+/* FOOTER */
+.footer {
+    text-align: center;
+    color: #6b7280;
+    font-size: 0.85rem;
+    margin-top: 2rem;
+}
+</style>
+""", unsafe_allow_html=True)
+
+# =========================================================
+# LÓGICA DE AUTENTICACIÓN
+# =========================================================
+if 'auth_area' not in st.session_state:
+    st.session_state.auth_area = None
+
+def check_password(area_seleccionada):
+    if st.session_state.auth_area == area_seleccionada:
+        return True
     
-    .info-card {{
-        background-color: white;
-        padding: 15px;
-        border-radius: 10px;
-        border-left: 5px solid #ed701b;
-        box-shadow: 2px 2px 5px rgba(0,0,0,0.05);
-        margin-bottom: 15px;
-        height: 100%;
-    }}
-    .info-label {{ color: #6c757d; font-size: 0.75rem; font-weight: bold; text-transform: uppercase; }}
-    .info-value {{ color: #07456a; font-size: 1.1rem; font-weight: bold; }}
+    st.warning(f"🔒 El área de **{area_seleccionada}** está restringida.")
+    _, col_p, _ = st.columns([1,1,1])
+    with col_p:
+        pwd = st.text_input("Ingrese contraseña de acceso:", type="password")
+        if st.button("Validar Acceso"):
+            if pwd == PASSWORDS[area_seleccionada]:
+                st.session_state.auth_area = area_seleccionada
+                st.rerun()
+            else:
+                st.error("Contraseña incorrecta")
+    return False
+
+# =========================================================
+# ENCABEZADO PRINCIPAL
+# =========================================================
+st.title("📊 Gestión Humana | Grupo Don Pollo")
+st.markdown(
+    """
+    Plataforma centralizada de **analítica, automatización y visualización de información**,  
+    desarrollada para apoyar la **toma de decisiones estratégicas** de la organización.
+    """
+)
+
+st.markdown("---")
+
+# =========================================================
+# MENÚ LATERAL
+# =========================================================
+st.sidebar.markdown("## 📌 Líneas de Gestión")
+linea = st.sidebar.radio(
+    "",
+    [
+        "👥 Administración de Personal",
+        "📈 Desarrollo Organizacional",
+        "🦺 Seguridad y Salud en el Trabajo"
+    ]
+)
+
+# =========================================================
+# FUNCIÓN CARD PRO
+# =========================================================
+def card(titulo, descripcion, link, icon="🔗", detalles=None):
+    with st.container(border=True):
+        st.subheader(titulo)
+        st.write(descripcion)
+        st.markdown(f"{icon} **[Acceder al recurso]({link})**")
+        if detalles:
+            with st.expander("➕ Información técnica"):
+                for d in detalles:
+                    st.markdown(f"- {d}")
+
+# =========================================================
+# VALIDACIÓN Y CONTENIDO
+# =========================================================
+if check_password(linea):
     
-    [data-testid="stSidebar"] {{ background-color: #07456a; }}
-    [data-testid="stSidebar"] * {{ color: white !important; }}
-    
-    .footer {{ 
-        position: fixed; 
-        bottom: 10px; 
-        left: 0; 
-        right: 0; 
-        text-align: center; 
-        color: #6c757d; 
-        font-size: 12px; 
-        font-weight: bold; 
-    }}
-    
-    .sidebar-logo {{ font-size: 50px; text-align: center; margin-bottom: -10px; }}
-    </style>
-    """, unsafe_allow_html=True)
+    if linea == "👥 Administración de Personal":
+        st.header("👥 Administración de Personal")
+        st.caption("Indicadores clave para el control, seguimiento y planificación del recurso humano.")
+        col1, col2, col3 = st.columns(3)
+        with col1:
+            card("🏖️ Vacaciones", "Visualización del uso, saldo y planificación.", "https://app.powerbi.com/links/1TThJ-ia9c?ctid=42fc96b3-c018-482d-8ada-cab81720489e&pbi_source=linkShare", icon="📊", detalles=["🛠️ Power BI", "🔄 Automática", "📅 Mensual"])
+        with col2:
+            card("⏰ Asistencia", "Análisis de puntualidad y ausentismo.", "https://tu-link-powerbi.com", icon="📊", detalles=["🛠️ Power BI", "🔄 Automática", "📅 Diaria"])
+        with col3:
+            card("📄 Legajos Digitales", "Repositorio documental del personal.", "https://github.com", icon="📁", detalles=["🛠️ SharePoint", "🔐 Restringido", "🔄 Manual"])
 
-# --- SISTEMA DE BASE DE DATOS ---
-def init_db():
-    conn = sqlite3.connect('incubacion_ultra_v4.db', check_same_thread=False)
-    c = conn.cursor()
-    c.execute('''CREATE TABLE IF NOT EXISTS lotes (
-                    id_unico TEXT PRIMARY KEY, lote_nro TEXT, procedencia TEXT, planta TEXT, 
-                    granja TEXT, linea_genetica TEXT, edad_repro INTEGER, 
-                    fecha_postura DATE, fecha_llegada DATE, cantidad_inicial INTEGER, 
-                    saldo INTEGER, obs_sanitarias TEXT)''')
-    c.execute('''CREATE TABLE IF NOT EXISTS historial (
-                    id INTEGER PRIMARY KEY AUTOINCREMENT, id_lote TEXT, planta TEXT,
-                    tipo TEXT, cantidad INTEGER, motivo TEXT, fecha TIMESTAMP)''')
-    conn.commit()
-    return conn
+    elif linea == "📈 Desarrollo Organizacional":
+        st.header("📈 Desarrollo Organizacional")
+        st.caption("Seguimiento del crecimiento y fortalecimiento del talento humano.")
+        col1, col2 = st.columns(2)
+        with col1:
+            card("🎓 Capacitaciones", "Control del cumplimiento del plan anual.", "https://github.com", icon="📊", detalles=["🛠️ Power BI", "📊 Registros", "📅 Mensual"])
+        with col2:
+            card("😊 Clima Laboral", "Resultados consolidados de encuestas.", "https://tu-link-powerbi.com", icon="📊", detalles=["🛠️ Power BI", "📝 Encuestas", "📅 Trimestral"])
 
-conn = init_db()
-c = conn.cursor()
+    elif linea == "🦺 Seguridad y Salud en el Trabajo":
+        st.header("🦺 Seguridad y Salud en el Trabajo")
+        st.caption("Monitoreo preventivo de riesgos e incidentes.")
+        col1, col2 = st.columns(2)
+        with col1:
+            card("⚠️ Incidentes y Accidentes", "Análisis de eventos de seguridad laboral.", "https://tu-link-powerbi.com", icon="📊", detalles=["🛠️ Power BI", "📊 Registros SST", "📅 Mensual"])
+        with col2:
+            card("❤️ Bienestar y Ausentismo", "Indicadores de salud ocupacional.", "https://tu-link-powerbi.com", icon="📊", detalles=["🛠️ Power BI", "📊 RRHH / SST", "📅 Mensual"])
 
-# --- LÓGICA DE NEGOCIO ---
-def generar_id_y_procedencia(lote_txt):
-    lote_txt = lote_txt.upper().strip()
-    timestamp = datetime.now().strftime("%d%m%y-%H%M%S")
-    if lote_txt.isdigit():
-        procedencia = "CDG"
-        id_gen = f"CDG-{lote_txt}-{timestamp}"
-    elif "SF" in lote_txt:
-        procedencia = "San Fernando"
-        id_gen = f"{lote_txt}-{timestamp}"
-    elif "SE" in lote_txt:
-        procedencia = "Santa Elena"
-        id_gen = f"{lote_txt}-{timestamp}"
-    else:
-        procedencia = "Otros"
-        id_gen = f"{lote_txt}-{timestamp}"
-    return id_gen, procedencia
-
-def calcular_dias(f_postura):
-    if isinstance(f_postura, str):
-        f_postura = datetime.strptime(f_postura, '%Y-%m-%d').date()
-    return (date.today() - f_postura).days
-
-def clasificar_repro(edad):
-    if not edad or edad == 0: return "S/D"
-    if edad < 30: return "Joven (<30)"
-    if 30 <= edad <= 39: return "Óptima (30-39)"
-    if 40 <= edad <= 49: return "Madura (40-49)"
-    return "Vieja (≥50)"
-
-def to_excel(df):
-    output = io.BytesIO()
-    with pd.ExcelWriter(output, engine='xlsxwriter') as writer:
-        df.to_excel(writer, index=False, sheet_name='Reporte')
-    return output.getvalue()
-
-# --- SIDEBAR ---
-st.sidebar.markdown('<div class="sidebar-logo">🐣</div>', unsafe_allow_html=True)
-st.sidebar.title("MENU ERP")
-menu = ["🟢 Recepción", "🟡 Inventario Global", "📊 Seguimiento & Decisiones", "🔵 Salidas (Incubación)", "🔍 Ficha de Trazabilidad", "📜 Historial General"]
-choice = st.sidebar.radio("Navegación:", menu)
-
-# --- 🟢 1. RECEPCIÓN ---
-if choice == "🟢 Recepción":
-    t1, t2 = st.tabs(["📥 Nuevo Ingreso", "✏️ Editar/Corregir"])
-    with t1:
-        st.header("Registro de Ingresos")
-        with st.form("form_ingreso", clear_on_submit=True):
-            col1, col2 = st.columns(2)
-            lote_input = col1.text_input("Nro de Lote")
-            planta = col2.selectbox("Planta Destino", ["P.I. Tarapoto", "P.I. Pucacaca"])
-            c1, c2, c3 = st.columns(3); granja = c1.text_input("Granja"); genetica = c2.selectbox("Genética", ["Cobb 500", "Ross 308", "Hubbard", "Sin Datos"]); edad_repro = c3.number_input("Edad Repro", min_value=0, value=0)
-            c4, c5, c6 = st.columns(3); cant_h = c4.number_input("Cantidad", min_value=0); f_postura = c5.date_input("Fecha Postura"); f_llegada = c6.date_input("Fecha Llegada")
-            obs = st.text_area("Notas Sanitarias")
-            
-            if st.form_submit_button("💾 GUARDAR REGISTRO"):
-                if not lote_input:
-                    st.error("❌ El número de lote es obligatorio.")
-                else:
-                    id_u, proc = generar_id_y_procedencia(lote_input)
-                    try:
-                        # CORRECCIÓN CLAVE: Especificamos las columnas para evitar el error de "13 columns"
-                        sql_lotes = """INSERT INTO lotes 
-                                     (id_unico, lote_nro, procedencia, planta, granja, linea_genetica, 
-                                      edad_repro, fecha_postura, fecha_llegada, cantidad_inicial, saldo, obs_sanitarias) 
-                                     VALUES (?,?,?,?,?,?,?,?,?,?,?,?)"""
-                        
-                        c.execute(sql_lotes, (id_u, lote_input, proc, planta, granja, genetica, 
-                                            (edad_repro if edad_repro > 0 else None), f_postura, f_llegada, 
-                                            cant_h, cant_h, obs))
-                        
-                        c.execute("INSERT INTO historial (id_lote, planta, tipo, cantidad, motivo, fecha) VALUES (?,?,?,?,?,?)", 
-                                 (id_u, planta, "INGRESO", cant_h, "Recepción", datetime.now()))
-                        conn.commit()
-                        st.toast(f"Lote {id_u} registrado", icon="📥")
-                        st.success(f"✅ Lote {id_u} guardado correctamente."); st.balloons(); time.sleep(1); st.rerun()
-                    except Exception as e: 
-                        st.error(f"❌ Error al guardar: {e}")
-
-    with t2:
-        st.header("Editor de Lotes")
-        lista = pd.read_sql_query("SELECT id_unico FROM lotes", conn)
-        id_edit = st.selectbox("Seleccione ID:", ["Seleccionar..."] + lista['id_unico'].tolist())
-        if id_edit != "Seleccionar...":
-            datos = pd.read_sql_query(f"SELECT * FROM lotes WHERE id_unico='{id_edit}'", conn).iloc[0]
-            with st.form("f_edit"):
-                col_e1, col_e2 = st.columns(2); e_granja = col_e1.text_input("Granja", value=datos['granja']); e_planta = col_e2.selectbox("Planta", ["P.I. Tarapoto", "P.I. Pucacaca"], index=0 if datos['planta']=="P.I. Tarapoto" else 1)
-                col_f1, col_f2 = st.columns(2); e_f_postura = col_f1.date_input("Fecha Postura", value=pd.to_datetime(datos['fecha_postura']).date()); e_f_llegada = col_f2.date_input("Fecha Llegada", value=pd.to_datetime(datos['fecha_llegada']).date())
-                ce1, ce2, ce3 = st.columns(3); e_gen = ce1.selectbox("Genética", ["Cobb 500", "Ross 308", "Hubbard", "Sin Datos"]); e_edad = ce2.number_input("Edad Repro", value=int(datos['edad_repro']) if datos['edad_repro'] else 0); e_saldo = ce3.number_input("Saldo", value=int(datos['saldo']))
-                e_obs = st.text_area("Observaciones", value=datos['obs_sanitarias'])
-                if st.form_submit_button("🔄 ACTUALIZAR DATOS"):
-                    c.execute("UPDATE lotes SET granja=?, planta=?, fecha_postura=?, fecha_llegada=?, linea_genetica=?, edad_repro=?, saldo=?, obs_sanitarias=? WHERE id_unico=?", (e_granja, e_planta, e_f_postura, e_f_llegada, e_gen, e_edad, e_saldo, e_obs, id_edit))
-                    conn.commit()
-                    st.toast("Datos actualizados con éxito", icon="🔄")
-                    st.info(f"Lote {id_edit} ha sido modificado."); time.sleep(1.5); st.rerun()
-
-# --- 🟡 INVENTARIO GLOBAL ---
-elif choice == "🟡 Inventario Global":
-    st.header("📦 Consolidado de Stock")
-    df = pd.read_sql_query("SELECT * FROM lotes WHERE saldo > 0", conn)
-    if not df.empty:
-        df['Días Almacén'] = df['fecha_postura'].apply(calcular_dias)
-        cols = ['id_unico', 'saldo', 'Días Almacén', 'planta', 'procedencia', 'granja', 'linea_genetica', 'edad_repro', 'fecha_postura', 'fecha_llegada', 'obs_sanitarias']
-        st.dataframe(df[cols], use_container_width=True)
-        if st.download_button("📥 DESCARGAR EXCEL COMPLETO", to_excel(df), "Inventario_Completo.xlsx"):
-            st.toast("Descarga iniciada", icon="📊")
-
-# --- 📊 SEGUIMIENTO & DECISIONES ---
-elif choice == "📊 Seguimiento & Decisiones":
-    st.header("🔬 Prioridades de Carga")
-    df = pd.read_sql_query("SELECT id_unico, planta, granja, linea_genetica, edad_repro, fecha_postura, saldo FROM lotes WHERE saldo > 0", conn)
-    if not df.empty:
-        df['Días'] = df['fecha_postura'].apply(calcular_dias)
-        df['Clasif. Repro'] = df['edad_repro'].apply(clasificar_repro)
-        df = df.sort_values(by="Días", ascending=False)
-        def color_semaforo(row):
-            if row['Días'] > 10: return ['background-color: #ffcccc'] * len(row)
-            elif 7 <= row['Días'] <= 9: return ['background-color: #fff4cc'] * len(row)
-            else: return ['background-color: #d4edda'] * len(row)
-        st.dataframe(df.style.apply(color_semaforo, axis=1), use_container_width=True)
-
-# --- 🔵 SALIDAS ---
-elif choice == "🔵 Salidas (Incubación)":
-    st.header("📤 Orden de Salida")
-    lotes_disponibles = pd.read_sql_query("SELECT id_unico, saldo, planta FROM lotes WHERE saldo > 0", conn)
-    if not lotes_disponibles.empty:
-        with st.form("form_salida", clear_on_submit=True):
-            id_s = st.selectbox("Seleccione Lote", lotes_disponibles['id_unico'])
-            cant = st.number_input("Cantidad", min_value=1)
-            mot = st.selectbox("Motivo", ["Carga Incubadora", "Venta", "Merma"])
-            if st.form_submit_button("🚀 PROCESAR SALIDA"):
-                lote_info = lotes_disponibles[lotes_disponibles['id_unico'] == id_s].iloc[0]
-                if cant <= lote_info['saldo']:
-                    c.execute("UPDATE lotes SET saldo = saldo - ? WHERE id_unico = ?", (cant, id_s))
-                    c.execute("INSERT INTO historial (id_lote, planta, tipo, cantidad, motivo, fecha) VALUES (?,?,?,?,?,?)", (id_s, lote_info['planta'], "SALIDA", cant, mot, datetime.now()))
-                    conn.commit()
-                    st.toast(f"Salida registrada: {id_s}", icon="📤")
-                    st.success(f"✅ ¡Operación Exitosa! {cant} huevos retirados."); st.balloons(); time.sleep(1.5); st.rerun()
-                else: st.error("Saldo insuficiente.")
-
-# --- 🔍 5. FICHA DE TRAZABILIDAD ---
-elif choice == "🔍 Ficha de Trazabilidad":
-    st.header("🔎 Expediente de Lote (Hoja de Vida)")
-    lotes_todos = pd.read_sql_query("SELECT id_unico FROM lotes", conn)
-    target = st.selectbox("Buscar Lote:", ["Seleccionar..."] + lotes_todos['id_unico'].tolist())
-    
-    if target != "Seleccionar...":
-        info = pd.read_sql_query(f"SELECT * FROM lotes WHERE id_unico='{target}'", conn).iloc[0]
-        movs = pd.read_sql_query(f"SELECT tipo, cantidad, motivo, fecha FROM historial WHERE id_lote='{target}' ORDER BY fecha DESC", conn)
-        
-        st.subheader("📊 Estado en Tiempo Real")
-        m1, m2, m3, m4 = st.columns(4)
-        with m1: st.markdown(f'<div class="info-card"><div class="info-label">Saldo en Cámara</div><div class="info-value">{info["saldo"]} Huevos</div></div>', unsafe_allow_html=True)
-        with m2: st.markdown(f'<div class="info-card"><div class="info-label">Equivalencia</div><div class="info-value">{round(info["saldo"]/360, 1)} Cajas</div></div>', unsafe_allow_html=True)
-        with m3: st.markdown(f'<div class="info-card"><div class="info-label">Días de Almacén</div><div class="info-value">{calcular_dias(info["fecha_postura"])} Días</div></div>', unsafe_allow_html=True)
-        with m4: st.markdown(f'<div class="info-card"><div class="info-label">Edad Repro</div><div class="info-value">{info["edad_repro"] if info["edad_repro"] else "S/D"} Sem.</div></div>', unsafe_allow_html=True)
-
-        st.subheader("📋 Datos Técnicos de Producción")
-        c1, c2, c3, c4 = st.columns(4)
-        with c1: st.markdown(f'<div class="info-card"><div class="info-label">Granja</div><div class="info-value">{info["granja"]}</div></div>', unsafe_allow_html=True)
-        with c2: st.markdown(f'<div class="info-card"><div class="info-label">Línea Genética</div><div class="info-value">{info["linea_genetica"]}</div></div>', unsafe_allow_html=True)
-        with c3: st.markdown(f'<div class="info-card"><div class="info-label">Procedencia</div><div class="info-value">{info["procedencia"]}</div></div>', unsafe_allow_html=True)
-        with c4: st.markdown(f'<div class="info-card"><div class="info-label">Lote Externo</div><div class="info-value">{info["lote_nro"]}</div></div>', unsafe_allow_html=True)
-
-        st.warning(f"📝 **Observaciones Sanitarias:** {info['obs_sanitarias']}")
-        st.divider()
-        
-        col_t1, col_t2 = st.columns([3, 1])
-        col_t1.subheader("📜 Movimientos Registrados")
-        if col_t2.download_button("📥 EXPORTAR EXPEDIENTE", to_excel(movs), f"Expediente_{target}.xlsx"):
-            st.toast(f"Reporte de {target} descargado", icon="📄")
-        st.dataframe(movs, use_container_width=True)
-
-# --- 📜 HISTORIAL GENERAL ---
-elif choice == "📜 Historial General":
-    st.header("📝 Auditoría de Movimientos")
-    h_df = pd.read_sql_query("SELECT * FROM historial ORDER BY fecha DESC", conn)
-    if not h_df.empty:
-        if st.download_button("📥 DESCARGAR AUDITORÍA", to_excel(h_df), "Auditoria.xlsx"):
-            st.toast("Auditoría exportada", icon="📜")
-        st.dataframe(h_df, use_container_width=True)
-
-st.markdown('<div class="footer">Desarrollado por Gerencia de Control de Gestión</div>', unsafe_allow_html=True)
+# =========================================================
+# FOOTER
+# =========================================================
+st.markdown("---")
+st.markdown(
+    "<div class='footer'>Gerencia de Control de Gestión | Transformación Digital</div>",
+    unsafe_allow_html=True
+)
