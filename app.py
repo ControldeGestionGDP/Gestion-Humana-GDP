@@ -69,26 +69,6 @@ html, body {{
     margin-bottom: 28px;
 }}
 
-/* ESTA CLASE YA NO SE USA PERO LA DEJO POR SI QUIERES REUTILIZARLA */
-.area-card {{
-    background: white;
-    border-radius: 18px;
-    height: 240px;
-    padding: 2rem;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-end;
-    box-shadow: 0 18px 40px rgba(0,0,0,0.08);
-    border-top: 6px solid {COLOR1};
-    transition: all 0.25s ease;
-}}
-
-.area-card:hover {{
-    transform: translateY(-8px);
-    border-top: 6px solid {COLOR3};
-    box-shadow: 0 28px 60px rgba(0,0,0,0.12);
-}}
-
 .login-box {{
     background: white;
     padding: 40px;
@@ -118,11 +98,6 @@ html, body {{
     border-bottom-right-radius: 18px;
 }}
 
-.desc {{
-    font-weight: 400;
-    font-size: 0.95rem;
-}}
-
 div.stButton > button {{
     background: linear-gradient(90deg, {COLOR1}, {COLOR2}, {COLOR3});
     color: white;
@@ -142,7 +117,7 @@ div.stButton > button:hover {{
 """, unsafe_allow_html=True)
 
 # =========================================================
-# FUNCIÓN TARJETA PRO (CLOUD SAFE)
+# FUNCIÓN TARJETA PRO
 # =========================================================
 def report_card(titulo, desc, link, img_relative_path):
 
@@ -152,15 +127,12 @@ def report_card(titulo, desc, link, img_relative_path):
 
     st.markdown('<div class="report-card">', unsafe_allow_html=True)
 
-    if img_to_use.exists():
-        st.image(str(img_to_use), use_container_width=True)
-    else:
-        st.warning("Imagen no encontrada y no existe default.jpg")
+    st.image(str(img_to_use), use_container_width=True)
 
     st.markdown(f"""
     <div class="overlay">
         {titulo}
-        <div class="desc">{desc}</div>
+        <div style="font-weight:400;font-size:0.95rem;">{desc}</div>
     </div>
     """, unsafe_allow_html=True)
 
@@ -190,20 +162,29 @@ if st.session_state.area is None:
     for col, name, img_file in zip([col1, col2, col3], areas, area_imgs):
         with col:
 
-            # 👇 SOLO IMAGEN
             img_path = ASSETS_DIR / img_file
-            if img_path.exists():
-                st.image(str(img_path), use_container_width=True)
-            else:
-                st.warning(f"Imagen {img_file} no encontrada")
+            fallback = ASSETS_DIR / "default.jpg"
+            img_to_use = img_path if img_path.exists() else fallback
+
+            # === TARJETA IGUAL A VACACIONES ===
+            st.markdown('<div class="report-card">', unsafe_allow_html=True)
+
+            st.image(str(img_to_use), use_container_width=True)
+
+            st.markdown(f"""
+            <div class="overlay">
+                {name}
+            </div>
+            """, unsafe_allow_html=True)
 
             clean_name = name.split(" ", 1)[1]
 
-            # 👇 BOTÓN ORIGINAL
             if st.button("Ingresar", key=clean_name):
                 st.session_state.area = clean_name
                 st.session_state.auth = False
                 st.rerun()
+
+            st.markdown("</div>", unsafe_allow_html=True)
 
 # =========================================================
 # LOGIN
