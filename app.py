@@ -73,10 +73,11 @@ html, body {{
     background: white;
     border-radius: 18px;
     height: 240px;
-    padding: 2rem;
+    padding: 0;
     display: flex;
     flex-direction: column;
     justify-content: flex-end;
+    overflow: hidden;
     box-shadow: 0 18px 40px rgba(0,0,0,0.08);
     border-top: 6px solid {COLOR1};
     transition: all 0.25s ease;
@@ -86,6 +87,14 @@ html, body {{
     transform: translateY(-8px);
     border-top: 6px solid {COLOR3};
     box-shadow: 0 28px 60px rgba(0,0,0,0.12);
+}}
+
+.area-overlay {{
+    padding: 20px;
+    color: white;
+    font-weight: 700;
+    font-size: 1.2rem;
+    background: linear-gradient(transparent, rgba(0,0,0,0.85));
 }}
 
 .login-box {{
@@ -179,19 +188,26 @@ if st.session_state.area is None:
     col1, col2, col3 = st.columns(3)
 
     areas = [
-        ("👥 Administración de Personal"),
-        ("📚 Desarrollo Organizacional"),
-        ("🦺 Seguridad y Salud en el Trabajo")
+        ("👥 Administración de Personal", "Administracion.jpg"),
+        ("📚 Desarrollo Organizacional", "Desarrollo.jpg"),
+        ("🦺 Seguridad y Salud en el Trabajo", "Seguridad.jpg")
     ]
 
-    for col, name in zip([col1, col2, col3], areas):
+    for col, (name, img) in zip([col1, col2, col3], areas):
         with col:
+
+            img_path = ASSETS_DIR / img
+            img_to_use = img_path if img_path.exists() else ASSETS_DIR / "default.jpg"
 
             st.markdown(f"""
             <div class="area-card">
-                <div style="font-size:1.3rem;font-weight:700;color:{COLOR2};">
-                    {name}
-                </div>
+                <img src="{img_to_use}" style="
+                    width:100%;
+                    height:100%;
+                    object-fit:cover;
+                    filter:brightness(0.75);
+                ">
+                <div class="area-overlay">{name}</div>
             </div>
             """, unsafe_allow_html=True)
 
