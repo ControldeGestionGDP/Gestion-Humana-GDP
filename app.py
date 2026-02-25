@@ -29,6 +29,7 @@ if "area" not in st.session_state:
 if "auth" not in st.session_state:
     st.session_state.auth = False
 
+
 # =========================================================
 # ESTILOS
 # =========================================================
@@ -59,25 +60,39 @@ html, body {{
     margin-bottom: 28px;
 }}
 
-.report-card img {{
+/* TARJETA */
+.card {{
+    position: relative;
     border-radius: 18px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: transform 0.35s ease;
+}}
+
+.card:hover {{
+    transform: translateY(-6px);
+}}
+
+.card img {{
+    width: 100%;
+    height: 260px;
+    object-fit: cover;
     transition: transform 0.4s ease;
 }}
 
-.report-card:hover img {{
+.card:hover img {{
     transform: scale(1.05);
 }}
 
 .overlay {{
-    position: relative;
-    margin-top: -110px;
+    position: absolute;
+    bottom: 0;
+    width: 100%;
     padding: 20px;
     color: white;
     font-weight: 700;
     font-size: 1.2rem;
     background: linear-gradient(transparent, rgba(0,0,0,0.85));
-    border-bottom-left-radius: 18px;
-    border-bottom-right-radius: 18px;
 }}
 
 .desc {{
@@ -93,48 +108,47 @@ html, body {{
     border-top: 5px solid {COLOR1};
 }}
 
-div.stButton > button {{
-    background: linear-gradient(90deg, {COLOR1}, {COLOR2}, {COLOR3});
-    color: white;
-    border-radius: 999px;
-    border: none;
-    font-weight: 700;
-    height: 45px;
-    transition: 0.3s;
-}}
-
-div.stButton > button:hover {{
-    transform: translateY(-2px);
-    box-shadow: 0 10px 25px rgba(0,0,0,0.25);
-}}
-
 </style>
 """, unsafe_allow_html=True)
 
+
 # =========================================================
-# TARJETA REUTILIZABLE
+# TARJETA CLICKEABLE
 # =========================================================
-def report_card(titulo, desc, link, img_relative_path):
+def card(titulo, desc, img_relative_path, action=None, link=None):
 
     img_path = ASSETS_DIR / img_relative_path
     fallback = ASSETS_DIR / "default.jpg"
     img_to_use = img_path if img_path.exists() else fallback
 
-    st.markdown('<div class="report-card">', unsafe_allow_html=True)
+    st.markdown('<div class="card">', unsafe_allow_html=True)
 
     if img_to_use.exists():
         st.image(str(img_to_use), use_container_width=True)
 
     st.markdown(f"""
-    <div class="overlay">
-        {titulo}
-        <div class="desc">{desc}</div>
-    </div>
+        <div class="overlay">
+            {titulo}
+            <div class="desc">{desc}</div>
+        </div>
     """, unsafe_allow_html=True)
 
-    st.link_button("Ingresar", link, use_container_width=True)
-
     st.markdown("</div>", unsafe_allow_html=True)
+
+    if action:
+        if st.button(f"abrir_{titulo}", key=titulo):
+            action()
+
+    if link:
+        st.markdown(f"""
+            <script>
+                const cards = window.parent.document.querySelectorAll('.card');
+                cards[cards.length - 1].onclick = function() {{
+                    window.open("{link}", "_blank");
+                }};
+            </script>
+        """, unsafe_allow_html=True)
+
 
 # =========================================================
 # PORTAL PRINCIPAL
@@ -148,43 +162,40 @@ if st.session_state.area is None:
     col1, col2, col3 = st.columns(3)
 
     with col1:
-        report_card(
+        card(
             "👥 Administración de Personal",
             "Vacaciones, descansos y exámenes",
-            "?area=Administración de Personal",
-            "Administracion.jpg"
+            "Administracion.jpg",
+            action=lambda: (
+                st.session_state.update({"area": "Administración de Personal"}),
+                st.rerun()
+            )
         )
-
-        if st.button("Entrar Administración"):
-            st.session_state.area = "Administración de Personal"
-            st.rerun()
 
     with col2:
-        report_card(
+        card(
             "📚 Desarrollo Organizacional",
             "Capacitaciones y desempeño",
-            "?area=Desarrollo Organizacional",
-            "Desarrollo.jpg"
+            "Desarrollo.jpg",
+            action=lambda: (
+                st.session_state.update({"area": "Desarrollo Organizacional"}),
+                st.rerun()
+            )
         )
-
-        if st.button("Entrar Desarrollo"):
-            st.session_state.area = "Desarrollo Organizacional"
-            st.rerun()
 
     with col3:
-        report_card(
+        card(
             "🦺 Seguridad y Salud en el Trabajo",
             "Indicadores SST",
-            "?area=Seguridad y Salud en el Trabajo",
-            "Seguridad.jpg"
+            "Seguridad.jpg",
+            action=lambda: (
+                st.session_state.update({"area": "Seguridad y Salud en el Trabajo"}),
+                st.rerun()
+            )
         )
 
-        if st.button("Entrar Seguridad"):
-            st.session_state.area = "Seguridad y Salud en el Trabajo"
-            st.rerun()
-
 # =========================================================
-# LOGIN + DASHBOARDS (NO SE TOCA)
+# LOGIN + DASHBOARD
 # =========================================================
 else:
 
@@ -237,19 +248,29 @@ else:
             col1, col2, col3 = st.columns(3)
 
             with col1:
-                report_card("Vacaciones", "Saldo y planificación",
-                            "https://app.powerbi.com",
-                            "Vacaciones.jpg")
+                card(
+                    "Vacaciones",
+                    "Saldo y planificación",
+                    "Vacaciones.jpg",
+                    link="https://app.powerbi.com"
+                )
 
             with col2:
-                report_card("Descansos Médicos", "Subsidios y ausencias",
-                            "https://app.powerbi.com",
-                            "DescansosMedicos.jpg")
+                card(
+                    "Descansos Médicos",
+                    "Subsidios y ausencias",
+                    "DescansosMedicos.jpg",
+                    link="https://app.powerbi.com"
+                )
 
             with col3:
-                report_card("Exámenes Médicos", "Seguimiento ocupacional",
-                            "https://app.powerbi.com",
-                            "Examenes.jpg")
+                card(
+                    "Exámenes Médicos",
+                    "Seguimiento ocupacional",
+                    "Examenes.jpg",
+                    link="https://app.powerbi.com"
+                )
+
 
 # =========================================================
 # FOOTER
