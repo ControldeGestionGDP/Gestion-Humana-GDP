@@ -188,13 +188,16 @@ if st.session_state.area is None:
 
     for col, name, img_file in zip([col1, col2, col3], areas, area_imgs):
         with col:
-            # Mostrar la imagen dentro de la tarjeta como fondo
+            # Mostrar imagen del área
             img_path = ASSETS_DIR / img_file
-            img_url = str(img_path) if img_path.exists() else ""
+            if img_path.exists():
+                st.image(str(img_path), use_container_width=True)
+            else:
+                st.warning(f"Imagen {img_file} no encontrada")
 
             st.markdown(f"""
-            <div class="area-card" style="background-image:url('{img_url}'); background-size:cover; background-position:center;">
-                <div style="font-size:1.3rem;font-weight:700;color:white;text-shadow: 1px 1px 5px black;">
+            <div class="area-card">
+                <div style="font-size:1.3rem;font-weight:700;color:{COLOR2};">
                     {name}
                 </div>
             </div>
