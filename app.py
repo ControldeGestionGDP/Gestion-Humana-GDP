@@ -69,6 +69,7 @@ html, body {{
     margin-bottom: 28px;
 }}
 
+/* ESTA CLASE YA NO SE USA PERO LA DEJO POR SI QUIERES REUTILIZARLA */
 .area-card {{
     background: white;
     border-radius: 18px;
@@ -188,23 +189,17 @@ if st.session_state.area is None:
 
     for col, name, img_file in zip([col1, col2, col3], areas, area_imgs):
         with col:
-            # Mostrar imagen del área
+
+            # 👇 SOLO IMAGEN
             img_path = ASSETS_DIR / img_file
             if img_path.exists():
                 st.image(str(img_path), use_container_width=True)
             else:
                 st.warning(f"Imagen {img_file} no encontrada")
 
-            st.markdown(f"""
-            <div class="area-card">
-                <div style="font-size:1.3rem;font-weight:700;color:{COLOR2};">
-                    {name}
-                </div>
-            </div>
-            """, unsafe_allow_html=True)
-
             clean_name = name.split(" ", 1)[1]
 
+            # 👇 BOTÓN ORIGINAL
             if st.button("Ingresar", key=clean_name):
                 st.session_state.area = clean_name
                 st.session_state.auth = False
@@ -262,7 +257,6 @@ else:
 
         st.divider()
 
-        # ADMINISTRACIÓN DE PERSONAL (3 REALES)
         if area == "Administración de Personal":
 
             col1, col2, col3 = st.columns(3)
@@ -282,7 +276,6 @@ else:
                             "https://app.powerbi.com/links/eAcPJmr1vJ?ctid=42fc96b3-c018-482d-8ada-cab81720489e&pbi_source=linkShare",
                             "Examenes.jpg")
 
-        # DESARROLLO ORGANIZACIONAL (1 FICTICIO)
         elif area == "Desarrollo Organizacional":
 
             col1, col2, col3 = st.columns([1,2,1])
@@ -293,7 +286,6 @@ else:
                             "https://app.powerbi.com",
                             "Capacitaciones.jpg")
 
-        # SEGURIDAD Y SALUD (1 FICTICIO)
         elif area == "Seguridad y Salud en el Trabajo":
 
             col1, col2, col3 = st.columns([1,2,1])
