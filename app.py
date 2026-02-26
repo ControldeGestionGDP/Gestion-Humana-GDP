@@ -39,7 +39,7 @@ if "auth" not in st.session_state:
     st.session_state.auth = False
 
 # =========================================================
-# ESTILOS
+# ESTILOS CON TRANSICIONES
 # =========================================================
 st.markdown(f"""
 <style>
@@ -47,12 +47,24 @@ st.markdown(f"""
 html, body {{
     font-family: "Segoe UI", sans-serif;
     background: #f4f6fb;
+    animation: fadeInBody 0.6s ease-in-out;
+}}
+
+@keyframes fadeInBody {{
+    from {{ opacity: 0; transform: translateY(8px); }}
+    to {{ opacity: 1; transform: translateY(0); }}
 }}
 
 .main-title {{
     font-size: 2.6rem;
     font-weight: 800;
     color: {COLOR2};
+    animation: slideInTitle 0.7s ease;
+}}
+
+@keyframes slideInTitle {{
+    from {{ opacity: 0; transform: translateX(-10px); }}
+    to {{ opacity: 1; transform: translateX(0); }}
 }}
 
 .subtitle {{
@@ -66,6 +78,12 @@ html, body {{
     background: linear-gradient(90deg,{COLOR1},{COLOR2},{COLOR3});
     border-radius: 4px;
     margin-bottom: 28px;
+    animation: expandBar 0.8s ease forwards;
+}}
+
+@keyframes expandBar {{
+    from {{ width: 0; }}
+    to {{ width: 120px; }}
 }}
 
 .login-box {{
@@ -74,6 +92,12 @@ html, body {{
     border-radius: 18px;
     box-shadow: 0 25px 55px rgba(0,0,0,0.12);
     border-top: 5px solid {COLOR1};
+    animation: fadeInCard 0.5s ease;
+}}
+
+@keyframes fadeInCard {{
+    from {{ opacity: 0; transform: translateY(12px); }}
+    to {{ opacity: 1; transform: translateY(0); }}
 }}
 
 .card {{
@@ -82,11 +106,11 @@ html, body {{
     box-shadow: 0 15px 35px rgba(0,0,0,0.12);
     margin-bottom: 8px;
     background: white;
-    transition: all 0.3s ease;
+    transition: all 0.35s cubic-bezier(.4,0,.2,1);
 }}
 
 .card:hover {{
-    transform: translateY(-6px);
+    transform: translateY(-8px);
     box-shadow: 0 25px 55px rgba(0,0,0,0.18);
 }}
 
@@ -96,7 +120,7 @@ html, body {{
 }}
 
 .card:hover img {{
-    transform: scale(1.03);
+    transform: scale(1.04);
 }}
 
 .card-title {{
@@ -117,8 +141,8 @@ div.stButton > button {{
 }}
 
 div.stButton > button:hover {{
-    transform: translateY(-2px);
-    box-shadow: 0 8px 18px rgba(0,0,0,0.2);
+    transform: translateY(-3px);
+    box-shadow: 0 10px 22px rgba(0,0,0,0.2);
 }}
 
 </style>
