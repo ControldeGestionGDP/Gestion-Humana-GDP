@@ -303,15 +303,15 @@ else:
 
             with col1:
                 report_card("Vacaciones", "Saldo y planificación", "Vacaciones.jpg")
-                open_panel_button("https://app.powerbi.com", "vacaciones")
+                open_panel_button("https://app.powerbi.com/links/1TThJ-ia9c?ctid=42fc96b3-c018-482d-8ada-cab81720489e&pbi_source=linkShare", "vacaciones")
 
             with col2:
                 report_card("Descansos Médicos", "Subsidios y ausencias", "DescansosMedicos.jpg")
-                open_panel_button("https://app.powerbi.com", "descansos")
+                open_panel_button("https://app.powerbi.com/links/NQfjSntCO1?ctid=42fc96b3-c018-482d-8ada-cab81720489e&pbi_source=linkShare&bookmarkGuid=e2215b9e-c265-4f82-97cc-e0d93d637760", "descansos")
 
             with col3:
                 report_card("Exámenes Médicos", "Seguimiento ocupacional", "Examenes.jpg")
-                open_panel_button("https://app.powerbi.com", "examenes")
+                open_panel_button("https://app.powerbi.com/links/eAcPJmr1vJ?ctid=42fc96b3-c018-482d-8ada-cab81720489e&pbi_source=linkShare", "examenes")
 
         elif area == "Desarrollo Organizacional":
 
