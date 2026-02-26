@@ -180,14 +180,29 @@ def report_card(titulo, desc, img_relative_path):
     st.markdown('</div>', unsafe_allow_html=True)
 
 # =========================================================
-# BOTÓN PANEL
+# BOTÓN PANEL (CORREGIDO)
 # =========================================================
 def open_panel_button(url, key):
-    if st.button("Abrir panel", key=key, use_container_width=True):
-        st.markdown(
-            f'<meta http-equiv="refresh" content="0; url={url}">',
-            unsafe_allow_html=True
-        )
+
+    st.markdown(f"""
+    <a href="{url}" target="_blank" style="text-decoration:none;">
+        <div style="
+            width:100%;
+            text-align:center;
+            padding:12px;
+            border-radius:10px;
+            font-weight:700;
+            color:white;
+            background: linear-gradient(90deg,{COLOR1},{COLOR2},{COLOR3});
+            transition: all 0.25s ease;
+            box-shadow: 0 6px 14px rgba(0,0,0,0.15);
+        "
+        onmouseover="this.style.transform='translateY(-3px)';this.style.boxShadow='0 10px 22px rgba(0,0,0,0.2)';"
+        onmouseout="this.style.transform='none';this.style.boxShadow='0 6px 14px rgba(0,0,0,0.15)';">
+            Abrir panel
+        </div>
+    </a>
+    """, unsafe_allow_html=True)
 
 # =========================================================
 # PORTAL PRINCIPAL
