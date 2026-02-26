@@ -29,7 +29,6 @@ PASSWORDS = {
     "Seguridad y Salud en el Trabajo": "seguridad2024"
 }
 
-# 🔥 NUEVA CONTRASEÑA GERENCIA
 GERENTE_PASSWORD = "gerencia2024"
 
 # =========================================================
@@ -42,33 +41,39 @@ if "auth" not in st.session_state:
     st.session_state.auth = False
 
 # =========================================================
-# ESTILOS CON TRANSICIONES (NO SE TOCA)
+# ESTILOS CON TRANSICIONES
 # =========================================================
 st.markdown(f"""
 <style>
+
 html, body {{
     font-family: "Segoe UI", sans-serif;
     background: #f4f6fb;
     animation: fadeInBody 0.6s ease-in-out;
 }}
+
 @keyframes fadeInBody {{
     from {{ opacity: 0; transform: translateY(8px); }}
     to {{ opacity: 1; transform: translateY(0); }}
 }}
+
 .main-title {{
     font-size: 2.6rem;
     font-weight: 800;
     color: {COLOR2};
     animation: slideInTitle 0.7s ease;
 }}
+
 @keyframes slideInTitle {{
     from {{ opacity: 0; transform: translateX(-10px); }}
     to {{ opacity: 1; transform: translateX(0); }}
 }}
+
 .subtitle {{
     color: #6b7280;
     margin-bottom: 12px;
 }}
+
 .title-accent {{
     height: 4px;
     width: 120px;
@@ -77,10 +82,12 @@ html, body {{
     margin-bottom: 28px;
     animation: expandBar 0.8s ease forwards;
 }}
+
 @keyframes expandBar {{
     from {{ width: 0; }}
     to {{ width: 120px; }}
 }}
+
 .login-box {{
     background: white;
     padding: 40px;
@@ -89,10 +96,12 @@ html, body {{
     border-top: 5px solid {COLOR1};
     animation: fadeInCard 0.5s ease;
 }}
+
 @keyframes fadeInCard {{
     from {{ opacity: 0; transform: translateY(12px); }}
     to {{ opacity: 1; transform: translateY(0); }}
 }}
+
 .card {{
     border-radius: 18px;
     overflow: hidden;
@@ -101,22 +110,27 @@ html, body {{
     background: white;
     transition: all 0.35s cubic-bezier(.4,0,.2,1);
 }}
+
 .card:hover {{
     transform: translateY(-8px);
     box-shadow: 0 25px 55px rgba(0,0,0,0.18);
 }}
+
 .card img {{
     border-radius: 18px;
     transition: transform 0.4s ease;
 }}
+
 .card:hover img {{
     transform: scale(1.04);
 }}
+
 .card-title {{
     padding: 15px;
     font-weight: 700;
     font-size: 1.1rem;
 }}
+
 div.stButton > button {{
     width: 100%;
     background: linear-gradient(90deg, {COLOR1}, {COLOR2}, {COLOR3});
@@ -127,10 +141,12 @@ div.stButton > button {{
     height: 45px;
     transition: all 0.25s ease;
 }}
+
 div.stButton > button:hover {{
     transform: translateY(-3px);
     box-shadow: 0 10px 22px rgba(0,0,0,0.2);
 }}
+
 </style>
 """, unsafe_allow_html=True)
 
@@ -138,6 +154,7 @@ div.stButton > button:hover {{
 # TARJETA
 # =========================================================
 def report_card(titulo, desc, img_relative_path):
+
     img_path = ASSETS_DIR / img_relative_path
     fallback = ASSETS_DIR / "default.jpg"
 
@@ -148,8 +165,10 @@ def report_card(titulo, desc, img_relative_path):
     elif fallback.exists():
         st.image(fallback.read_bytes(), use_container_width=True)
     else:
-        st.image("https://via.placeholder.com/800x400.png?text=Imagen+no+disponible",
-                 use_container_width=True)
+        st.image(
+            "https://via.placeholder.com/800x400.png?text=Imagen+no+disponible",
+            use_container_width=True
+        )
 
     st.markdown(f"""
         <div class="card-title">
@@ -166,6 +185,7 @@ def report_card(titulo, desc, img_relative_path):
 # BOTÓN PANEL
 # =========================================================
 def open_panel_button(url, key):
+
     st.markdown(f"""
     <a href="{url}" target="_blank" style="text-decoration:none;">
         <div style="
@@ -191,11 +211,11 @@ def open_panel_button(url, key):
 # =========================================================
 if st.session_state.area is None:
 
-    st.markdown('<div class="main-title">Panel de Control — Gestión Humana GDP</div>', unsafe_allow_html=True)
-    st.markdown('<div class="subtitle">Seleccione el área de interés.</div>', unsafe_allow_html=True)
+    st.markdown('<div class="main-title">Portal Gestión Humana</div>', unsafe_allow_html=True)
+    st.markdown('<div class="subtitle">Seleccione una línea de gestión</div>', unsafe_allow_html=True)
     st.markdown('<div class="title-accent"></div>', unsafe_allow_html=True)
 
-    col1, col2, col3, col4 = st.columns(4)
+    col1, col2, col3 = st.columns(3)
 
     with col1:
         report_card("Administración de Personal",
@@ -224,17 +244,6 @@ if st.session_state.area is None:
 
         if st.button("Ingresar", key="sst", use_container_width=True):
             st.session_state.area = "Seguridad y Salud en el Trabajo"
-            st.session_state.auth = False
-            st.rerun()
-
-    # 🔥 NUEVA TARJETA GERENCIA
-    with col4:
-        report_card("Gerencia",
-                    "Acceso global a todos los dashboards",
-                    "Gerencia.jpg")
-
-        if st.button("Ingresar", key="gerencia", use_container_width=True):
-            st.session_state.area = "Gerencia"
             st.session_state.auth = False
             st.rerun()
 
@@ -299,51 +308,21 @@ else:
 
         st.divider()
 
-        # ================= GERENCIA =================
-        if area == "Gerencia":
-
-            st.subheader("Administración de Personal")
+        if area == "Administración de Personal":
 
             col1, col2, col3 = st.columns(3)
 
             with col1:
                 report_card("Vacaciones", "Saldo y planificación", "Vacaciones.jpg")
-                open_panel_button("https://app.powerbi.com/links/1TThJ-ia9c", "g1")
+                open_panel_button("https://app.powerbi.com", "vacaciones")
 
             with col2:
                 report_card("Descansos Médicos", "Subsidios y ausencias", "DescansosMedicos.jpg")
-                open_panel_button("https://app.powerbi.com/links/NQfjSntCO1", "g2")
+                open_panel_button("https://app.powerbi.com", "descansos")
 
             with col3:
                 report_card("Exámenes Médicos", "Seguimiento ocupacional", "Examenes.jpg")
-                open_panel_button("https://app.powerbi.com/links/eAcPJmr1vJ", "g3")
-
-            st.subheader("Desarrollo Organizacional")
-
-            report_card("Capacitaciones", "Panel en construcción", "Capacitaciones.jpg")
-            open_panel_button("https://app.powerbi.com", "g4")
-
-            st.subheader("Seguridad y Salud en el Trabajo")
-
-            report_card("Incidentes SST", "Panel en construcción", "Incidentes.jpg")
-            open_panel_button("https://app.powerbi.com", "g5")
-
-        # ================= RESTO NORMAL =================
-        elif area == "Administración de Personal":
-
-            col1, col2, col3 = st.columns(3)
-
-            with col1:
-                report_card("Vacaciones", "Saldo y planificación", "Vacaciones.jpg")
-                open_panel_button("https://app.powerbi.com/links/1TThJ-ia9c?ctid=42fc96b3-c018-482d-8ada-cab81720489e&pbi_source=linkShare", "vacaciones")
-
-            with col2:
-                report_card("Descansos Médicos", "Subsidios y ausencias", "DescansosMedicos.jpg")
-                open_panel_button("https://app.powerbi.com/links/NQfjSntCO1?ctid=42fc96b3-c018-482d-8ada-cab81720489e&pbi_source=linkShare&bookmarkGuid=e2215b9e-c265-4f82-97cc-e0d93d637760", "descansos")
-
-            with col3:
-                report_card("Exámenes Médicos", "Seguimiento ocupacional", "Examenes.jpg")
-                open_panel_button("https://app.powerbi.com/links/eAcPJmr1vJ?ctid=42fc96b3-c018-482d-8ada-cab81720489e&pbi_source=linkShare", "examenes")
+                open_panel_button("https://app.powerbi.com", "examenes")
 
         elif area == "Desarrollo Organizacional":
 
@@ -361,10 +340,35 @@ else:
                 report_card("Incidentes SST", "Panel en construcción", "Incidentes.jpg")
                 open_panel_button("https://app.powerbi.com", "incidentes")
 
+        elif area == "Gerencia":
+
+            col1, col2, col3 = st.columns(3)
+
+            with col1:
+                report_card("Panel Ejecutivo", "Vista consolidada", "Vacaciones.jpg")
+                open_panel_button("https://app.powerbi.com", "ger1")
+
+            with col2:
+                report_card("KPIs Globales", "Indicadores estratégicos", "Desarrollo.jpg")
+                open_panel_button("https://app.powerbi.com", "ger2")
+
+            with col3:
+                report_card("Alertas Organizacionales", "Riesgos y seguimiento", "Seguridad.jpg")
+                open_panel_button("https://app.powerbi.com", "ger3")
+
 # =========================================================
-# FOOTER
+# FOOTER + ACCESO SECRETO
 # =========================================================
-st.markdown(
-    "<center style='color:#9ca3af;margin-top:40px;'>Gerencia de Control de Gestión • Grupo Don Pollo</center>",
-    unsafe_allow_html=True
-)
+colf1, colf2 = st.columns([8,1])
+
+with colf1:
+    st.markdown(
+        "<center style='color:#9ca3af;margin-top:40px;'>Gerencia de Control de Gestión • Grupo Don Pollo</center>",
+        unsafe_allow_html=True
+    )
+
+with colf2:
+    if st.button("•", key="hidden_gerencia"):
+        st.session_state.area = "Gerencia"
+        st.session_state.auth = False
+        st.rerun()
