@@ -16,7 +16,7 @@ COLOR2 = "#2E3788"
 COLOR3 = "#C4579B"
 
 # =========================================================
-# RUTA BASE (FUNCIONA EN LOCAL Y CLOUD)
+# RUTA BASE
 # =========================================================
 BASE_DIR = Path(__file__).resolve().parent
 ASSETS_DIR = BASE_DIR / "assets"
@@ -40,7 +40,7 @@ if "auth" not in st.session_state:
     st.session_state.auth = False
 
 # =========================================================
-# ESTILOS SaaS PREMIUM
+# ESTILOS
 # =========================================================
 st.markdown(f"""
 <style>
@@ -80,9 +80,9 @@ html, body {{
 .report-card img {{
     border-radius: 18px;
     transition: transform 0.4s ease;
-    height: 260px;       /* 🔥 MISMO TAMAÑO PARA TODAS */
+    height: 260px;
     width: 100%;
-    object-fit: cover;   /* 🔥 RECORTE PROFESIONAL */
+    object-fit: cover;
 }}
 
 .report-card:hover img {{
@@ -120,7 +120,7 @@ div.stButton > button:hover {{
 """, unsafe_allow_html=True)
 
 # =========================================================
-# FUNCIÓN TARJETA PRO
+# TARJETA DASHBOARD
 # =========================================================
 def report_card(titulo, desc, link, img_relative_path):
 
@@ -144,6 +144,34 @@ def report_card(titulo, desc, link, img_relative_path):
     st.markdown("</div>", unsafe_allow_html=True)
 
 # =========================================================
+# ⭐ TARJETA DE ÁREA (NUEVA)
+# =========================================================
+def area_card(nombre, img_relative_path):
+
+    img_path = ASSETS_DIR / img_relative_path
+    fallback = ASSETS_DIR / "default.jpg"
+    img_to_use = img_path if img_path.exists() else fallback
+
+    st.markdown('<div class="report-card">', unsafe_allow_html=True)
+
+    st.image(str(img_to_use), use_container_width=True)
+
+    st.markdown(f"""
+    <div class="overlay">
+        {nombre}
+    </div>
+    """, unsafe_allow_html=True)
+
+    clean_name = nombre.split(" ", 1)[1]
+
+    if st.button("Ingresar", key=clean_name):
+        st.session_state.area = clean_name
+        st.session_state.auth = False
+        st.rerun()
+
+    st.markdown("</div>", unsafe_allow_html=True)
+
+# =========================================================
 # PORTAL PRINCIPAL
 # =========================================================
 if st.session_state.area is None:
@@ -154,39 +182,14 @@ if st.session_state.area is None:
 
     col1, col2, col3 = st.columns(3)
 
-    areas = [
-        ("👥 Administración de Personal"),
-        ("📚 Desarrollo Organizacional"),
-        ("🦺 Seguridad y Salud en el Trabajo")
-    ]
-    
-    area_imgs = ["Administracion.jpg", "Desarrollo.jpg", "Seguridad.jpg"]
+    with col1:
+        area_card("👥 Administración de Personal", "Administracion.jpg")
 
-    for col, name, img_file in zip([col1, col2, col3], areas, area_imgs):
-        with col:
+    with col2:
+        area_card("📚 Desarrollo Organizacional", "Desarrollo.jpg")
 
-            img_path = ASSETS_DIR / img_file
-            fallback = ASSETS_DIR / "default.jpg"
-            img_to_use = img_path if img_path.exists() else fallback
-
-            st.markdown('<div class="report-card">', unsafe_allow_html=True)
-
-            st.image(str(img_to_use), use_container_width=True)
-
-            st.markdown(f"""
-            <div class="overlay">
-                {name}
-            </div>
-            """, unsafe_allow_html=True)
-
-            clean_name = name.split(" ", 1)[1]
-
-            if st.button("Ingresar", key=clean_name):
-                st.session_state.area = clean_name
-                st.session_state.auth = False
-                st.rerun()
-
-            st.markdown("</div>", unsafe_allow_html=True)
+    with col3:
+        area_card("🦺 Seguridad y Salud en el Trabajo", "Seguridad.jpg")
 
 # =========================================================
 # LOGIN
