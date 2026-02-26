@@ -209,8 +209,8 @@ def open_panel_button(url, key):
 # =========================================================
 if st.session_state.area is None:
 
-    st.markdown('<div class="main-title">Portal Gestión Humana</div>', unsafe_allow_html=True)
-    st.markdown('<div class="subtitle">Seleccione una línea de gestión</div>', unsafe_allow_html=True)
+    st.markdown('<div class="main-title">Portal Gestión Humana GDP</div>', unsafe_allow_html=True)
+    st.markdown('<div class="subtitle">Seleccione un área</div>', unsafe_allow_html=True)
     st.markdown('<div class="title-accent"></div>', unsafe_allow_html=True)
 
     col1, col2, col3 = st.columns(3)
