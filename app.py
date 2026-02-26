@@ -199,7 +199,7 @@ def open_panel_button(url, key):
         "
         onmouseover="this.style.transform='translateY(-3px)';this.style.boxShadow='0 10px 22px rgba(0,0,0,0.2)';"
         onmouseout="this.style.transform='none';this.style.boxShadow='0 6px 14px rgba(0,0,0,0.15)';">
-            Abrir panel
+            Abrir Dashboard
         </div>
     </a>
     """, unsafe_allow_html=True)
