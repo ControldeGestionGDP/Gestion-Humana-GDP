@@ -39,7 +39,7 @@ if "auth" not in st.session_state:
     st.session_state.auth = False
 
 # =========================================================
-# ESTILOS CON TRANSICIONES PRO
+# ESTILOS
 # =========================================================
 st.markdown(f"""
 <style>
@@ -47,24 +47,12 @@ st.markdown(f"""
 html, body {{
     font-family: "Segoe UI", sans-serif;
     background: #f4f6fb;
-    animation: fadeInBody 0.6s ease-in-out;
-}}
-
-@keyframes fadeInBody {{
-    from {{ opacity: 0; transform: translateY(10px); }}
-    to {{ opacity: 1; transform: translateY(0); }}
 }}
 
 .main-title {{
     font-size: 2.6rem;
     font-weight: 800;
     color: {COLOR2};
-    animation: fadeInTitle 0.8s ease-in-out;
-}}
-
-@keyframes fadeInTitle {{
-    from {{ opacity: 0; transform: translateX(-10px); }}
-    to {{ opacity: 1; transform: translateX(0); }}
 }}
 
 .subtitle {{
@@ -78,12 +66,6 @@ html, body {{
     background: linear-gradient(90deg,{COLOR1},{COLOR2},{COLOR3});
     border-radius: 4px;
     margin-bottom: 28px;
-    animation: expandBar 0.8s ease forwards;
-}}
-
-@keyframes expandBar {{
-    from {{ width: 0; }}
-    to {{ width: 120px; }}
 }}
 
 .login-box {{
@@ -92,25 +74,19 @@ html, body {{
     border-radius: 18px;
     box-shadow: 0 25px 55px rgba(0,0,0,0.12);
     border-top: 5px solid {COLOR1};
-    animation: fadeInCard 0.6s ease-in-out;
-}}
-
-@keyframes fadeInCard {{
-    from {{ opacity: 0; transform: translateY(15px); }}
-    to {{ opacity: 1; transform: translateY(0); }}
 }}
 
 .card {{
     border-radius: 18px;
     overflow: hidden;
     box-shadow: 0 15px 35px rgba(0,0,0,0.12);
-    margin-bottom: 12px;
-    transition: all 0.35s cubic-bezier(.4,0,.2,1);
+    margin-bottom: 8px;
     background: white;
+    transition: all 0.3s ease;
 }}
 
 .card:hover {{
-    transform: translateY(-8px);
+    transform: translateY(-6px);
     box-shadow: 0 25px 55px rgba(0,0,0,0.18);
 }}
 
@@ -120,7 +96,7 @@ html, body {{
 }}
 
 .card:hover img {{
-    transform: scale(1.04);
+    transform: scale(1.03);
 }}
 
 .card-title {{
@@ -130,17 +106,18 @@ html, body {{
 }}
 
 div.stButton > button {{
+    width: 100%;
     background: linear-gradient(90deg, {COLOR1}, {COLOR2}, {COLOR3});
     color: white;
-    border-radius: 999px;
+    border-radius: 10px;
     border: none;
     font-weight: 700;
     height: 45px;
-    transition: all 0.3s ease;
+    transition: all 0.25s ease;
 }}
 
 div.stButton > button:hover {{
-    transform: translateY(-3px);
+    transform: translateY(-2px);
     box-shadow: 0 8px 18px rgba(0,0,0,0.2);
 }}
 
@@ -204,7 +181,7 @@ if st.session_state.area is None:
                     "Gestión operativa del personal",
                     "Administracion.jpg")
 
-        if st.button("Ingresar Administración", key="admin"):
+        if st.button("Ingresar", key="admin", use_container_width=True):
             st.session_state.area = "Administración de Personal"
             st.session_state.auth = False
             st.rerun()
@@ -214,7 +191,7 @@ if st.session_state.area is None:
                     "Talento y cultura",
                     "Desarrollo.jpg")
 
-        if st.button("Ingresar Desarrollo", key="do"):
+        if st.button("Ingresar", key="do", use_container_width=True):
             st.session_state.area = "Desarrollo Organizacional"
             st.session_state.auth = False
             st.rerun()
@@ -224,7 +201,7 @@ if st.session_state.area is None:
                     "Gestión preventiva",
                     "Seguridad.jpg")
 
-        if st.button("Ingresar SST", key="sst"):
+        if st.button("Ingresar", key="sst", use_container_width=True):
             st.session_state.area = "Seguridad y Salud en el Trabajo"
             st.session_state.auth = False
             st.rerun()
