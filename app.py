@@ -29,8 +29,6 @@ PASSWORDS = {
     "Seguridad y Salud en el Trabajo": "seguridad2024"
 }
 
-GERENTE_PASSWORD = "gerencia2024"
-
 # =========================================================
 # SESSION STATE
 # =========================================================
@@ -39,6 +37,25 @@ if "area" not in st.session_state:
 
 if "auth" not in st.session_state:
     st.session_state.auth = False
+
+
+# =========================================================
+# 🔐 ACCESO OCULTO GERENCIA (SIDEBAR)
+# =========================================================
+with st.sidebar:
+    st.markdown("### 🔐 Acceso Ejecutivo")
+
+    opcion = st.selectbox(
+        "Paneles especiales",
+        ["—", "Panel Gerencial"]
+    )
+
+    if opcion == "Panel Gerencial":
+        if st.button("Ingresar"):
+            st.session_state.area = "Gerencia"
+            st.session_state.auth = True
+            st.rerun()
+
 
 # =========================================================
 # ESTILOS CON TRANSICIONES
@@ -182,7 +199,7 @@ def report_card(titulo, desc, img_relative_path):
     st.markdown('</div>', unsafe_allow_html=True)
 
 # =========================================================
-# BOTÓN PANEL
+# BOTÓN PANEL (CORREGIDO)
 # =========================================================
 def open_panel_button(url, key):
 
@@ -274,20 +291,11 @@ else:
             pwd = st.text_input("Contraseña", type="password")
 
             if st.button("Ingresar", use_container_width=True):
-
-                if area == "Gerencia":
-                    if pwd == GERENTE_PASSWORD:
-                        st.session_state.auth = True
-                        st.rerun()
-                    else:
-                        st.error("Contraseña incorrecta")
-
+                if pwd == PASSWORDS[area]:
+                    st.session_state.auth = True
+                    st.rerun()
                 else:
-                    if pwd == PASSWORDS[area]:
-                        st.session_state.auth = True
-                        st.rerun()
-                    else:
-                        st.error("Contraseña incorrecta")
+                    st.error("Contraseña incorrecta")
 
             if st.button("Volver", use_container_width=True):
                 st.session_state.area = None
@@ -314,15 +322,15 @@ else:
 
             with col1:
                 report_card("Vacaciones", "Saldo y planificación", "Vacaciones.jpg")
-                open_panel_button("https://app.powerbi.com", "vacaciones")
+                open_panel_button("https://app.powerbi.com/links/1TThJ-ia9c?ctid=42fc96b3-c018-482d-8ada-cab81720489e&pbi_source=linkShare", "vacaciones")
 
             with col2:
                 report_card("Descansos Médicos", "Subsidios y ausencias", "DescansosMedicos.jpg")
-                open_panel_button("https://app.powerbi.com", "descansos")
+                open_panel_button("https://app.powerbi.com/links/NQfjSntCO1?ctid=42fc96b3-c018-482d-8ada-cab81720489e&pbi_source=linkShare&bookmarkGuid=e2215b9e-c265-4f82-97cc-e0d93d637760", "descansos")
 
             with col3:
                 report_card("Exámenes Médicos", "Seguimiento ocupacional", "Examenes.jpg")
-                open_panel_button("https://app.powerbi.com", "examenes")
+                open_panel_button("https://app.powerbi.com/links/eAcPJmr1vJ?ctid=42fc96b3-c018-482d-8ada-cab81720489e&pbi_source=linkShare", "examenes")
 
         elif area == "Desarrollo Organizacional":
 
@@ -340,35 +348,19 @@ else:
                 report_card("Incidentes SST", "Panel en construcción", "Incidentes.jpg")
                 open_panel_button("https://app.powerbi.com", "incidentes")
 
+        # PANEL GERENCIAL OCULTO
         elif area == "Gerencia":
 
-            col1, col2, col3 = st.columns(3)
-
-            with col1:
-                report_card("Panel Ejecutivo", "Vista consolidada", "Vacaciones.jpg")
-                open_panel_button("https://app.powerbi.com", "ger1")
+            col1, col2, col3 = st.columns([1,2,1])
 
             with col2:
-                report_card("KPIs Globales", "Indicadores estratégicos", "Desarrollo.jpg")
-                open_panel_button("https://app.powerbi.com", "ger2")
-
-            with col3:
-                report_card("Alertas Organizacionales", "Riesgos y seguimiento", "Seguridad.jpg")
-                open_panel_button("https://app.powerbi.com", "ger3")
+                report_card("Panel Gerencial", "Indicadores estratégicos", "default.jpg")
+                open_panel_button("https://app.powerbi.com", "gerencia")
 
 # =========================================================
-# FOOTER + ACCESO SECRETO
+# FOOTER
 # =========================================================
-colf1, colf2 = st.columns([8,1])
-
-with colf1:
-    st.markdown(
-        "<center style='color:#9ca3af;margin-top:40px;'>Gerencia de Control de Gestión • Grupo Don Pollo</center>",
-        unsafe_allow_html=True
-    )
-
-with colf2:
-    if st.button("•", key="hidden_gerencia"):
-        st.session_state.area = "Gerencia"
-        st.session_state.auth = False
-        st.rerun()
+st.markdown(
+    "<center style='color:#9ca3af;margin-top:40px;'>Gerencia de Control de Gestión • Grupo Don Pollo</center>",
+    unsafe_allow_html=True
+)
