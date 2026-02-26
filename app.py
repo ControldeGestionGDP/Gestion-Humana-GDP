@@ -1,6 +1,5 @@
 import streamlit as st
 from pathlib import Path
-from datetime import datetime
 
 # =========================================================
 # CONFIG
@@ -45,7 +44,6 @@ if "auth" not in st.session_state:
 # 🔐 SIDEBAR GERENCIA
 # =========================================================
 with st.sidebar:
-
     st.markdown("### 🔐 Acceso Ejecutivo")
 
     if st.button("Panel Gerencial"):
@@ -53,53 +51,9 @@ with st.sidebar:
         st.session_state.auth = False
         st.rerun()
 
-    st.divider()
-
-    # 📘 Manual / Políticas
-    st.markdown("### 📘 Recursos")
-    st.link_button("Manual de RRHH", "https://www.gob.pe")
-    st.link_button("Políticas Corporativas", "https://www.gob.pe")
-
 
 # =========================================================
-# 🕒 FECHA + HORA CORPORATIVA
-# =========================================================
-now = datetime.now()
-st.markdown(f"""
-<div style="
-    text-align:right;
-    font-size:0.9rem;
-    color:#6b7280;
-    margin-bottom:8px;
-">
-{now.strftime('%A %d de %B %Y — %H:%M')}
-</div>
-""", unsafe_allow_html=True)
-
-# =========================================================
-# 📢 AVISO RRHH
-# =========================================================
-st.markdown(f"""
-<div style="
-    background: linear-gradient(90deg,{COLOR1},{COLOR2});
-    color:white;
-    padding:12px 18px;
-    border-radius:12px;
-    margin-bottom:18px;
-    font-weight:600;
-    box-shadow: 0 8px 18px rgba(0,0,0,0.12);
-">
-📢 Aviso RRHH: Actualización de políticas internas disponible en el portal.
-</div>
-""", unsafe_allow_html=True)
-
-# =========================================================
-# ⏳ INDICADOR DE CARGA
-# =========================================================
-st.progress(100)
-
-# =========================================================
-# ESTILOS (TU BLOQUE ORIGINAL)
+# ESTILOS (TU MISMO BLOQUE ORIGINAL)
 # =========================================================
 st.markdown(f"""
 <style>
@@ -146,6 +100,10 @@ html, body {{
     border-top: 5px solid {COLOR1};
     animation: fadeInCard 0.5s ease;
 }}
+@keyframes fadeInCard {{
+    from {{ opacity: 0; transform: translateY(12px); }}
+    to {{ opacity: 1; transform: translateY(0); }}
+}}
 .card {{
     border-radius: 18px;
     overflow: hidden;
@@ -186,6 +144,7 @@ div.stButton > button:hover {{
 }}
 </style>
 """, unsafe_allow_html=True)
+
 
 # =========================================================
 # FUNCIONES (SIN CAMBIOS)
@@ -233,6 +192,7 @@ def open_panel_button(url, key):
         </div>
     </a>
     """, unsafe_allow_html=True)
+
 
 # =========================================================
 # PORTAL
