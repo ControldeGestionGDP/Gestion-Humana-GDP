@@ -39,11 +39,10 @@ if "auth" not in st.session_state:
     st.session_state.auth = False
 
 # =========================================================
-# ESTILOS PROFESIONALES
+# ESTILOS
 # =========================================================
 st.markdown(f"""
 <style>
-
 html, body {{
     font-family: "Segoe UI", sans-serif;
     background: #f4f6fb;
@@ -77,8 +76,6 @@ html, body {{
 }}
 
 .card {{
-    position: relative;
-    height: 260px;
     border-radius: 18px;
     overflow: hidden;
     box-shadow: 0 15px 35px rgba(0,0,0,0.15);
@@ -86,21 +83,13 @@ html, body {{
 }}
 
 .card img {{
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
+    border-radius: 18px;
 }}
 
-.card-overlay {{
-    position: absolute;
-    bottom: 0;
-    width: 100%;
-    padding: 20px;
-    color: white;
+.card-title {{
+    padding: 15px;
     font-weight: 700;
-    font-size: 1.2rem;
-    background: linear-gradient(transparent, rgba(0,0,0,0.85));
+    font-size: 1.1rem;
 }}
 
 div.stButton > button {{
@@ -111,29 +100,38 @@ div.stButton > button {{
     font-weight: 700;
     height: 45px;
 }}
-
 </style>
 """, unsafe_allow_html=True)
 
 # =========================================================
-# TARJETA PERFECTA
+# FUNCIÓN TARJETA SEGURA
 # =========================================================
 def report_card(titulo, desc, img_relative_path):
 
     img_path = ASSETS_DIR / img_relative_path
     fallback = ASSETS_DIR / "default.jpg"
-    img_to_use = img_path if img_path.exists() else fallback
+
+    st.markdown('<div class="card">', unsafe_allow_html=True)
+
+    # Mostrar imagen segura
+    if img_path.exists():
+        st.image(img_path.read_bytes(), use_container_width=True)
+    elif fallback.exists():
+        st.image(fallback.read_bytes(), use_container_width=True)
+    else:
+        st.image("https://via.placeholder.com/800x400.png?text=Imagen+no+disponible",
+                 use_container_width=True)
 
     st.markdown(f"""
-    <div class="card">
-        <img src="data:image/jpg;base64,{img_to_use.read_bytes().hex()}">
-        <div class="card-overlay">
-            {titulo}
-            <div style="font-weight:400;font-size:0.95rem;">{desc}</div>
+        <div class="card-title">
+            {titulo}<br>
+            <span style="font-weight:400;color:#6b7280;font-size:0.95rem;">
+                {desc}
+            </span>
         </div>
-    </div>
     """, unsafe_allow_html=True)
 
+    st.markdown('</div>', unsafe_allow_html=True)
 
 # =========================================================
 # PORTAL PRINCIPAL
