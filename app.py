@@ -5,7 +5,7 @@ from pathlib import Path
 # CONFIG
 # =========================================================
 st.set_page_config(
-    page_title="Portal Gestión Humana",
+    page_title="Portal Gestión Humana GDP",
     page_icon="📊",
     layout="wide"
 )
@@ -318,6 +318,6 @@ else:
 # FOOTER
 # =========================================================
 st.markdown(
-    "<center style='color:#9ca3af;margin-top:40px;'>Gerencia de Control de Gestión • Transformación Digital</center>",
+    "<center style='color:#9ca3af;margin-top:40px;'>Gerencia de Control de Gestión • Grupo Don Pollo</center>",
     unsafe_allow_html=True
 )
