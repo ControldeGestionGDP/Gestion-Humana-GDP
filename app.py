@@ -1,5 +1,6 @@
 import streamlit as st
 from pathlib import Path
+import base64
 
 # =========================================================
 # CONFIG
@@ -10,29 +11,19 @@ st.set_page_config(
     layout="wide"
 )
 
-# ===== COLORES CORPORATIVOS =====
 COLOR1 = "#1071B8"
 COLOR2 = "#2E3788"
 COLOR3 = "#C4579B"
 
-# =========================================================
-# RUTA BASE
-# =========================================================
 BASE_DIR = Path(__file__).resolve().parent
 ASSETS_DIR = BASE_DIR / "assets"
 
-# =========================================================
-# PASSWORDS
-# =========================================================
 PASSWORDS = {
     "Administración de Personal": "pollo123",
     "Desarrollo Organizacional": "talento2024",
     "Seguridad y Salud en el Trabajo": "seguridad2024"
 }
 
-# =========================================================
-# SESSION STATE
-# =========================================================
 if "area" not in st.session_state:
     st.session_state.area = None
 
@@ -40,7 +31,7 @@ if "auth" not in st.session_state:
     st.session_state.auth = False
 
 # =========================================================
-# ESTILOS
+# CSS
 # =========================================================
 st.markdown(f"""
 <style>
@@ -69,24 +60,11 @@ html, body {{
     margin-bottom: 28px;
 }}
 
-.login-box {{
-    background: white;
-    padding: 40px;
-    border-radius: 18px;
-    box-shadow: 0 25px 55px rgba(0,0,0,0.12);
-    border-top: 5px solid {COLOR1};
-}}
-
 .report-card img {{
-    border-radius: 18px;
-    transition: transform 0.4s ease;
-    height: 260px;
-    width: 100%;
+    height: 260px !important;
+    width: 100% !important;
     object-fit: cover;
-}}
-
-.report-card:hover img {{
-    transform: scale(1.05);
+    border-radius: 18px;
 }}
 
 .overlay {{
@@ -108,53 +86,35 @@ div.stButton > button {{
     border: none;
     font-weight: 700;
     height: 45px;
-    transition: 0.3s;
-}}
-
-div.stButton > button:hover {{
-    transform: translateY(-2px);
-    box-shadow: 0 10px 25px rgba(0,0,0,0.25);
 }}
 
 </style>
 """, unsafe_allow_html=True)
 
 # =========================================================
-# TARJETA DASHBOARD
+# 🔥 CONVERTIR IMAGEN A BASE64
 # =========================================================
-def report_card(titulo, desc, link, img_relative_path):
+def img_to_base64(path):
+    with open(path, "rb") as f:
+        return base64.b64encode(f.read()).decode()
 
-    img_path = ASSETS_DIR / img_relative_path
+# =========================================================
+# TARJETA ÁREA — MISMO FORMATO DASHBOARD
+# =========================================================
+def area_card(nombre, img_file):
+
+    img_path = ASSETS_DIR / img_file
     fallback = ASSETS_DIR / "default.jpg"
     img_to_use = img_path if img_path.exists() else fallback
 
-    st.markdown('<div class="report-card">', unsafe_allow_html=True)
-
-    st.image(str(img_to_use), use_container_width=True)
-
-    st.markdown(f"""
-    <div class="overlay">
-        {titulo}
-        <div style="font-weight:400;font-size:0.95rem;">{desc}</div>
-    </div>
-    """, unsafe_allow_html=True)
-
-    st.link_button("Abrir reporte", link, use_container_width=True)
-
-    st.markdown("</div>", unsafe_allow_html=True)
-
-# =========================================================
-# ⭐ TARJETA DE ÁREA (NUEVA)
-# =========================================================
-def area_card(nombre, img_relative_path):
-
-    img_path = ASSETS_DIR / img_relative_path
-    fallback = ASSETS_DIR / "default.jpg"
-    img_to_use = img_path if img_path.exists() else fallback
+    img64 = img_to_base64(img_to_use)
 
     st.markdown('<div class="report-card">', unsafe_allow_html=True)
 
-    st.image(str(img_to_use), use_container_width=True)
+    st.markdown(
+        f'<img src="data:image/jpg;base64,{img64}">',
+        unsafe_allow_html=True
+    )
 
     st.markdown(f"""
     <div class="overlay">
@@ -168,6 +128,35 @@ def area_card(nombre, img_relative_path):
         st.session_state.area = clean_name
         st.session_state.auth = False
         st.rerun()
+
+    st.markdown("</div>", unsafe_allow_html=True)
+
+# =========================================================
+# TARJETA DASHBOARD (MISMO MÉTODO)
+# =========================================================
+def report_card(titulo, desc, link, img_file):
+
+    img_path = ASSETS_DIR / img_file
+    fallback = ASSETS_DIR / "default.jpg"
+    img_to_use = img_path if img_path.exists() else fallback
+
+    img64 = img_to_base64(img_to_use)
+
+    st.markdown('<div class="report-card">', unsafe_allow_html=True)
+
+    st.markdown(
+        f'<img src="data:image/jpg;base64,{img64}">',
+        unsafe_allow_html=True
+    )
+
+    st.markdown(f"""
+    <div class="overlay">
+        {titulo}
+        <div style="font-weight:400;font-size:0.95rem;">{desc}</div>
+    </div>
+    """, unsafe_allow_html=True)
+
+    st.link_button("Abrir reporte", link, use_container_width=True)
 
     st.markdown("</div>", unsafe_allow_html=True)
 
@@ -205,14 +194,7 @@ else:
         with col2:
 
             st.markdown(f"""
-            <div class="login-box">
-                <div style="font-size:1.4rem;font-weight:700;color:{COLOR2};text-align:center;">
-                    {area}
-                </div>
-                <div style="text-align:center;color:#6b7280;margin-bottom:20px;">
-                    Ingrese su contraseña
-                </div>
-            </div>
+            <div class="main-title" style="text-align:center">{area}</div>
             """, unsafe_allow_html=True)
 
             pwd = st.text_input("Contraseña", type="password")
@@ -261,26 +243,6 @@ else:
                 report_card("Exámenes Médicos", "Seguimiento ocupacional",
                             "https://app.powerbi.com",
                             "Examenes.jpg")
-
-        elif area == "Desarrollo Organizacional":
-
-            col1, col2, col3 = st.columns([1,2,1])
-
-            with col2:
-                report_card("Capacitaciones",
-                            "Panel en construcción",
-                            "https://app.powerbi.com",
-                            "Capacitaciones.jpg")
-
-        elif area == "Seguridad y Salud en el Trabajo":
-
-            col1, col2, col3 = st.columns([1,2,1])
-
-            with col2:
-                report_card("Incidentes SST",
-                            "Panel en construcción",
-                            "https://app.powerbi.com",
-                            "Incidentes.jpg")
 
 # =========================================================
 # FOOTER
