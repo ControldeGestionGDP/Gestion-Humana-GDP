@@ -39,19 +39,32 @@ if "auth" not in st.session_state:
     st.session_state.auth = False
 
 # =========================================================
-# ESTILOS
+# ESTILOS CON TRANSICIONES PRO
 # =========================================================
 st.markdown(f"""
 <style>
+
 html, body {{
     font-family: "Segoe UI", sans-serif;
     background: #f4f6fb;
+    animation: fadeInBody 0.6s ease-in-out;
+}}
+
+@keyframes fadeInBody {{
+    from {{ opacity: 0; transform: translateY(10px); }}
+    to {{ opacity: 1; transform: translateY(0); }}
 }}
 
 .main-title {{
     font-size: 2.6rem;
     font-weight: 800;
     color: {COLOR2};
+    animation: fadeInTitle 0.8s ease-in-out;
+}}
+
+@keyframes fadeInTitle {{
+    from {{ opacity: 0; transform: translateX(-10px); }}
+    to {{ opacity: 1; transform: translateX(0); }}
 }}
 
 .subtitle {{
@@ -65,6 +78,12 @@ html, body {{
     background: linear-gradient(90deg,{COLOR1},{COLOR2},{COLOR3});
     border-radius: 4px;
     margin-bottom: 28px;
+    animation: expandBar 0.8s ease forwards;
+}}
+
+@keyframes expandBar {{
+    from {{ width: 0; }}
+    to {{ width: 120px; }}
 }}
 
 .login-box {{
@@ -73,17 +92,35 @@ html, body {{
     border-radius: 18px;
     box-shadow: 0 25px 55px rgba(0,0,0,0.12);
     border-top: 5px solid {COLOR1};
+    animation: fadeInCard 0.6s ease-in-out;
+}}
+
+@keyframes fadeInCard {{
+    from {{ opacity: 0; transform: translateY(15px); }}
+    to {{ opacity: 1; transform: translateY(0); }}
 }}
 
 .card {{
     border-radius: 18px;
     overflow: hidden;
-    box-shadow: 0 15px 35px rgba(0,0,0,0.15);
-    margin-bottom: 10px;
+    box-shadow: 0 15px 35px rgba(0,0,0,0.12);
+    margin-bottom: 12px;
+    transition: all 0.35s cubic-bezier(.4,0,.2,1);
+    background: white;
+}}
+
+.card:hover {{
+    transform: translateY(-8px);
+    box-shadow: 0 25px 55px rgba(0,0,0,0.18);
 }}
 
 .card img {{
     border-radius: 18px;
+    transition: transform 0.4s ease;
+}}
+
+.card:hover img {{
+    transform: scale(1.04);
 }}
 
 .card-title {{
@@ -99,12 +136,19 @@ div.stButton > button {{
     border: none;
     font-weight: 700;
     height: 45px;
+    transition: all 0.3s ease;
 }}
+
+div.stButton > button:hover {{
+    transform: translateY(-3px);
+    box-shadow: 0 8px 18px rgba(0,0,0,0.2);
+}}
+
 </style>
 """, unsafe_allow_html=True)
 
 # =========================================================
-# FUNCIÓN TARJETA SEGURA (SOLO VISUAL)
+# TARJETA
 # =========================================================
 def report_card(titulo, desc, img_relative_path):
 
@@ -134,9 +178,8 @@ def report_card(titulo, desc, img_relative_path):
 
     st.markdown('</div>', unsafe_allow_html=True)
 
-
 # =========================================================
-# BOTÓN DISCRETO PARA ABRIR PANEL
+# BOTÓN PANEL
 # =========================================================
 def open_panel_button(url, key):
     if st.button("Abrir panel", key=key, use_container_width=True):
@@ -144,7 +187,6 @@ def open_panel_button(url, key):
             f'<meta http-equiv="refresh" content="0; url={url}">',
             unsafe_allow_html=True
         )
-
 
 # =========================================================
 # PORTAL PRINCIPAL
@@ -239,7 +281,6 @@ else:
 
         st.divider()
 
-        # -------- ADMINISTRACIÓN --------
         if area == "Administración de Personal":
 
             col1, col2, col3 = st.columns(3)
@@ -256,7 +297,6 @@ else:
                 report_card("Exámenes Médicos", "Seguimiento ocupacional", "Examenes.jpg")
                 open_panel_button("https://app.powerbi.com", "examenes")
 
-        # -------- DESARROLLO --------
         elif area == "Desarrollo Organizacional":
 
             col1, col2, col3 = st.columns([1,2,1])
@@ -265,7 +305,6 @@ else:
                 report_card("Capacitaciones", "Panel en construcción", "Capacitaciones.jpg")
                 open_panel_button("https://app.powerbi.com", "capacitaciones")
 
-        # -------- SST --------
         elif area == "Seguridad y Salud en el Trabajo":
 
             col1, col2, col3 = st.columns([1,2,1])
@@ -273,7 +312,6 @@ else:
             with col2:
                 report_card("Incidentes SST", "Panel en construcción", "Incidentes.jpg")
                 open_panel_button("https://app.powerbi.com", "incidentes")
-
 
 # =========================================================
 # FOOTER
