@@ -1,6 +1,5 @@
 import streamlit as st
 from pathlib import Path
-import base64
 
 # =========================================================
 # CONFIG
@@ -11,19 +10,29 @@ st.set_page_config(
     layout="wide"
 )
 
+# ===== COLORES CORPORATIVOS =====
 COLOR1 = "#1071B8"
 COLOR2 = "#2E3788"
 COLOR3 = "#C4579B"
 
+# =========================================================
+# RUTA BASE
+# =========================================================
 BASE_DIR = Path(__file__).resolve().parent
 ASSETS_DIR = BASE_DIR / "assets"
 
+# =========================================================
+# PASSWORDS
+# =========================================================
 PASSWORDS = {
     "Administración de Personal": "pollo123",
     "Desarrollo Organizacional": "talento2024",
     "Seguridad y Salud en el Trabajo": "seguridad2024"
 }
 
+# =========================================================
+# SESSION STATE
+# =========================================================
 if "area" not in st.session_state:
     st.session_state.area = None
 
@@ -31,7 +40,7 @@ if "auth" not in st.session_state:
     st.session_state.auth = False
 
 # =========================================================
-# CSS
+# ESTILOS
 # =========================================================
 st.markdown(f"""
 <style>
@@ -60,11 +69,19 @@ html, body {{
     margin-bottom: 28px;
 }}
 
-.report-card img {{
-    height: 260px !important;
-    width: 100% !important;
-    object-fit: cover;
+.login-box {{
+    background: white;
+    padding: 40px;
     border-radius: 18px;
+    box-shadow: 0 25px 55px rgba(0,0,0,0.12);
+    border-top: 5px solid {COLOR1};
+}}
+
+.report-card img {{
+    border-radius: 18px;
+    height: 260px;
+    width: 100%;
+    object-fit: cover;
 }}
 
 .overlay {{
@@ -92,62 +109,17 @@ div.stButton > button {{
 """, unsafe_allow_html=True)
 
 # =========================================================
-# 🔥 CONVERTIR IMAGEN A BASE64
+# FUNCIÓN TARJETA (MISMA PARA TODO)
 # =========================================================
-def img_to_base64(path):
-    with open(path, "rb") as f:
-        return base64.b64encode(f.read()).decode()
+def report_card(titulo, desc, link, img_relative_path):
 
-# =========================================================
-# TARJETA ÁREA — MISMO FORMATO DASHBOARD
-# =========================================================
-def area_card(nombre, img_file):
-
-    img_path = ASSETS_DIR / img_file
+    img_path = ASSETS_DIR / img_relative_path
     fallback = ASSETS_DIR / "default.jpg"
     img_to_use = img_path if img_path.exists() else fallback
 
-    img64 = img_to_base64(img_to_use)
-
     st.markdown('<div class="report-card">', unsafe_allow_html=True)
 
-    st.markdown(
-        f'<img src="data:image/jpg;base64,{img64}">',
-        unsafe_allow_html=True
-    )
-
-    st.markdown(f"""
-    <div class="overlay">
-        {nombre}
-    </div>
-    """, unsafe_allow_html=True)
-
-    clean_name = nombre.split(" ", 1)[1]
-
-    if st.button("Ingresar", key=clean_name):
-        st.session_state.area = clean_name
-        st.session_state.auth = False
-        st.rerun()
-
-    st.markdown("</div>", unsafe_allow_html=True)
-
-# =========================================================
-# TARJETA DASHBOARD (MISMO MÉTODO)
-# =========================================================
-def report_card(titulo, desc, link, img_file):
-
-    img_path = ASSETS_DIR / img_file
-    fallback = ASSETS_DIR / "default.jpg"
-    img_to_use = img_path if img_path.exists() else fallback
-
-    img64 = img_to_base64(img_to_use)
-
-    st.markdown('<div class="report-card">', unsafe_allow_html=True)
-
-    st.markdown(
-        f'<img src="data:image/jpg;base64,{img64}">',
-        unsafe_allow_html=True
-    )
+    st.image(str(img_to_use), use_container_width=True)
 
     st.markdown(f"""
     <div class="overlay">
@@ -156,12 +128,10 @@ def report_card(titulo, desc, link, img_file):
     </div>
     """, unsafe_allow_html=True)
 
-    st.link_button("Abrir reporte", link, use_container_width=True)
-
     st.markdown("</div>", unsafe_allow_html=True)
 
 # =========================================================
-# PORTAL PRINCIPAL
+# PORTAL PRINCIPAL (MISMO FORMATO QUE DASHBOARDS)
 # =========================================================
 if st.session_state.area is None:
 
@@ -172,13 +142,34 @@ if st.session_state.area is None:
     col1, col2, col3 = st.columns(3)
 
     with col1:
-        area_card("👥 Administración de Personal", "Administracion.jpg")
+        report_card("Administración de Personal",
+                    "Gestión operativa del personal",
+                    "#",
+                    "Administracion.jpg")
+        if st.button("Ingresar Administración", key="admin"):
+            st.session_state.area = "Administración de Personal"
+            st.session_state.auth = False
+            st.rerun()
 
     with col2:
-        area_card("📚 Desarrollo Organizacional", "Desarrollo.jpg")
+        report_card("Desarrollo Organizacional",
+                    "Talento y cultura",
+                    "#",
+                    "Desarrollo.jpg")
+        if st.button("Ingresar Desarrollo", key="do"):
+            st.session_state.area = "Desarrollo Organizacional"
+            st.session_state.auth = False
+            st.rerun()
 
     with col3:
-        area_card("🦺 Seguridad y Salud en el Trabajo", "Seguridad.jpg")
+        report_card("Seguridad y Salud en el Trabajo",
+                    "Gestión preventiva",
+                    "#",
+                    "Seguridad.jpg")
+        if st.button("Ingresar SST", key="sst"):
+            st.session_state.area = "Seguridad y Salud en el Trabajo"
+            st.session_state.auth = False
+            st.rerun()
 
 # =========================================================
 # LOGIN
@@ -194,7 +185,14 @@ else:
         with col2:
 
             st.markdown(f"""
-            <div class="main-title" style="text-align:center">{area}</div>
+            <div class="login-box">
+                <div style="font-size:1.4rem;font-weight:700;color:{COLOR2};text-align:center;">
+                    {area}
+                </div>
+                <div style="text-align:center;color:#6b7280;margin-bottom:20px;">
+                    Ingrese su contraseña
+                </div>
+            </div>
             """, unsafe_allow_html=True)
 
             pwd = st.text_input("Contraseña", type="password")
@@ -211,7 +209,7 @@ else:
                 st.rerun()
 
 # =========================================================
-# DASHBOARDS
+# DASHBOARDS (SE MANTIENE IGUAL)
 # =========================================================
     else:
 
@@ -243,6 +241,26 @@ else:
                 report_card("Exámenes Médicos", "Seguimiento ocupacional",
                             "https://app.powerbi.com",
                             "Examenes.jpg")
+
+        elif area == "Desarrollo Organizacional":
+
+            col1, col2, col3 = st.columns([1,2,1])
+
+            with col2:
+                report_card("Capacitaciones",
+                            "Panel en construcción",
+                            "https://app.powerbi.com",
+                            "Capacitaciones.jpg")
+
+        elif area == "Seguridad y Salud en el Trabajo":
+
+            col1, col2, col3 = st.columns([1,2,1])
+
+            with col2:
+                report_card("Incidentes SST",
+                            "Panel en construcción",
+                            "https://app.powerbi.com",
+                            "Incidentes.jpg")
 
 # =========================================================
 # FOOTER
