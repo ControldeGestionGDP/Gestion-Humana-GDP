@@ -1,6 +1,5 @@
 import streamlit as st
 from pathlib import Path
-import base64
 
 # =========================================================
 # CONFIG
@@ -11,7 +10,6 @@ st.set_page_config(
     layout="wide"
 )
 
-# ===== COLORES CORPORATIVOS =====
 COLOR1 = "#1071B8"
 COLOR2 = "#2E3788"
 COLOR3 = "#C4579B"
@@ -41,7 +39,7 @@ if "auth" not in st.session_state:
     st.session_state.auth = False
 
 # =========================================================
-# ESTILOS PREMIUM
+# ESTILOS PREMIUM SUAVES
 # =========================================================
 st.markdown(f"""
 <style>
@@ -55,6 +53,7 @@ html, body {{
     font-size: 2.6rem;
     font-weight: 800;
     color: {COLOR2};
+    animation: fadeSlide 0.6s ease;
 }}
 
 .subtitle {{
@@ -76,49 +75,37 @@ html, body {{
     border-radius: 18px;
     box-shadow: 0 25px 55px rgba(0,0,0,0.12);
     border-top: 5px solid {COLOR1};
+    animation: fadeSlide 0.6s ease;
 }}
 
-.report-card {{
+.card {{
     border-radius: 18px;
     overflow: hidden;
+    box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+    margin-bottom: 10px;
     background: white;
-    box-shadow: 0 8px 20px rgba(0,0,0,0.12);
     transition: all 0.35s ease;
+    animation: fadeUp 0.7s ease;
 }}
 
-.report-card:hover {{
-    transform: translateY(-12px);
-    box-shadow: 0 25px 50px rgba(0,0,0,0.25);
+.card:hover {{
+    transform: translateY(-10px);
+    box-shadow: 0 30px 55px rgba(0,0,0,0.25);
 }}
 
-.report-card img {{
-    height: 260px;
-    width: 100%;
-    object-fit: cover;
+.card img {{
+    border-radius: 18px;
+    transition: transform 0.5s ease;
 }}
 
-.overlay {{
-    position: relative;
-    margin-top: -110px;
-    padding: 20px;
-    color: white;
+.card:hover img {{
+    transform: scale(1.05);
+}}
+
+.card-title {{
+    padding: 15px;
     font-weight: 700;
-    font-size: 1.2rem;
-    background: linear-gradient(transparent, rgba(0,0,0,0.9));
-}}
-
-.card-button {{
-    display: block;
-    text-align: center;
-    padding: 12px;
-    background: linear-gradient(90deg, {COLOR1}, {COLOR2}, {COLOR3});
-    color: white;
-    font-weight: 700;
-    text-decoration: none;
-}}
-
-.card-button:hover {{
-    filter: brightness(1.1);
+    font-size: 1.1rem;
 }}
 
 div.stButton > button {{
@@ -128,35 +115,69 @@ div.stButton > button {{
     border: none;
     font-weight: 700;
     height: 45px;
+    transition: all 0.25s ease;
+}}
+
+div.stButton > button:hover {{
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+}}
+
+@keyframes fadeUp {{
+    from {{
+        opacity: 0;
+        transform: translateY(20px);
+    }}
+    to {{
+        opacity: 1;
+        transform: translateY(0);
+    }}
+}}
+
+@keyframes fadeSlide {{
+    from {{
+        opacity: 0;
+        transform: translateX(-15px);
+    }}
+    to {{
+        opacity: 1;
+        transform: translateX(0);
+    }}
 }}
 
 </style>
 """, unsafe_allow_html=True)
 
 # =========================================================
-# FUNCIÓN TARJETA PRO TOTALMENTE CLICABLE
+# FUNCIÓN TARJETA SEGURA
 # =========================================================
-def report_card(titulo, desc, link, img_relative_path):
+def report_card(titulo, desc, img_relative_path):
 
     img_path = ASSETS_DIR / img_relative_path
     fallback = ASSETS_DIR / "default.jpg"
-    img_to_use = img_path if img_path.exists() else fallback
 
-    with open(img_to_use, "rb") as f:
-        encoded = base64.b64encode(f.read()).decode()
+    st.markdown('<div class="card">', unsafe_allow_html=True)
+
+    if img_path.exists():
+        st.image(img_path.read_bytes(), use_container_width=True)
+    elif fallback.exists():
+        st.image(fallback.read_bytes(), use_container_width=True)
+    else:
+        st.image(
+            "https://via.placeholder.com/800x400.png?text=Imagen+no+disponible",
+            use_container_width=True
+        )
 
     st.markdown(f"""
-    <div class="report-card">
-        <a href="{link}" target="_blank" style="text-decoration:none;">
-            <img src="data:image/jpg;base64,{encoded}">
-            <div class="overlay">
-                {titulo}
-                <div style="font-weight:400;font-size:0.95rem;">{desc}</div>
-            </div>
-            <div class="card-button">Abrir panel</div>
-        </a>
-    </div>
+        <div class="card-title">
+            {titulo}<br>
+            <span style="font-weight:400;color:#6b7280;font-size:0.95rem;">
+                {desc}
+            </span>
+        </div>
     """, unsafe_allow_html=True)
+
+    st.markdown('</div>', unsafe_allow_html=True)
 
 # =========================================================
 # PORTAL PRINCIPAL
@@ -172,9 +193,9 @@ if st.session_state.area is None:
     with col1:
         report_card("Administración de Personal",
                     "Gestión operativa del personal",
-                    "#",
                     "Administracion.jpg")
-        if st.button("Ingresar Administración"):
+
+        if st.button("Ingresar Administración", key="admin"):
             st.session_state.area = "Administración de Personal"
             st.session_state.auth = False
             st.rerun()
@@ -182,9 +203,9 @@ if st.session_state.area is None:
     with col2:
         report_card("Desarrollo Organizacional",
                     "Talento y cultura",
-                    "#",
                     "Desarrollo.jpg")
-        if st.button("Ingresar Desarrollo"):
+
+        if st.button("Ingresar Desarrollo", key="do"):
             st.session_state.area = "Desarrollo Organizacional"
             st.session_state.auth = False
             st.rerun()
@@ -192,9 +213,9 @@ if st.session_state.area is None:
     with col3:
         report_card("Seguridad y Salud en el Trabajo",
                     "Gestión preventiva",
-                    "#",
                     "Seguridad.jpg")
-        if st.button("Ingresar SST"):
+
+        if st.button("Ingresar SST", key="sst"):
             st.session_state.area = "Seguridad y Salud en el Trabajo"
             st.session_state.auth = False
             st.rerun()
@@ -256,39 +277,27 @@ else:
             col1, col2, col3 = st.columns(3)
 
             with col1:
-                report_card("Vacaciones", "Saldo y planificación",
-                            "https://app.powerbi.com",
-                            "Vacaciones.jpg")
+                report_card("Vacaciones", "Saldo y planificación", "Vacaciones.jpg")
 
             with col2:
-                report_card("Descansos Médicos", "Subsidios y ausencias",
-                            "https://app.powerbi.com",
-                            "DescansosMedicos.jpg")
+                report_card("Descansos Médicos", "Subsidios y ausencias", "DescansosMedicos.jpg")
 
             with col3:
-                report_card("Exámenes Médicos", "Seguimiento ocupacional",
-                            "https://app.powerbi.com",
-                            "Examenes.jpg")
+                report_card("Exámenes Médicos", "Seguimiento ocupacional", "Examenes.jpg")
 
         elif area == "Desarrollo Organizacional":
 
             col1, col2, col3 = st.columns([1,2,1])
 
             with col2:
-                report_card("Capacitaciones",
-                            "Panel en construcción",
-                            "https://app.powerbi.com",
-                            "Capacitaciones.jpg")
+                report_card("Capacitaciones", "Panel en construcción", "Capacitaciones.jpg")
 
         elif area == "Seguridad y Salud en el Trabajo":
 
             col1, col2, col3 = st.columns([1,2,1])
 
             with col2:
-                report_card("Incidentes SST",
-                            "Panel en construcción",
-                            "https://app.powerbi.com",
-                            "Incidentes.jpg")
+                report_card("Incidentes SST", "Panel en construcción", "Incidentes.jpg")
 
 # =========================================================
 # FOOTER
