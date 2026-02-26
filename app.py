@@ -39,11 +39,10 @@ if "auth" not in st.session_state:
     st.session_state.auth = False
 
 # =========================================================
-# ESTILOS PREMIUM SUAVES
+# ESTILOS
 # =========================================================
 st.markdown(f"""
 <style>
-
 html, body {{
     font-family: "Segoe UI", sans-serif;
     background: #f4f6fb;
@@ -53,7 +52,6 @@ html, body {{
     font-size: 2.6rem;
     font-weight: 800;
     color: {COLOR2};
-    animation: fadeSlide 0.6s ease;
 }}
 
 .subtitle {{
@@ -75,7 +73,6 @@ html, body {{
     border-radius: 18px;
     box-shadow: 0 25px 55px rgba(0,0,0,0.12);
     border-top: 5px solid {COLOR1};
-    animation: fadeSlide 0.6s ease;
 }}
 
 .card {{
@@ -83,23 +80,10 @@ html, body {{
     overflow: hidden;
     box-shadow: 0 15px 35px rgba(0,0,0,0.15);
     margin-bottom: 10px;
-    background: white;
-    transition: all 0.35s ease;
-    animation: fadeUp 0.7s ease;
-}}
-
-.card:hover {{
-    transform: translateY(-10px);
-    box-shadow: 0 30px 55px rgba(0,0,0,0.25);
 }}
 
 .card img {{
     border-radius: 18px;
-    transition: transform 0.5s ease;
-}}
-
-.card:hover img {{
-    transform: scale(1.05);
 }}
 
 .card-title {{
@@ -115,41 +99,12 @@ div.stButton > button {{
     border: none;
     font-weight: 700;
     height: 45px;
-    transition: all 0.25s ease;
 }}
-
-div.stButton > button:hover {{
-    transform: translateY(-2px);
-    box-shadow: 0 10px 20px rgba(0,0,0,0.2);
-}}
-
-@keyframes fadeUp {{
-    from {{
-        opacity: 0;
-        transform: translateY(20px);
-    }}
-    to {{
-        opacity: 1;
-        transform: translateY(0);
-    }}
-}}
-
-@keyframes fadeSlide {{
-    from {{
-        opacity: 0;
-        transform: translateX(-15px);
-    }}
-    to {{
-        opacity: 1;
-        transform: translateX(0);
-    }}
-}}
-
 </style>
 """, unsafe_allow_html=True)
 
 # =========================================================
-# FUNCIÓN TARJETA SEGURA
+# FUNCIÓN TARJETA SEGURA (SOLO VISUAL)
 # =========================================================
 def report_card(titulo, desc, img_relative_path):
 
@@ -178,6 +133,18 @@ def report_card(titulo, desc, img_relative_path):
     """, unsafe_allow_html=True)
 
     st.markdown('</div>', unsafe_allow_html=True)
+
+
+# =========================================================
+# BOTÓN DISCRETO PARA ABRIR PANEL
+# =========================================================
+def open_panel_button(url, key):
+    if st.button("Abrir panel", key=key, use_container_width=True):
+        st.markdown(
+            f'<meta http-equiv="refresh" content="0; url={url}">',
+            unsafe_allow_html=True
+        )
+
 
 # =========================================================
 # PORTAL PRINCIPAL
@@ -272,32 +239,41 @@ else:
 
         st.divider()
 
+        # -------- ADMINISTRACIÓN --------
         if area == "Administración de Personal":
 
             col1, col2, col3 = st.columns(3)
 
             with col1:
                 report_card("Vacaciones", "Saldo y planificación", "Vacaciones.jpg")
+                open_panel_button("https://app.powerbi.com", "vacaciones")
 
             with col2:
                 report_card("Descansos Médicos", "Subsidios y ausencias", "DescansosMedicos.jpg")
+                open_panel_button("https://app.powerbi.com", "descansos")
 
             with col3:
                 report_card("Exámenes Médicos", "Seguimiento ocupacional", "Examenes.jpg")
+                open_panel_button("https://app.powerbi.com", "examenes")
 
+        # -------- DESARROLLO --------
         elif area == "Desarrollo Organizacional":
 
             col1, col2, col3 = st.columns([1,2,1])
 
             with col2:
                 report_card("Capacitaciones", "Panel en construcción", "Capacitaciones.jpg")
+                open_panel_button("https://app.powerbi.com", "capacitaciones")
 
+        # -------- SST --------
         elif area == "Seguridad y Salud en el Trabajo":
 
             col1, col2, col3 = st.columns([1,2,1])
 
             with col2:
                 report_card("Incidentes SST", "Panel en construcción", "Incidentes.jpg")
+                open_panel_button("https://app.powerbi.com", "incidentes")
+
 
 # =========================================================
 # FOOTER
