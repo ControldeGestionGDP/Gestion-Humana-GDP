@@ -315,7 +315,7 @@ else:
                 open_panel_button("https://app.powerbi.com/links/1TThJ-ia9c", "v")
             with col2:
                 report_card("Descansos Médicos", "Subsidios y ausencias", "DescansosMedicos.jpg")
-                open_panel_button("https://app.powerbi.com/links/NQfjSntCO1", "d")
+                open_panel_button("https://app.powerbi.com/links/NQfjSntCO1?ctid=42fc96b3-c018-482d-8ada-cab81720489e&pbi_source=linkShare", "d")
             with col3:
                 report_card("Exámenes Médicos", "Seguimiento ocupacional", "Examenes.jpg")
                 open_panel_button("https://app.powerbi.com/links/eAcPJmr1vJ", "e")
