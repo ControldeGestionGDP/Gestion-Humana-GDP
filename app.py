@@ -318,7 +318,7 @@ else:
                 open_panel_button("https://app.powerbi.com/links/NQfjSntCO1?ctid=42fc96b3-c018-482d-8ada-cab81720489e&pbi_source=linkShare", "d")
             with col3:
                 report_card("Exámenes Médicos", "Seguimiento ocupacional", "Examenes.jpg")
-                open_panel_button("https://app.powerbi.com/links/eAcPJmr1vJ", "e")
+                open_panel_button("https://app.powerbi.com/links/eAcPJmr1vJ?ctid=42fc96b3-c018-482d-8ada-cab81720489e&pbi_source=linkShare", "e")
 
         elif area == "Desarrollo Organizacional":
             col1, col2, col3 = st.columns([1,2,1])
