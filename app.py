@@ -60,7 +60,7 @@ with st.sidebar:
     """, unsafe_allow_html=True)
 
     # Botón con estilo mejorado mediante CSS de Streamlit
-    if st.button("🚀 INGRESAR AL PANEL GERENCIAL", use_container_width=True):
+    if st.button("INGRESAR", use_container_width=True):
         st.session_state.area = "Gerencia"
         st.session_state.auth = False
         st.rerun()
