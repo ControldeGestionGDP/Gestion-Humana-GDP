@@ -5,7 +5,7 @@ from pathlib import Path
 # CONFIG
 # =========================================================
 st.set_page_config(
-    page_title="Ecosistema Digital • Gestión Humana • GDP",
+    page_title="Gestión Humana • GDP",
     page_icon="🐥",
     layout="wide"
 )
@@ -242,7 +242,7 @@ def open_panel_button(url, key):
 # =========================================================
 if st.session_state.area is None:
 
-    st.markdown('<div class="main-title">Panel de Control — Gestión Humana GDP</div>', unsafe_allow_html=True)
+    st.markdown('<div class="main-title">Ecosistema Digital • Gestión Humana • GDP</div>', unsafe_allow_html=True)
     st.markdown('<div class="subtitle">Seleccione el área de interés</div>', unsafe_allow_html=True)
     st.markdown('<div class="title-accent"></div>', unsafe_allow_html=True)
 
