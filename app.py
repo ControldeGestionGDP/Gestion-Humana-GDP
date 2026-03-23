@@ -41,32 +41,76 @@ if "auth" not in st.session_state:
 
 
 # =========================================================
-# 🔐 SIDEBAR GERENCIA (MEJORADO)
+# 🔐 SIDEBAR GERENCIA (VERSIÓN SUPER PRO)
 # =========================================================
 with st.sidebar:
     st.markdown(f"""
-    <div style="
-        background: linear-gradient(135deg, {COLOR1}22, {COLOR2}22);
-        padding: 20px;
-        border-radius: 15px;
-        border: 1px solid {COLOR1}44;
-        margin-bottom: 25px;
+    <style>
+    .executive-card {{
+        background: rgba(255, 255, 255, 0.05);
+        backdrop-filter: blur(10px);
+        border-radius: 20px;
+        padding: 25px 15px;
+        border: 1px solid rgba(16, 113, 184, 0.2);
+        box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.1);
         text-align: center;
-    ">
-        <span style="font-size: 2.5rem;">🛡️</span>
-        <h3 style="margin: 10px 0 5px 0; color: {COLOR2}; font-size: 1.2rem;">Acceso Ejecutivo</h3>
-        <p style="font-size: 0.85rem; color: #6b7280;">Área restringida para Gerencia y Dirección</p>
+        margin-bottom: 20px;
+        transition: all 0.4s ease;
+        position: relative;
+        overflow: hidden;
+    }}
+    .executive-card::before {{
+        content: "";
+        position: absolute;
+        top: -50%;
+        left: -50%;
+        width: 200%;
+        height: 200%;
+        background: radial-gradient(circle, {COLOR1}11 0%, transparent 70%);
+        animation: rotate 10s linear infinite;
+    }}
+    @keyframes rotate {{
+        from {{ transform: rotate(0deg); }}
+        to {{ transform: rotate(360deg); }}
+    }}
+    .exe-title {{
+        font-weight: 800;
+        letter-spacing: 1.5px;
+        color: {COLOR2};
+        margin: 10px 0;
+        font-size: 1rem;
+        text-transform: uppercase;
+    }}
+    .exe-status {{
+        display: inline-block;
+        padding: 4px 12px;
+        background: {COLOR1}22;
+        color: {COLOR1};
+        border-radius: 20px;
+        font-size: 0.7rem;
+        font-weight: 700;
+        margin-bottom: 15px;
+    }}
+    </style>
+    
+    <div class="executive-card">
+        <div style="font-size: 2.8rem; filter: drop-shadow(0 5px 15px rgba(0,0,0,0.1));">🏢</div>
+        <div class="exe-title">Panel Ejecutivo</div>
+        <div class="exe-status">● ACCESO RESTRINGIDO</div>
+        <p style="color: #64748b; font-size: 0.8rem; line-height: 1.4;">
+            Visualización estratégica de indicadores críticos para la toma de decisiones.
+        </p>
     </div>
     """, unsafe_allow_html=True)
 
-    # Botón con estilo mejorado mediante CSS de Streamlit
-    if st.button("INGRESAR", use_container_width=True):
+    # Botón integrado con el diseño
+    if st.button("🔑 DESBLOQUEAR PANEL", use_container_width=True, help="Solo personal autorizado"):
         st.session_state.area = "Gerencia"
         st.session_state.auth = False
         st.rerun()
     
     st.markdown("---")
-    st.caption("Grupo Don Pollo • v2.0")
+    st.caption("🔒 Seguridad Encriptada GDP")
 
 
 # =========================================================
