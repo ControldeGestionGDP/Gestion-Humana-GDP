@@ -291,6 +291,15 @@ else:
             with col3:
                 report_card("Exámenes Médicos", "Seguimiento ocupacional", "Examenes.jpg")
                 open_panel_button("https://app.powerbi.com/links/eAcPJmr1vJ", "g3")
+            
+            # Segunda fila alineada a la izquierda
+            col_g4, col_g5, _ = st.columns(3)
+            with col_g4:
+                report_card("Medidas Disciplinarias", "Registro de sanciones", "Disciplinarias.jpg")
+                open_panel_button("https://app.powerbi.com", "g_md")
+            with col_g5:
+                report_card("Casos Especiales", "Seguimiento de casos", "CasosEspeciales.jpg")
+                open_panel_button("https://app.powerbi.com", "g_ce")
 
             st.divider()
             st.subheader("Desarrollo Organizacional")
@@ -306,9 +315,10 @@ else:
                 report_card("Incidentes SST", "Panel en construcción", "Incidentes.jpg")
                 open_panel_button("https://app.powerbi.com", "g5")
 
-        # ================= AREAS NORMALES =================
+       # ================= AREAS NORMALES =================
         elif area == "Administración de Personal":
 
+            # Primera fila (3 columnas)
             col1, col2, col3 = st.columns(3)
             with col1:
                 report_card("Vacaciones", "Saldo y planificación", "Vacaciones.jpg")
@@ -319,6 +329,15 @@ else:
             with col3:
                 report_card("Exámenes Médicos", "Seguimiento ocupacional", "Examenes.jpg")
                 open_panel_button("https://app.powerbi.com/links/eAcPJmr1vJ?ctid=42fc96b3-c018-482d-8ada-cab81720489e&pbi_source=linkShare", "e")
+            
+            # Segunda fila alineada a la izquierda (3 columnas, la última vacía)
+            col_a4, col_a5, _ = st.columns(3)
+            with col_a4:
+                report_card("Medidas Disciplinarias", "Registro de sanciones", "Disciplinarias.jpg")
+                open_panel_button("https://app.powerbi.com", "md")
+            with col_a5:
+                report_card("Casos Especiales", "Seguimiento de casos", "CasosEspeciales.jpg")
+                open_panel_button("https://app.powerbi.com", "ce")
 
         elif area == "Desarrollo Organizacional":
             col1, col2, col3 = st.columns([1,2,1])
@@ -331,7 +350,6 @@ else:
             with col2:
                 report_card("Incidentes SST", "Panel en construcción", "Incidentes.jpg")
                 open_panel_button("https://app.powerbi.com", "i")
-
 
 # =========================================================
 # FOOTER
