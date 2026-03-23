@@ -5,7 +5,7 @@ from pathlib import Path
 # CONFIG
 # =========================================================
 st.set_page_config(
-    page_title="Portal Gestión Humana GDP",
+    page_title="Ecosistema Digital • Gestión Humana • GDP",
     page_icon="🐥",
     layout="wide"
 )
@@ -92,7 +92,7 @@ with st.sidebar:
         st.rerun()
     
     st.markdown("---")
-    st.caption("© 2026 - Grupo Don Pollo")
+    st.caption("© 2026 • Grupo Don Pollo")
 
 
 # =========================================================
