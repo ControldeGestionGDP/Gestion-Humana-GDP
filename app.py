@@ -284,19 +284,19 @@ else:
             col1, col2, col3 = st.columns(3)
             with col1:
                 report_card("Vacaciones", "Saldo y planificación", "Vacaciones.jpg")
-                open_panel_button("https://app.powerbi.com/links/1TThJ-ia9c", "g1")
+                open_panel_button("https://app.powerbi.com/links/99-7IxzOn8?ctid=42fc96b3-c018-482d-8ada-cab81720489e&pbi_source=linkShare", "g1")
             with col2:
                 report_card("Descansos Médicos", "Subsidios y ausencias", "DescansosMedicos.jpg")
-                open_panel_button("https://app.powerbi.com/links/NQfjSntCO1", "g2")
+                open_panel_button("https://app.powerbi.com/links/NQfjSntCO1?ctid=42fc96b3-c018-482d-8ada-cab81720489e&pbi_source=linkShare", "g2")
             with col3:
                 report_card("Exámenes Médicos", "Seguimiento ocupacional", "Examenes.jpg")
-                open_panel_button("https://app.powerbi.com/links/eAcPJmr1vJ", "g3")
+                open_panel_button("https://app.powerbi.com/links/eAcPJmr1vJ?ctid=42fc96b3-c018-482d-8ada-cab81720489e&pbi_source=linkShare", "g3")
             
             # Segunda fila alineada a la izquierda
             col_g4, col_g5, _ = st.columns(3)
             with col_g4:
                 report_card("Medidas Disciplinarias", "Registro de sanciones", "Disciplinarias.jpg")
-                open_panel_button("https://app.powerbi.com", "g_md")
+                open_panel_button("https://app.powerbi.com/links/Tpui1mE6E4?ctid=42fc96b3-c018-482d-8ada-cab81720489e&pbi_source=linkShare&bookmarkGuid=fd005400-09db-4ac9-bac1-f07463e944d5", "g_md")
             with col_g5:
                 report_card("Casos Especiales", "Seguimiento de casos", "CasosEspeciales.jpg")
                 open_panel_button("https://app.powerbi.com", "g_ce")
@@ -334,7 +334,7 @@ else:
             col_a4, col_a5, _ = st.columns(3)
             with col_a4:
                 report_card("Medidas Disciplinarias", "Registro de sanciones", "Disciplinarias.jpg")
-                open_panel_button("https://app.powerbi.com", "md")
+                open_panel_button("https://app.powerbi.com/links/Tpui1mE6E4?ctid=42fc96b3-c018-482d-8ada-cab81720489e&pbi_source=linkShare&bookmarkGuid=fd005400-09db-4ac9-bac1-f07463e944d5", "md")
             with col_a5:
                 report_card("Casos Especiales", "Seguimiento de casos", "CasosEspeciales.jpg")
                 open_panel_button("https://app.powerbi.com", "ce")
