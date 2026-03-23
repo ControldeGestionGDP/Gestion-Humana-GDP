@@ -242,7 +242,7 @@ def open_panel_button(url, key):
 # =========================================================
 if st.session_state.area is None:
 
-    st.markdown('<div class="main-title">Ecosistema Digital • Gestión Humana • GDP</div>', unsafe_allow_html=True)
+    st.markdown('<div class="main-title">Ecosistema Digital • Gestión Humana</div>', unsafe_allow_html=True)
     st.markdown('<div class="subtitle">Seleccione el área de interés</div>', unsafe_allow_html=True)
     st.markdown('<div class="title-accent"></div>', unsafe_allow_html=True)
 
