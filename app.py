@@ -10,10 +10,9 @@ st.set_page_config(
     layout="wide"
 )
 
-# Paleta de Colores Corporativa
-COLOR1 = "#1071B8" # Azul Primario
-COLOR2 = "#2E3788" # Azul Oscuro
-COLOR3 = "#C4579B" # Magenta
+COLOR1 = "#1071B8"
+COLOR2 = "#2E3788"
+COLOR3 = "#C4579B"
 
 # =========================================================
 # RUTA BASE
@@ -36,275 +35,386 @@ PASSWORDS = {
 # =========================================================
 if "area" not in st.session_state:
     st.session_state.area = None
+
 if "auth" not in st.session_state:
     st.session_state.auth = False
 
-# =========================================================
-# ESTILOS "SUPER PRO" (CSS AVANZADO)
-# =========================================================
-st.markdown(f"""
-<style>
-    /* Fondo y Tipografía Global */
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap');
-    
-    html, body, [class*="st-"] {{
-        font-family: 'Inter', sans-serif;
-        background-color: #f8fafc;
-    }}
-
-    /* Header Ejecutivo Estilo Moderno */
-    .executive-header {{
-        background: linear-gradient(135deg, white 0%, #f1f5f9 100%);
-        padding: 2rem;
-        border-radius: 24px;
-        border-left: 8px solid {COLOR1};
-        box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-        margin-bottom: 2rem;
-    }}
-
-    .main-title {{
-        font-size: 2.8rem;
-        font-weight: 800;
-        background: linear-gradient(90deg, {COLOR2}, {COLOR1});
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        margin: 0;
-    }}
-
-    /* Tarjetas de Reporte Mejoradas */
-    .card {{
-        background: white;
-        border-radius: 22px;
-        padding: 0px;
-        border: 1px solid #e2e8f0;
-        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        overflow: hidden;
-        margin-bottom: 10px;
-    }}
-
-    .card:hover {{
-        transform: translateY(-10px);
-        box-shadow: 0 20px 40px rgba(0,0,0,0.1);
-        border-color: {COLOR1}44;
-    }}
-
-    .card-content {{
-        padding: 20px;
-    }}
-
-    /* Botón Pro con Gradiente y Elevación */
-    .btn-pro {{
-        display: block;
-        width: 100%;
-        padding: 12px;
-        text-align: center;
-        background: linear-gradient(135deg, {COLOR1}, {COLOR2});
-        color: white !important;
-        font-weight: 700;
-        text-decoration: none;
-        border-radius: 12px;
-        box-shadow: 0 4px 12px {COLOR1}44;
-        transition: all 0.3s ease;
-        border: none;
-    }}
-
-    .btn-pro:hover {{
-        box-shadow: 0 6px 20px {COLOR1}66;
-        transform: scale(1.02);
-        filter: brightness(1.1);
-    }}
-
-    /* Estilos de la Sidebar Gerencial */
-    .executive-card-sidebar {{
-        background: rgba(255, 255, 255, 0.05);
-        backdrop-filter: blur(10px);
-        border-radius: 20px;
-        padding: 20px;
-        border: 1px solid {COLOR1}22;
-        text-align: center;
-        margin-bottom: 20px;
-    }}
-</style>
-""", unsafe_allow_html=True)
 
 # =========================================================
-# FUNCIONES NIVELES PRO
-# =========================================================
-def report_card(titulo, desc, img_relative_path):
-    img_path = ASSETS_DIR / img_relative_path
-    st.markdown('<div class="card">', unsafe_allow_html=True)
-    
-    if img_path.exists():
-        st.image(img_path.read_bytes(), use_container_width=True)
-    else:
-        st.image("https://via.placeholder.com/800x450?text=Grupo+Don+Pollo", use_container_width=True)
-        
-    st.markdown(f"""
-        <div class="card-content">
-            <div style="font-weight:800; font-size:1.15rem; color:{COLOR2};">{titulo}</div>
-            <div style="font-size:0.9rem; color:#64748b; margin-top:5px; margin-bottom:15px;">{desc}</div>
-        </div>
-    """, unsafe_allow_html=True)
-    st.markdown('</div>', unsafe_allow_html=True)
-
-def open_panel_button(url, key):
-    st.markdown(f'<a href="{url}" target="_blank" class="btn-pro">📊 Abrir Dashboard</a>', unsafe_allow_html=True)
-    st.write("") # Espaciador
-
-# =========================================================
-# 🔐 SIDEBAR
+# 🔐 SIDEBAR GERENCIA (VERSIÓN SUPER PRO)
 # =========================================================
 with st.sidebar:
     st.markdown(f"""
-    <div class="executive-card-sidebar">
-        <div style="font-size: 3rem;">💎</div>
-        <div style="font-weight:800; color:{COLOR2}; text-transform:uppercase; letter-spacing:1px;">Acceso VIP</div>
-        <div style="font-size:0.7rem; color:{COLOR1}; font-weight:700; margin-top:5px;">● GERENCIA GENERAL</div>
+    <style>
+    .executive-card {{
+        background: rgba(255, 255, 255, 0.05);
+        backdrop-filter: blur(10px);
+        border-radius: 20px;
+        padding: 25px 15px;
+        border: 1px solid rgba(16, 113, 184, 0.2);
+        box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.1);
+        text-align: center;
+        margin-bottom: 20px;
+        transition: all 0.4s ease;
+        position: relative;
+        overflow: hidden;
+    }}
+    .executive-card::before {{
+        content: "";
+        position: absolute;
+        top: -50%;
+        left: -50%;
+        width: 200%;
+        height: 200%;
+        background: radial-gradient(circle, {COLOR1}11 0%, transparent 70%);
+        animation: rotate 10s linear infinite;
+    }}
+    @keyframes rotate {{
+        from {{ transform: rotate(0deg); }}
+        to {{ transform: rotate(360deg); }}
+    }}
+    .exe-title {{
+        font-weight: 800;
+        letter-spacing: 1.5px;
+        color: {COLOR2};
+        margin: 10px 0;
+        font-size: 1rem;
+        text-transform: uppercase;
+    }}
+    .exe-status {{
+        display: inline-block;
+        padding: 4px 12px;
+        background: {COLOR1}22;
+        color: {COLOR1};
+        border-radius: 20px;
+        font-size: 0.7rem;
+        font-weight: 700;
+        margin-bottom: 15px;
+    }}
+    </style>
+    
+    <div class="executive-card">
+        <div style="font-size: 2.8rem; filter: drop-shadow(0 5px 15px rgba(0,0,0,0.1));"></div>
+        <div class="exe-title">Panel Ejecutivo</div>
+        <div class="exe-status">● ACCESO RESTRINGIDO</div>
+        <p style="color: #64748b; font-size: 0.8rem; line-height: 1.4;">
+            Visualización estratégica de indicadores críticos para la toma de decisiones.
+        </p>
     </div>
     """, unsafe_allow_html=True)
 
-    if st.button("🚀 INGRESAR PANEL CEO", use_container_width=True):
+    # Botón integrado con el diseño
+    if st.button("INGRESAR", use_container_width=True, help="Solo personal autorizado"):
         st.session_state.area = "Gerencia"
         st.session_state.auth = False
         st.rerun()
-    st.divider()
+    
+    st.markdown("---")
+
 
 # =========================================================
-# LOGICA DEL PORTAL
+# ESTILOS (TU MISMO BLOQUE ORIGINAL)
 # =========================================================
-if st.session_state.area is None:
-    # Home Page
+st.markdown(f"""
+<style>
+html, body {{
+    font-family: "Segoe UI", sans-serif;
+    background: #f4f6fb;
+    animation: fadeInBody 0.6s ease-in-out;
+}}
+@keyframes fadeInBody {{
+    from {{ opacity: 0; transform: translateY(8px); }}
+    to {{ opacity: 1; transform: translateY(0); }}
+}}
+.main-title {{
+    font-size: 2.6rem;
+    font-weight: 800;
+    color: {COLOR2};
+    animation: slideInTitle 0.7s ease;
+}}
+@keyframes slideInTitle {{
+    from {{ opacity: 0; transform: translateX(-10px); }}
+    to {{ opacity: 1; transform: translateX(0); }}
+}}
+.subtitle {{
+    color: #6b7280;
+    margin-bottom: 12px;
+}}
+.title-accent {{
+    height: 4px;
+    width: 120px;
+    background: linear-gradient(90deg,{COLOR1},{COLOR2},{COLOR3});
+    border-radius: 4px;
+    margin-bottom: 28px;
+    animation: expandBar 0.8s ease forwards;
+}}
+@keyframes expandBar {{
+    from {{ width: 0; }}
+    to {{ width: 120px; }}
+}}
+.login-box {{
+    background: white;
+    padding: 40px;
+    border-radius: 18px;
+    box-shadow: 0 25px 55px rgba(0,0,0,0.12);
+    border-top: 5px solid {COLOR1};
+    animation: fadeInCard 0.5s ease;
+}}
+@keyframes fadeInCard {{
+    from {{ opacity: 0; transform: translateY(12px); }}
+    to {{ opacity: 1; transform: translateY(0); }}
+}}
+.card {{
+    border-radius: 18px;
+    overflow: hidden;
+    box-shadow: 0 15px 35px rgba(0,0,0,0.12);
+    margin-bottom: 8px;
+    background: white;
+    transition: all 0.35s cubic-bezier(.4,0,.2,1);
+}}
+.card:hover {{
+    transform: translateY(-8px);
+    box-shadow: 0 25px 55px rgba(0,0,0,0.18);
+}}
+.card img {{
+    border-radius: 18px;
+    transition: transform 0.4s ease;
+}}
+.card:hover img {{
+    transform: scale(1.04);
+}}
+.card-title {{
+    padding: 15px;
+    font-weight: 700;
+    font-size: 1.1rem;
+}}
+div.stButton > button {{
+    width: 100%;
+    background: linear-gradient(90deg, {COLOR1}, {COLOR2}, {COLOR3});
+    color: white;
+    border-radius: 10px;
+    border: none;
+    font-weight: 700;
+    height: 45px;
+    transition: all 0.25s ease;
+}}
+div.stButton > button:hover {{
+    transform: translateY(-3px);
+    box-shadow: 0 10px 22px rgba(0,0,0,0.2);
+}}
+</style>
+""", unsafe_allow_html=True)
+
+
+# =========================================================
+# FUNCIONES (SIN CAMBIOS)
+# =========================================================
+def report_card(titulo, desc, img_relative_path):
+    img_path = ASSETS_DIR / img_relative_path
+    fallback = ASSETS_DIR / "default.jpg"
+
+    st.markdown('<div class="card">', unsafe_allow_html=True)
+
+    if img_path.exists():
+        st.image(img_path.read_bytes(), use_container_width=True)
+    elif fallback.exists():
+        st.image(fallback.read_bytes(), use_container_width=True)
+    else:
+        st.image("https://via.placeholder.com/800x400.png?text=Imagen+no+disponible",
+                 use_container_width=True)
+
     st.markdown(f"""
-    <div class="executive-header">
-        <div class="main-title">Portal Gestión Humana</div>
-        <div style="color:#64748b; font-weight:600; font-size:1.1rem;">Seleccione un área estratégica para continuar</div>
-    </div>
+        <div class="card-title">
+            {titulo}<br>
+            <span style="font-weight:400;color:#6b7280;font-size:0.95rem;">
+                {desc}
+            </span>
+        </div>
     """, unsafe_allow_html=True)
 
+    st.markdown('</div>', unsafe_allow_html=True)
+
+
+def open_panel_button(url, key):
+    st.markdown(f"""
+    <a href="{url}" target="_blank" style="text-decoration:none;">
+        <div style="
+            width:100%;
+            text-align:center;
+            padding:12px;
+            border-radius:10px;
+            font-weight:700;
+            color:white;
+            background: linear-gradient(90deg,{COLOR1},{COLOR2},{COLOR3});
+            box-shadow: 0 6px 14px rgba(0,0,0,0.15);
+        ">
+            Abrir Dashboard
+        </div>
+    </a>
+    """, unsafe_allow_html=True)
+
+
+# =========================================================
+# PORTAL
+# =========================================================
+if st.session_state.area is None:
+
+    st.markdown('<div class="main-title">Panel de Control — Gestión Humana GDP</div>', unsafe_allow_html=True)
+    st.markdown('<div class="subtitle">Seleccione el área de interés</div>', unsafe_allow_html=True)
+    st.markdown('<div class="title-accent"></div>', unsafe_allow_html=True)
+
     col1, col2, col3 = st.columns(3)
-    
+
     with col1:
-        report_card("Administración de Personal", "Control operativo y contractual", "Administracion.jpg")
-        if st.button("Entrar a Operaciones", key="admin", use_container_width=True):
+        report_card("Administración de Personal",
+                    "Gestión operativa del personal",
+                    "Administracion.jpg")
+        if st.button("Ingresar", key="admin", use_container_width=True):
             st.session_state.area = "Administración de Personal"
             st.session_state.auth = False
             st.rerun()
 
     with col2:
-        report_card("Desarrollo Organizacional", "Cultura, Talento y Clima", "Desarrollo.jpg")
-        if st.button("Entrar a Desarrollo", key="do", use_container_width=True):
+        report_card("Desarrollo Organizacional",
+                    "Talento y cultura",
+                    "Desarrollo.jpg")
+        if st.button("Ingresar", key="do", use_container_width=True):
             st.session_state.area = "Desarrollo Organizacional"
             st.session_state.auth = False
             st.rerun()
 
     with col3:
-        report_card("Seguridad y Salud", "Prevención y Bienestar SST", "Seguridad.jpg")
-        if st.button("Entrar a SST", key="sst", use_container_width=True):
+        report_card("Seguridad y Salud en el Trabajo",
+                    "Gestión preventiva",
+                    "Seguridad.jpg")
+        if st.button("Ingresar", key="sst", use_container_width=True):
             st.session_state.area = "Seguridad y Salud en el Trabajo"
             st.session_state.auth = False
             st.rerun()
 
 else:
+
     area = st.session_state.area
 
     if not st.session_state.auth:
-        # Login Page Pro
-        col1, col2, col3 = st.columns([1,1.5,1])
+
+        col1, col2, col3 = st.columns([1,2,1])
         with col2:
+
             st.markdown(f"""
-            <div style="background:white; padding:40px; border-radius:24px; box-shadow: 0 20px 50px rgba(0,0,0,0.1); border-top: 6px solid {COLOR1};">
-                <h2 style="text-align:center; color:{COLOR2}; margin-bottom:10px;">🔐 Autenticación</h2>
-                <p style="text-align:center; color:#64748b;">Accediendo a: <b>{area}</b></p>
+            <div class="login-box">
+                <div style="font-size:1.4rem;font-weight:700;color:{COLOR2};text-align:center;">
+                    {area}
+                </div>
+                <div style="text-align:center;color:#6b7280;margin-bottom:20px;">
+                    Ingrese su contraseña
+                </div>
+            </div>
             """, unsafe_allow_html=True)
-            
-            pwd = st.text_input("Introduzca su clave de acceso", type="password")
-            
-            if st.button("Validar Credenciales", use_container_width=True):
+
+            pwd = st.text_input("Contraseña", type="password")
+
+            if st.button("Ingresar", use_container_width=True):
                 if pwd == PASSWORDS[area]:
                     st.session_state.auth = True
                     st.rerun()
                 else:
-                    st.error("Acceso denegado: Contraseña incorrecta")
-            
-            if st.button("← Volver al Inicio", use_container_width=True):
+                    st.error("Contraseña incorrecta")
+
+            if st.button("Volver", use_container_width=True):
                 st.session_state.area = None
                 st.rerun()
-            st.markdown("</div>", unsafe_allow_html=True)
 
     else:
-        # Dashboard Area Pro
-        st.markdown(f"""
-        <div class="executive-header">
-            <div class="main-title">{area}</div>
-            <div style="color:{COLOR3}; font-weight:700;">Indicadores de Gestión Estratégica</div>
-        </div>
-        """, unsafe_allow_html=True)
 
-        if st.button("退出 Cerrar Sesión / Cambiar Área"):
+        st.markdown(f'<div class="main-title">{area}</div>', unsafe_allow_html=True)
+        st.markdown('<div class="title-accent"></div>', unsafe_allow_html=True)
+
+        if st.button("Cambiar área"):
             st.session_state.area = None
             st.session_state.auth = False
             st.rerun()
 
         st.divider()
 
+        # ================= GERENCIA VE TODO =================
         if area == "Gerencia":
-            st.subheader("📊 Consolidado Administración de Personal")
-            c1, c2, c3 = st.columns(3)
-            with c1:
+
+            st.subheader("Administración de Personal")
+            col1, col2, col3 = st.columns(3)
+            with col1:
                 report_card("Vacaciones", "Saldo y planificación", "Vacaciones.jpg")
                 open_panel_button("https://app.powerbi.com/links/99-7IxzOn8?ctid=42fc96b3-c018-482d-8ada-cab81720489e&pbi_source=linkShare", "g1")
-            with c2:
+            with col2:
                 report_card("Descansos Médicos", "Subsidios y ausencias", "DescansosMedicos.jpg")
                 open_panel_button("https://app.powerbi.com/links/NQfjSntCO1?ctid=42fc96b3-c018-482d-8ada-cab81720489e&pbi_source=linkShare", "g2")
-            with c3:
+            with col3:
                 report_card("Exámenes Médicos", "Seguimiento ocupacional", "Examenes.jpg")
                 open_panel_button("https://app.powerbi.com/links/eAcPJmr1vJ?ctid=42fc96b3-c018-482d-8ada-cab81720489e&pbi_source=linkShare", "g3")
-
-            c_low1, c_low2, _ = st.columns(3)
-            with c_low1:
-                report_card("Medidas Disciplinarias", "Cumplimiento normativo", "Disciplinarias.jpg")
-                open_panel_button("https://app.powerbi.com/links/Tpui1mE6E4?ctid=42fc96b3-c018-482d-8ada-cab81720489e&pbi_source=linkShare", "g_md")
-            with c_low2:
-                report_card("Casos Especiales", "Atención priorizada", "CasosEspeciales.jpg")
+            
+            # Segunda fila alineada a la izquierda
+            col_g4, col_g5, _ = st.columns(3)
+            with col_g4:
+                report_card("Medidas Disciplinarias", "Registro de sanciones", "Disciplinarias.jpg")
+                open_panel_button("https://app.powerbi.com/links/Tpui1mE6E4?ctid=42fc96b3-c018-482d-8ada-cab81720489e&pbi_source=linkShare&bookmarkGuid=fd005400-09db-4ac9-bac1-f07463e944d5", "g_md")
+            with col_g5:
+                report_card("Casos Especiales", "Seguimiento de casos", "CasosEspeciales.jpg")
                 open_panel_button("https://app.powerbi.com", "g_ce")
 
-        elif area == "Administración de Personal":
-            c1, c2, c3 = st.columns(3)
-            with c1:
-                report_card("Vacaciones", "Saldos actualizados", "Vacaciones.jpg")
-                open_panel_button("https://app.powerbi.com/links/99-7IxzOn8?ctid=42fc96b3-c018-482d-8ada-cab81720489e&pbi_source=linkShare", "v")
-            with c2:
-                report_card("Descansos Médicos", "Gestión de subsidios", "DescansosMedicos.jpg")
-                open_panel_button("https://app.powerbi.com/links/NQfjSntCO1?ctid=42fc96b3-c018-482d-8ada-cab81720489e&pbi_source=linkShare", "d")
-            with c3:
-                report_card("Exámenes Médicos", "Vencimientos y citas", "Examenes.jpg")
-                open_panel_button("https://app.powerbi.com/links/eAcPJmr1vJ?ctid=42fc96b3-c018-482d-8ada-cab81720489e&pbi_source=linkShare", "e")
+            st.divider()
+            st.subheader("Desarrollo Organizacional")
+            col1, col2, col3 = st.columns([1,2,1])
+            with col2:
+                report_card("Capacitaciones", "Panel en construcción", "Capacitaciones.jpg")
+                open_panel_button("https://app.powerbi.com", "g4")
 
-            c4, c5, _ = st.columns(3)
-            with c4:
-                report_card("Medidas Disciplinarias", "Control de sanciones", "Disciplinarias.jpg")
-                open_panel_button("https://app.powerbi.com/links/Tpui1mE6E4?ctid=42fc96b3-c018-482d-8ada-cab81720489e&pbi_source=linkShare", "md")
-            with c5:
-                report_card("Casos Especiales", "Seguimiento individual", "CasosEspeciales.jpg")
+            st.divider()
+            st.subheader("Seguridad y Salud en el Trabajo")
+            col1, col2, col3 = st.columns([1,2,1])
+            with col2:
+                report_card("Incidentes SST", "Panel en construcción", "Incidentes.jpg")
+                open_panel_button("https://app.powerbi.com", "g5")
+
+       # ================= AREAS NORMALES =================
+        elif area == "Administración de Personal":
+
+            # Primera fila (3 columnas)
+            col1, col2, col3 = st.columns(3)
+            with col1:
+                report_card("Vacaciones", "Saldo y planificación", "Vacaciones.jpg")
+                open_panel_button("https://app.powerbi.com/links/99-7IxzOn8?ctid=42fc96b3-c018-482d-8ada-cab81720489e&pbi_source=linkShare", "v")
+            with col2:
+                report_card("Descansos Médicos", "Subsidios y ausencias", "DescansosMedicos.jpg")
+                open_panel_button("https://app.powerbi.com/links/NQfjSntCO1?ctid=42fc96b3-c018-482d-8ada-cab81720489e&pbi_source=linkShare", "d")
+            with col3:
+                report_card("Exámenes Médicos", "Seguimiento ocupacional", "Examenes.jpg")
+                open_panel_button("https://app.powerbi.com/links/eAcPJmr1vJ?ctid=42fc96b3-c018-482d-8ada-cab81720489e&pbi_source=linkShare", "e")
+            
+            # Segunda fila alineada a la izquierda (3 columnas, la última vacía)
+            col_a4, col_a5, _ = st.columns(3)
+            with col_a4:
+                report_card("Medidas Disciplinarias", "Registro de sanciones", "Disciplinarias.jpg")
+                open_panel_button("https://app.powerbi.com/links/Tpui1mE6E4?ctid=42fc96b3-c018-482d-8ada-cab81720489e&pbi_source=linkShare&bookmarkGuid=fd005400-09db-4ac9-bac1-f07463e944d5", "md")
+            with col_a5:
+                report_card("Casos Especiales", "Seguimiento de casos", "CasosEspeciales.jpg")
                 open_panel_button("https://app.powerbi.com", "ce")
 
-        # Secciones DO y SST mantenidas con col2 centrada
         elif area == "Desarrollo Organizacional":
-            _, col2, _ = st.columns([1,2,1])
+            col1, col2, col3 = st.columns([1,2,1])
             with col2:
-                report_card("Capacitaciones", "Plan de formación anual", "Capacitaciones.jpg")
+                report_card("Capacitaciones", "Panel en construcción", "Capacitaciones.jpg")
                 open_panel_button("https://app.powerbi.com", "c")
 
         elif area == "Seguridad y Salud en el Trabajo":
-            _, col2, _ = st.columns([1,2,1])
+            col1, col2, col3 = st.columns([1,2,1])
             with col2:
-                report_card("Incidentes SST", "Reporte de accidentabilidad", "Incidentes.jpg")
+                report_card("Incidentes SST", "Panel en construcción", "Incidentes.jpg")
                 open_panel_button("https://app.powerbi.com", "i")
 
-# Footer
-st.markdown(f"""
-    <div style="text-align:center; margin-top:50px; padding:20px; color:#94a3b8; font-size:0.85rem; border-top:1px solid #e2e8f0;">
-        <b>Grupo Don Pollo</b> • Sistema de Inteligencia de Negocios 2026<br>
-        Gerencia de Control de Gestión
-    </div>
-""", unsafe_allow_html=True)
+# =========================================================
+# FOOTER
+# =========================================================
+st.markdown(
+    "<center style='color:#9ca3af;margin-top:40px;'>Gerencia de Control de Gestión • Grupo Don Pollo</center>",
+    unsafe_allow_html=True
+)
