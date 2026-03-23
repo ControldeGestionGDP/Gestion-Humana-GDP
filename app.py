@@ -76,23 +76,23 @@ with st.sidebar:
     </style>
     
     <div class="executive-card-sidebar">
-        <div style="font-size: 2.2rem; margin-bottom: 10px;">📊</div>
+        <div style="font-size: 2.2rem; margin-bottom: 10px;">🐣</div>
         <div class="exe-title-sidebar">Panel Ejecutivo</div>
         <div class="exe-status-sidebar">● ACCESO RESTRINGIDO</div>
         <p style="color: #64748b; font-size: 0.85rem; line-height: 1.4; margin-top: 5px;">
-            Visualización estratégica de indicadores críticos para la alta gerencia.
+            Todo el ecosistema de Gestión Humana consolidado en una sola vista estratégica.
         </p>
     </div>
     """, unsafe_allow_html=True)
 
     # Botón con el mismo estilo de los módulos principales
-    if st.button("INGRESAR AL PANEL", use_container_width=True, help="Solo personal autorizado"):
+    if st.button("INGRESAR", use_container_width=True, help="Solo personal autorizado"):
         st.session_state.area = "Gerencia"
         st.session_state.auth = False
         st.rerun()
     
     st.markdown("---")
-    st.caption("© 2026 Grupo Don Pollo")
+    st.caption("© 2026 - Grupo Don Pollo")
 
 
 # =========================================================
