@@ -94,7 +94,7 @@ with st.sidebar:
     </style>
     
     <div class="executive-card">
-        <div style="font-size: 2.8rem; filter: drop-shadow(0 5px 15px rgba(0,0,0,0.1));">🏢</div>
+        <div style="font-size: 2.8rem; filter: drop-shadow(0 5px 15px rgba(0,0,0,0.1));"></div>
         <div class="exe-title">Panel Ejecutivo</div>
         <div class="exe-status">● ACCESO RESTRINGIDO</div>
         <p style="color: #64748b; font-size: 0.8rem; line-height: 1.4;">
@@ -104,13 +104,12 @@ with st.sidebar:
     """, unsafe_allow_html=True)
 
     # Botón integrado con el diseño
-    if st.button("🔑 DESBLOQUEAR PANEL", use_container_width=True, help="Solo personal autorizado"):
+    if st.button("INGRESAR", use_container_width=True, help="Solo personal autorizado"):
         st.session_state.area = "Gerencia"
         st.session_state.auth = False
         st.rerun()
     
     st.markdown("---")
-    st.caption("🔒 Seguridad Encriptada GDP")
 
 
 # =========================================================
