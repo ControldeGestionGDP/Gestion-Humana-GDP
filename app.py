@@ -6,7 +6,7 @@ from pathlib import Path
 # =========================================================
 st.set_page_config(
     page_title="Portal Gestión Humana GDP",
-    page_icon="📊",
+    page_icon="🐥",
     layout="wide"
 )
 
@@ -41,15 +41,32 @@ if "auth" not in st.session_state:
 
 
 # =========================================================
-# 🔐 SIDEBAR GERENCIA
+# 🔐 SIDEBAR GERENCIA (MEJORADO)
 # =========================================================
 with st.sidebar:
-    st.markdown("### 🔐 Acceso Ejecutivo")
+    st.markdown(f"""
+    <div style="
+        background: linear-gradient(135deg, {COLOR1}22, {COLOR2}22);
+        padding: 20px;
+        border-radius: 15px;
+        border: 1px solid {COLOR1}44;
+        margin-bottom: 25px;
+        text-align: center;
+    ">
+        <span style="font-size: 2.5rem;">🛡️</span>
+        <h3 style="margin: 10px 0 5px 0; color: {COLOR2}; font-size: 1.2rem;">Acceso Ejecutivo</h3>
+        <p style="font-size: 0.85rem; color: #6b7280;">Área restringida para Gerencia y Dirección</p>
+    </div>
+    """, unsafe_allow_html=True)
 
-    if st.button("Panel Gerencial"):
+    # Botón con estilo mejorado mediante CSS de Streamlit
+    if st.button("🚀 INGRESAR AL PANEL GERENCIAL", use_container_width=True):
         st.session_state.area = "Gerencia"
         st.session_state.auth = False
         st.rerun()
+    
+    st.markdown("---")
+    st.caption("Grupo Don Pollo • v2.0")
 
 
 # =========================================================
