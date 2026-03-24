@@ -341,7 +341,7 @@ else:
                 report_card("Medidas Disciplinarias", "Registro de sanciones", "Disciplinarias.jpg")
                 open_panel_button("https://app.powerbi.com/links/Tpui1mE6E4?ctid=42fc96b3-c018-482d-8ada-cab81720489e&pbi_source=linkShare&bookmarkGuid=fd005400-09db-4ac9-bac1-f07463e944d5", "g_md")
             with col_g5:
-                report_card("Casos Especiales", "Seguimiento de casos", "CasosEspeciales.jpg")
+                report_card("Casos Especiales", "Seguimiento de casos críticos", "CasosEspeciales.jpg")
                 open_panel_button("https://app.powerbi.com/links/TcB5oWEaBX?ctid=42fc96b3-c018-482d-8ada-cab81720489e&pbi_source=linkShare", "g_ce")
 
             st.divider()
@@ -379,7 +379,7 @@ else:
                 report_card("Medidas Disciplinarias", "Registro de sanciones", "Disciplinarias.jpg")
                 open_panel_button("https://app.powerbi.com/links/Tpui1mE6E4?ctid=42fc96b3-c018-482d-8ada-cab81720489e&pbi_source=linkShare&bookmarkGuid=fd005400-09db-4ac9-bac1-f07463e944d5", "md")
             with col_a5:
-                report_card("Casos Especiales", "Seguimiento de casos", "CasosEspeciales.jpg")
+                report_card("Casos Especiales", "Seguimiento de casos críticos", "CasosEspeciales.jpg")
                 open_panel_button("https://app.powerbi.com/links/TcB5oWEaBX?ctid=42fc96b3-c018-482d-8ada-cab81720489e&pbi_source=linkShare", "ce")
 
         elif area == "Desarrollo Organizacional":
