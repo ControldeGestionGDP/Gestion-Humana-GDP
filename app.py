@@ -24,10 +24,10 @@ ASSETS_DIR = BASE_DIR / "assets"
 # PASSWORDS
 # =========================================================
 PASSWORDS = {
-    "Administración de Personal": "pollo123",
-    "Desarrollo Organizacional": "talento2024",
-    "Seguridad y Salud en el Trabajo": "seguridad2024",
-    "Gerencia": "gerencia2024"
+    "Administración de Personal": "admin2026",
+    "Desarrollo Organizacional": "desarrollo2026",
+    "Seguridad y Salud en el Trabajo": "seguridad2026",
+    "Gerencia": "gerencia2026"
 }
 
 # =========================================================
