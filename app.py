@@ -336,14 +336,17 @@ else:
                 open_panel_button("https://app.powerbi.com/links/eAcPJmr1vJ?ctid=42fc96b3-c018-482d-8ada-cab81720489e&pbi_source=linkShare", "g3")
             
             # Segunda fila alineada a la izquierda
-            col_g4, col_g5, _ = st.columns(3)
+            col_g4, col_g5, col_g6 = st.columns(3)
             with col_g4:
                 report_card("Medidas Disciplinarias", "Registro de sanciones", "Disciplinarias.jpg")
                 open_panel_button("https://app.powerbi.com/links/Tpui1mE6E4?ctid=42fc96b3-c018-482d-8ada-cab81720489e&pbi_source=linkShare&bookmarkGuid=fd005400-09db-4ac9-bac1-f07463e944d5", "g_md")
             with col_g5:
                 report_card("Casos Médicos Especiales", "Seguimiento de casos críticos", "CasosEspeciales.jpg")
                 open_panel_button("https://app.powerbi.com/links/TcB5oWEaBX?ctid=42fc96b3-c018-482d-8ada-cab81720489e&pbi_source=linkShare", "g_ce")
-
+            with col_g6:
+                report_card("Subsidios", "Incapacidad y Maternidad", "Subsidios.jpg")
+                open_panel_button("https://app.powerbi.com/links/wIsyeAFeq2?ctid=42fc96b3-c018-482d-8ada-cab81720489e&pbi_source=linkShare","g_sub")
+                
             st.divider()
             st.subheader("Desarrollo Organizacional")
             col1, col2, col3 = st.columns([1,2,1])
