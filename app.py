@@ -373,14 +373,20 @@ else:
                 report_card("Exámenes Médicos", "Seguimiento ocupacional", "Examenes.jpg")
                 open_panel_button("https://app.powerbi.com/links/eAcPJmr1vJ?ctid=42fc96b3-c018-482d-8ada-cab81720489e&pbi_source=linkShare", "e")
             
-            # Segunda fila alineada a la izquierda (3 columnas, la última vacía)
-            col_a4, col_a5, _ = st.columns(3)
+            # Segunda fila alineada a la izquierda (3 columnas)
+            col_a4, col_a5, col_a6 = st.columns(3)
+
             with col_a4:
                 report_card("Medidas Disciplinarias", "Registro de sanciones", "Disciplinarias.jpg")
                 open_panel_button("https://app.powerbi.com/links/Tpui1mE6E4?ctid=42fc96b3-c018-482d-8ada-cab81720489e&pbi_source=linkShare&bookmarkGuid=fd005400-09db-4ac9-bac1-f07463e944d5", "md")
+
             with col_a5:
                 report_card("Casos Médicos Especiales", "Seguimiento de casos críticos", "CasosEspeciales.jpg")
                 open_panel_button("https://app.powerbi.com/links/TcB5oWEaBX?ctid=42fc96b3-c018-482d-8ada-cab81720489e&pbi_source=linkShare", "ce")
+
+            with col_a6:
+                report_card("Subsidios", "Incapacidad y Maternidad", "Subsidios.jpg")
+                open_panel_button("TU_LINK_POWERBI", "sub")hare", "ce")
 
         elif area == "Desarrollo Organizacional":
             col1, col2, col3 = st.columns([1,2,1])
