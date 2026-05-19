@@ -328,8 +328,8 @@ else:
             col1, col2, col3 = st.columns([1,2,1])
             
             with col2:
-                report_card("Comité Recursos Humanos", "Dashboard gerencial consolidado", "ComiteRRHH.jpg")
-                open_panel_button("TU_LINK_POWERBI", "g_rrhh")
+                report_card("Comité Recursos Humanos", "Dashboard Gerencial Consolidado", "ComiteRRHH.jpg")
+                open_panel_button("https://app.powerbi.com/links/5dlBVQRxiu?ctid=42fc96b3-c018-482d-8ada-cab81720489e&pbi_source=linkShare", "g_rrhh")
             st.divider()
     
             st.subheader("Administración de Personal")
