@@ -322,7 +322,13 @@ else:
 
         # ================= GERENCIA VE TODO =================
         if area == "Gerencia":
-
+                st.subheader("Comité Recursos Humanos")
+                col1, col2, col3 = st.columns([1,2,1])
+                with col2:
+                    report_card("Comité Recursos Humanos", "Dashboard gerencial consolidado", "ComiteRRHH.jpg")
+                    open_panel_button("TU_LINK_POWERBI", "g_rrhh")
+            st.divider()
+    
             st.subheader("Administración de Personal")
             col1, col2, col3 = st.columns(3)
             with col1:
