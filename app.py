@@ -386,7 +386,7 @@ else:
 
             with col_a6:
                 report_card("Subsidios", "Incapacidad y Maternidad", "Subsidios.jpg")
-                open_panel_button("TU_LINK_POWERBI", "sub")hare", "ce")
+                open_panel_button("https://app.powerbi.com/links/wIsyeAFeq2?ctid=42fc96b3-c018-482d-8ada-cab81720489e&pbi_source=linkShare", "sub")
 
         elif area == "Desarrollo Organizacional":
             col1, col2, col3 = st.columns([1,2,1])
