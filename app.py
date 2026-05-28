@@ -360,8 +360,8 @@ else:
             st.subheader("Desarrollo Organizacional")
             col1, col2, col3 = st.columns([1,2,1])
             with col2:
-                report_card("Capacitaciones", "Panel en construcción", "Capacitaciones.jpg")
-                open_panel_button("https://app.powerbi.com", "g4")
+                report_card("Capacitaciones", "Seguimiento de Capacitaciones", "Capacitaciones.jpg")
+                open_panel_button("https://app.powerbi.com/links/034xivMREw?ctid=42fc96b3-c018-482d-8ada-cab81720489e&pbi_source=linkShare", "g4")
 
             st.divider()
             st.subheader("Seguridad y Salud en el Trabajo")
@@ -403,8 +403,8 @@ else:
         elif area == "Desarrollo Organizacional":
             col1, col2, col3 = st.columns([1,2,1])
             with col2:
-                report_card("Capacitaciones", "Panel en construcción", "Capacitaciones.jpg")
-                open_panel_button("https://app.powerbi.com", "c")
+                report_card("Capacitaciones", "Seguimiento de Capacitaciones", "Capacitaciones.jpg")
+                open_panel_button("https://app.powerbi.com/links/034xivMREw?ctid=42fc96b3-c018-482d-8ada-cab81720489e&pbi_source=linkShare", "c")
 
         elif area == "Seguridad y Salud en el Trabajo":
             col1, col2, col3 = st.columns([1,2,1])
