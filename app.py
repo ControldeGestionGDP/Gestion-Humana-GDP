@@ -401,10 +401,31 @@ else:
                 open_panel_button("https://app.powerbi.com/links/wIsyeAFeq2?ctid=42fc96b3-c018-482d-8ada-cab81720489e&pbi_source=linkShare", "sub")
 
         elif area == "Desarrollo Organizacional":
-            col1, col2, col3 = st.columns([1,2,1])
+
+            col1, col2 = st.columns(2)
+        
+            with col1:
+                report_card(
+                    "Capacitaciones",
+                    "Seguimiento de Capacitaciones",
+                    "Capacitaciones.jpg"
+                )
+                open_panel_button(
+                    "https://app.powerbi.com/links/034xivMREw?ctid=42fc96b3-c018-482d-8ada-cab81720489e&pbi_source=linkShare",
+                    "c"
+                )
+        
             with col2:
-                report_card("Capacitaciones", "Seguimiento de Capacitaciones", "Capacitaciones.jpg")
-                open_panel_button("https://app.powerbi.com/links/034xivMREw?ctid=42fc96b3-c018-482d-8ada-cab81720489e&pbi_source=linkShare", "c")
+                report_card(
+                    "Reclutamiento y Selección",
+                    "Seguimiento de Reclutamiento y Selección",
+                    "Reclutamiento.jpg"
+                )
+                open_panel_button(
+                    "https://app.powerbi.com/links/UqL5GKwcqx?ctid=42fc96b3-c018-482d-8ada-cab81720489e&pbi_source=linkShare",
+                    "r"
+                )
+                
 
         elif area == "Seguridad y Salud en el Trabajo":
             col1, col2, col3 = st.columns([1,2,1])
