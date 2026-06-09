@@ -419,6 +419,26 @@ else:
                 report_card("Subsidios", "Incapacidad y Maternidad", "Subsidios.jpg")
                 open_panel_button("https://app.powerbi.com/links/wIsyeAFeq2?ctid=42fc96b3-c018-482d-8ada-cab81720489e&pbi_source=linkShare", "sub")
 
+            # Tercera fila
+            col_a7, col_a8, col_a9 = st.columns(3)
+
+            with col_a7:
+                report_card(
+                    "Encuesta de Satisfacción Planta Beneficio",
+                    "Condiciones de trabajo y bienestar",
+                    "EncuestaSatisfaccion.jpg"
+                )
+                open_panel_button(
+                    "https://app.powerbi.com/links/3mvf36dwAF?ctid=42fc96b3-c018-482d-8ada-cab81720489e&pbi_source=linkShare",
+                    "enc"
+                )
+
+            with col_a8:
+                st.empty()
+
+            with col_a9:
+                st.empty()
+                
         elif area == "Desarrollo Organizacional":
 
             col1, col2 = st.columns(2)
