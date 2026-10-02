@@ -153,14 +153,17 @@ display:flex;align-items:center;justify-content:center;box-shadow:0 20px 40px -1
 .hero-logo img{max-width:100%;max-height:100%;}
 
 /* ---------- TARJETAS ---------- */
-.rcard{display:block;text-decoration:none !important;background:#fff;border:1px solid var(--line);
+.rcard{position:relative;display:block;text-decoration:none !important;background:#fff;border:1px solid var(--line);
 border-radius:22px;overflow:hidden;margin-bottom:14px;color:var(--ink) !important;
 box-shadow:0 12px 30px -18px rgba(15,40,70,.25);transition:transform .4s cubic-bezier(.16,1,.3,1),box-shadow .4s,border-color .4s;
 animation:rise .7s cubic-bezier(.16,1,.3,1) both;animation-delay:var(--d,0ms);}
 @keyframes rise{from{opacity:0;transform:translateY(22px);}to{opacity:1;transform:none;}}
 .rcard:hover{transform:translateY(-8px);border-color:rgba(16,113,184,.4);box-shadow:0 30px 50px -22px rgba(16,113,184,.45);}
-.media{position:relative;aspect-ratio:16/9;overflow:hidden;background:linear-gradient(135deg,#0a3a63,#1071b8);}
-.media img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .8s cubic-bezier(.16,1,.3,1);}
+.media{position:relative;aspect-ratio:16/9;overflow:hidden;background:#0a3a63;}
+.rcard .media img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;
+border-radius:0 !important;margin:0;transition:transform .8s cubic-bezier(.16,1,.3,1);}
+.cover{position:absolute;inset:0;z-index:3;border-radius:22px;}
+.tt .t{min-height:2.75em;}.td .d{min-height:2.7em;}
 .media::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 55%,rgba(6,28,51,.5));}
 .rcard:hover .media img{transform:scale(1.08);}
 .badge{position:absolute;z-index:2;top:14px;left:14px;display:inline-flex;align-items:center;gap:7px;
@@ -178,11 +181,13 @@ border-top:1px solid var(--line);font-weight:700;font-size:.9rem;color:var(--blu
 .go svg{transition:transform .35s cubic-bezier(.16,1,.3,1);}
 .rcard:hover .go svg{transform:translateX(6px);}
 .rcard.wide{display:grid;grid-template-columns:1.1fr 1fr;}
-.rcard.wide .media{aspect-ratio:auto;min-height:230px;}
+.rcard.wide .media{aspect-ratio:auto;min-height:280px;}
 .rcard.wide .body{display:flex;flex-direction:column;justify-content:center;padding:28px 34px;}
 .rcard.wide .t{font-size:1.45rem;}
 
 /* ---------- BOTONES ---------- */
+.stButton,[data-testid="stButton"],[data-testid="stFormSubmitButton"]{width:100% !important;}
+div.stButton>button,[data-testid="stFormSubmitButton"]>button{display:flex;align-items:center;justify-content:center;}
 div.stButton>button,[data-testid="stFormSubmitButton"]>button{width:100%;height:48px;border:none !important;
 border-radius:14px !important;color:#fff !important;font-weight:700 !important;font-size:.95rem !important;
 background:linear-gradient(135deg,var(--blue),var(--blue-d)) !important;
@@ -196,6 +201,8 @@ box-shadow:none !important;}
 background:#f1f5f9 !important;border-color:#94a3b8 !important;}
 
 /* ---------- OTROS ---------- */
+[data-testid="stForm"]{border:none !important;padding:0 !important;background:transparent !important;}
+.stTabs [data-baseweb="tab-highlight"]{background:var(--blue) !important;}
 div[data-baseweb="input"]{border-radius:14px !important;background:#fff !important;border:1.5px solid var(--line) !important;}
 div[data-baseweb="input"]:focus-within{border-color:var(--blue) !important;box-shadow:0 0 0 4px rgba(16,113,184,.12);}
 .stTabs [data-baseweb="tab-list"]{gap:6px;border-bottom:1px solid var(--line);}
@@ -268,15 +275,17 @@ def hero(kicker, title, sub, stats):
     )
 
 
-def card_html(r, i=0, wide=False):
+def card_html(r, i=0, wide=False, tall=(False, False)):
     img = img_uri(r["img"])
     media = f'<img src="{img}" alt="">' if img else ""
     badge = ('<span class="badge wip"><i></i>En construcción</span>' if r.get("wip")
              else '<span class="badge live"><i></i>Disponible</span>')
-    return (f'<a class="rcard{" wide" if wide else ""}" href="{html.escape(r["url"])}" target="_blank" '
-            f'rel="noopener" style="--d:{i * 70}ms"><div class="media">{media}{badge}</div>'
+    cls = "rcard" + (" wide" if wide else "") + (" tt" if tall[0] else "") + (" td" if tall[1] else "")
+    return (f'<div class="{cls}" style="--d:{i * 70}ms"><div class="media">{media}{badge}</div>'
             f'<div class="body"><div class="t">{r["title"]}</div><div class="d">{r["desc"]}</div>'
-            f'<div class="go"><span>Abrir dashboard</span>{ARROW}</div></div></a>')
+            f'<div class="go"><span>Abrir dashboard</span>{ARROW}</div></div>'
+            f'<a class="cover" href="{html.escape(r["url"])}" target="_blank" rel="noopener" '
+            f'aria-label="Abrir {html.escape(r["title"])}"></a></div>')
 
 
 def grid(items, cols=3):
@@ -287,9 +296,11 @@ def grid(items, cols=3):
         st.markdown(card_html(items[0], 0, wide=True), unsafe_allow_html=True)
         return
     for s in range(0, len(items), cols):
-        for c, (j, r) in zip(st.columns(cols), enumerate(items[s:s + cols])):
+        row = items[s:s + cols]
+        tall = (any(len(r["title"]) > 26 for r in row), any(len(r["desc"]) > 30 for r in row))
+        for c, (j, r) in zip(st.columns(cols), enumerate(row)):
             with c:
-                st.markdown(card_html(r, s + j), unsafe_allow_html=True)
+                st.markdown(card_html(r, s + j, tall=tall), unsafe_allow_html=True)
 
 
 def area_card(name, i):
@@ -330,7 +341,7 @@ def modal_gerencia():
     )
     with st.form("form_gerencia"):
         pwd = st.text_input("Contraseña gerencial", type="password", placeholder="••••••••")
-        if st.form_submit_button("Ingresar al panel"):
+        if st.form_submit_button("Ingresar al panel", use_container_width=True):
             if check_pwd(GER, pwd):
                 st.session_state.area, st.session_state.auth = GER, True
                 st.rerun()
@@ -344,13 +355,13 @@ def modal_gerencia():
 def portal():
     total = len(REPORTES)
     wip = sum(1 for r in REPORTES if r.get("wip"))
-    c1, c2 = st.columns([3.8, 1.2], vertical_alignment="center")
+    c1, c2 = st.columns([2.6, 1.4], vertical_alignment="center")
     with c1:
         st.markdown('<div style="font-weight:800;color:#0f172a;font-size:1.02rem;">Grupo Don Pollo '
                     '<span style="color:#1071b8">•</span> Gerencia de Planeamiento Estratégico</div>',
                     unsafe_allow_html=True)
     with c2:
-        if st.button("Acceso Gerencial", key="btn_open_modal"):
+        if st.button("Acceso Gerencial", key="btn_open_modal", use_container_width=True):
             modal_gerencia()
 
     hero(saludo(), "Ecosistema Digital • Gestión Humana",
@@ -362,7 +373,7 @@ def portal():
     for i, (c, name) in enumerate(zip(cols, AREAS)):
         with c:
             area_card(name, i)
-            if st.button("Ingresar", key=f"go_{i}"):
+            if st.button("Ingresar", key=f"go_{i}", use_container_width=True):
                 st.session_state.area, st.session_state.auth = name, False
                 st.rerun()
 
@@ -380,13 +391,13 @@ def login(area):
         )
         with st.form("form_login"):
             pwd = st.text_input("Contraseña", type="password", placeholder="••••••••")
-            if st.form_submit_button("Ingresar"):
+            if st.form_submit_button("Ingresar", use_container_width=True):
                 if check_pwd(area, pwd):
                     st.session_state.auth = True
                     st.rerun()
                 else:
                     st.error("Acceso denegado: clave incorrecta.")
-        if st.button("Volver", key="btn_login_volver"):
+        if st.button("Volver", key="btn_login_volver", use_container_width=True):
             go_home()
 
 
@@ -394,8 +405,10 @@ def dashboard(area):
     ger = area == GER
     items = [r for r in REPORTES if (r["ger"] if ger else r["area"] == area)]
 
-    if st.button("← Cambiar área", key="btn_back"):
-        go_home()
+    back, _ = st.columns([1.4, 4.6])
+    with back:
+        if st.button("← Cambiar área", key="btn_back", use_container_width=True):
+            go_home()
 
     if ger:
         hero(saludo(), "Panel Gerencial", "Vista consolidada de Gestión Humana: todas las áreas en un solo lugar.",
