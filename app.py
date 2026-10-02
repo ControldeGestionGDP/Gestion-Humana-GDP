@@ -539,7 +539,8 @@ else:
                 report_card("Gestión Humana 360°", "Indicadores clave de gestión de personal", "gestionhumana12.jpg")
                 open_panel_button("https://app.powerbi.com/links/ssZMKk5F6e?ctid=42fc96b3-c018-482d-8ada-cab81720489e&pbi_source=linkShare&bookmarkGuid=53368b91-d02d-4478-bf45-0d094274d808", "enc")
             with col_a9:
-                st.empty()
+                report_card("Entrega de Uniformes", "Gestión y control de entrega de uniformes", "uniformes.jpg")
+                open_panel_button("https://app.powerbi.com/links/Ig7sM1zEVo?ctid=42fc96b3-c018-482d-8ada-cab81720489e&pbi_source=linkShare", "enc")
                 
         # ================= DESARROLLO ORGANIZACIONAL =================
         elif area == "Desarrollo Organizacional":
