@@ -64,7 +64,7 @@ PASSWORDS = get_passwords()
 
 # =========================================================
 # CATÁLOGO DE REPORTES (única fuente de verdad)
-# ger=True -> también aparece en el panel de Gerencia
+# Gerencia ve automáticamente TODOS los reportes de la lista
 # =========================================================
 AREAS = {
     "Administración de Personal": ("Gestión operativa del personal", "Administracion.jpg"),
@@ -75,33 +75,33 @@ AREAS = {
 AP, DO, SST, GER = list(AREAS)[0], list(AREAS)[1], list(AREAS)[2], "Gerencia"
 
 REPORTES = [
-    dict(area=GER, ger=True, title="Comité Recursos Humanos", desc="Dashboard Gerencial Consolidado",
+    dict(area=GER, title="Comité Recursos Humanos", desc="Dashboard Gerencial Consolidado",
          img="ComiteRRHH.jpg", url=pbi("5dlBVQRxiu")),
-    dict(area=AP, ger=True, title="Vacaciones", desc="Saldo y planificación",
+    dict(area=AP, title="Vacaciones", desc="Saldo y planificación",
          img="Vacaciones.jpg", url=pbi("99-7IxzOn8")),
-    dict(area=AP, ger=True, title="Descansos Médicos", desc="Subsidios y ausencias",
+    dict(area=AP, title="Descansos Médicos", desc="Subsidios y ausencias",
          img="DescansosMedicos.jpg", url=pbi("NQfjSntCO1")),
-    dict(area=AP, ger=True, title="Exámenes Médicos", desc="Seguimiento ocupacional",
+    dict(area=AP, title="Exámenes Médicos", desc="Seguimiento ocupacional",
          img="Examenes.jpg", url=pbi("eAcPJmr1vJ")),
-    dict(area=AP, ger=True, title="Medidas Disciplinarias", desc="Registro de sanciones",
+    dict(area=AP, title="Medidas Disciplinarias", desc="Registro de sanciones",
          img="Disciplinarias.jpg",
          url=pbi("Tpui1mE6E4", "&bookmarkGuid=fd005400-09db-4ac9-bac1-f07463e944d5")),
-    dict(area=AP, ger=True, title="Casos Médicos Especiales", desc="Seguimiento de casos críticos",
+    dict(area=AP, title="Casos Médicos Especiales", desc="Seguimiento de casos críticos",
          img="CasosEspeciales.jpg", url=pbi("TcB5oWEaBX")),
-    dict(area=AP, ger=True, title="Subsidios", desc="Incapacidad y Maternidad",
+    dict(area=AP, title="Subsidios", desc="Incapacidad y Maternidad",
          img="Subsidios.jpg", url=pbi("wIsyeAFeq2")),
-    dict(area=AP, ger=False, title="Encuesta de Satisfacción Planta Beneficio",
+    dict(area=AP, title="Encuesta de Satisfacción Planta Beneficio",
          desc="Condiciones de trabajo y bienestar", img="EncuestaSatisfaccion.jpg", url=pbi("3mvf36dwAF")),
-    dict(area=AP, ger=False, title="Gestión Humana 360°", desc="Indicadores clave de gestión de personal",
+    dict(area=AP, title="Gestión Humana 360°", desc="Indicadores clave de gestión de personal",
          img="gestionhumana12.jpg",
          url=pbi("ssZMKk5F6e", "&bookmarkGuid=53368b91-d02d-4478-bf45-0d094274d808")),
-    dict(area=AP, ger=False, title="Entrega de Uniformes", desc="Gestión y control de entrega de uniformes",
+    dict(area=AP, title="Entrega de Uniformes", desc="Gestión y control de entrega de uniformes",
          img="uniformes.jpg", url=pbi("Ig7sM1zEVo")),
-    dict(area=DO, ger=True, title="Capacitaciones", desc="Seguimiento de Capacitaciones",
+    dict(area=DO, title="Capacitaciones", desc="Seguimiento de Capacitaciones",
          img="Capacitaciones.jpg", url=pbi("034xivMREw")),
-    dict(area=DO, ger=True, title="Reclutamiento y Selección", desc="Seguimiento de Reclutamiento y Selección",
+    dict(area=DO, title="Reclutamiento y Selección", desc="Seguimiento de Reclutamiento y Selección",
          img="Reclutamiento.jpg", url=pbi("UqL5GKwcqx")),
-    dict(area=SST, ger=True, title="Incidentes SST", desc="Panel en construcción",
+    dict(area=SST, title="Incidentes SST", desc="Panel en construcción",
          img="Incidentes.jpg", url=URL_PENDIENTE, wip=True),
 ]
 
@@ -403,7 +403,7 @@ def login(area):
 
 def dashboard(area):
     ger = area == GER
-    items = [r for r in REPORTES if (r["ger"] if ger else r["area"] == area)]
+    items = REPORTES if ger else [r for r in REPORTES if r["area"] == area]
 
     back, _ = st.columns([1.4, 4.6])
     with back:
