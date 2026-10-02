@@ -536,7 +536,7 @@ else:
                 report_card("Encuesta de Satisfacción Planta Beneficio", "Condiciones de trabajo y bienestar", "EncuestaSatisfaccion.jpg")
                 open_panel_button("https://app.powerbi.com/links/3mvf36dwAF?ctid=42fc96b3-c018-482d-8ada-cab81720489e&pbi_source=linkShare", "enc")
             with col_a8:
-                report_card("Gestión Humana 360°", "Costos de Planilla, Rotación, Ausentismo, Horas Extras, Productividad ", "gestionhumana12.jpg")
+                report_card("Gestión Humana 360°", "Indicadores clave de gestión de personal", "gestionhumana12.jpg")
                 open_panel_button("https://app.powerbi.com/links/ssZMKk5F6e?ctid=42fc96b3-c018-482d-8ada-cab81720489e&pbi_source=linkShare&bookmarkGuid=53368b91-d02d-4478-bf45-0d094274d808", "enc")
             with col_a9:
                 st.empty()
