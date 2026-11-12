@@ -103,6 +103,8 @@ REPORTES = [
          img="Reclutamiento.jpg", url=pbi("UqL5GKwcqx")),
     dict(area=SST, title="Incidentes SST", desc="Panel en construcción",
          img="Incidentes.jpg", url=URL_PENDIENTE, wip=True),
+    dict(area=SST, title="Indicadores Semanales SST", desc="Evolución semanal de seguridad y salud",
+         img="EstadisticaSemanalSST.jpg", url=pbi("4OH4ZBfguJ")),
 ]
 
 # =========================================================
