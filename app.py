@@ -231,18 +231,29 @@ ARROW = ('<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="cu
          'stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>')
 
 
-@st.cache_data(show_spinner=False)
 def img_uri(name, width=900):
-    for p in (ASSETS_DIR / name, ASSETS_DIR / "default.jpg"):
-        if p.exists():
+    # Sin cache: las imágenes nuevas se reconocen al desplegarse en GitHub/Streamlit.
+    # Primero busca el nombre exacto; después admite diferencias de mayúsculas.
+    requested = ASSETS_DIR / name
+    if requested.is_file():
+        candidates = [requested]
+    else:
+        matches = ([p for p in ASSETS_DIR.iterdir()
+                    if p.is_file() and p.name.casefold() == name.casefold()]
+                   if ASSETS_DIR.is_dir() else [])
+        candidates = matches
+    candidates.append(ASSETS_DIR / "default.jpg")
+    for p in candidates:
+        if p.is_file():
             try:
-                im = Image.open(p).convert("RGB")
+                with Image.open(p) as source:
+                    im = source.convert("RGB")
                 im.thumbnail((width, width))
                 buf = io.BytesIO()
                 im.save(buf, "JPEG", quality=82, optimize=True)
                 return "data:image/jpeg;base64," + base64.b64encode(buf.getvalue()).decode()
-            except Exception:
-                pass
+            except (OSError, ValueError):
+                continue
     return ""
 
 
